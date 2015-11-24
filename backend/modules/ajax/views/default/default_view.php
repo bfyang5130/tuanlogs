@@ -5,6 +5,7 @@ use backend\services\TraceLogService;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 use yii\helpers\Html;
+use yii\widgets\Breadcrumbs;
 ?>
 <div class="row">
     <div id="breadcrumb" class="col-xs-12">
@@ -12,9 +13,18 @@ use yii\helpers\Html;
             <i class="fa fa-bars"></i>
         </a>
         <ol class="breadcrumb pull-left">
-            <li><a href="index.html">Dashboard</a></li>
-            <li><a href="#">Tables</a></li>
-            <li><a href="#">Simple Tables</a></li>
+            <?=
+            Breadcrumbs::widget([
+                'itemTemplate' => "<li>{link}</li>\n", // template for all links
+                'links' => [
+                    [
+                        'label' => '错误信息',
+                        'url' => ['/ajax/default/index'],
+                        'class'=>'ajax-link',
+                    ]
+                ]
+            ]);
+            ?>
         </ol>
         <div id="social" class="pull-right">
             <a href="#"><i class="fa fa-google-plus"></i></a>
@@ -129,3 +139,11 @@ if (isset($p_get['type']) && $p_get['type'] != 1) {
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $(".ajax-link").on("click", function() {
+        var thisurl = $(this).attr("href");
+        htmlobj = $.ajax({url: thisurl, async: false});
+        $("#ajax-content").html(htmlobj.responseText);
+        return false;
+    });
+</script>

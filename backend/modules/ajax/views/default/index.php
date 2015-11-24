@@ -4,6 +4,7 @@ use backend\services\AppcationNameService;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 use yii\helpers\Html;
+use yii\widgets\Breadcrumbs;
 ?>
 <div class="row">
     <div id="breadcrumb" class="col-xs-12">
@@ -11,17 +12,28 @@ use yii\helpers\Html;
             <i class="fa fa-bars"></i>
         </a>
         <ol class="breadcrumb pull-left">
-            <li><a href="index.html">Dashboard</a></li>
-            <li><a href="#">Tables</a></li>
-            <li><a href="#">Simple Tables</a></li>
+            <?=
+            Breadcrumbs::widget([
+                'itemTemplate' => "<li>{link}</li>\n", // template for all links
+                'links' => [
+                    [
+                        'label' => '导航面板',
+                        'url' => ['/ajax/default/index'],
+                        'class' => 'ajax-link',
+                    ]
+                ]
+            ]);
+            ?>
         </ol>
-        <div id="social" class="pull-right">
-            <a href="#"><i class="fa fa-google-plus"></i></a>
-            <a href="#"><i class="fa fa-facebook"></i></a>
-            <a href="#"><i class="fa fa-twitter"></i></a>
-            <a href="#"><i class="fa fa-linkedin"></i></a>
-            <a href="#"><i class="fa fa-youtube"></i></a>
-        </div>
+        <?php
+        //<div id="social" class="pull-right">
+        //    <a href="#"><i class="fa fa-google-plus"></i></a>
+        //    <a href="#"><i class="fa fa-facebook"></i></a>
+        //    <a href="#"><i class="fa fa-twitter"></i></a>
+        //    <a href="#"><i class="fa fa-linkedin"></i></a>
+        //    <a href="#"><i class="fa fa-youtube"></i></a>
+        //</div>
+        ?>
     </div>
 </div>
 <?php

@@ -2247,3 +2247,5 @@ border-radius: 50%;}
     display: none;
   }
 }
+.maxwidth{width:50%;}
+td{word-break:break-all;}

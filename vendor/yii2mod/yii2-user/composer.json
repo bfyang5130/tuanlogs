@@ -1,0 +1,22 @@
+{
+    "name": "yii2mod/yii2-user",
+    "description": "User module",
+    "type": "yii2-extension",
+    "keywords": ["yii2", "extension"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dmitry Semenov",
+            "email": "disemx@gmail.com"
+        },
+        {
+            "name": "Igor Chepurnoy",
+            "email": "igorzfort@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "yii2mod\\user\\": ""
+        }
+    }
+}

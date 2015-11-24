@@ -25,6 +25,9 @@ return [
                 ],
             ]
         ],
+        'ajax' => [
+            'class' => 'backend\modules\ajax\AjaxModule',
+        ],
     ],
     'components' => [
         'authManager' => [

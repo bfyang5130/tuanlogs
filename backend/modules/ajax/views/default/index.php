@@ -70,7 +70,7 @@ $dataProvider = AppcationNameService::findApplicationName();
                         ['class' => 'yii\grid\SerialColumn'],
                         [
                             'attribute' => 'appname',
-                            'label' => '日志名称',
+                            'label' => '日志名称'
                         ],
                         [
                             'attribute' => 'newname',

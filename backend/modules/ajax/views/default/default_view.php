@@ -2,10 +2,12 @@
 
 use backend\services\ErrorLogService;
 use backend\services\TraceLogService;
+use backend\models\TraceLogSearch;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
+use dosamigos\datepicker\DatePicker;
 ?>
 <div class="row">
     <div id="breadcrumb" class="col-xs-12">
@@ -20,7 +22,7 @@ use yii\widgets\Breadcrumbs;
                     [
                         'label' => '错误信息',
                         'url' => ['/ajax/default/index'],
-                        'class'=>'ajax-link',
+                        'class' => 'ajax-link',
                     ]
                 ]
             ]);
@@ -38,11 +40,6 @@ use yii\widgets\Breadcrumbs;
 <?php
 #获得具体日志统计记录
 $p_get = Yii::$app->request->get();
-if (isset($p_get['type']) && $p_get['type'] != 1) {
-    $dataProvider = ErrorLogService::findErrorLogByAppId();
-} else {
-    $dataProvider = TraceLogService::findTraceLogByAppId();
-}
 ?>
 <div class="row">
     <div class="col-xs-12">
@@ -69,6 +66,7 @@ if (isset($p_get['type']) && $p_get['type'] != 1) {
                 <?php
                 Pjax::begin(['id' => 'countries']);
                 if (isset($p_get['type']) && $p_get['type'] != 1) {
+                    $dataProvider = ErrorLogService::findErrorLogByAppId();
                     echo GridView::widget([
                         'dataProvider' => $dataProvider,
                         'columns' => [
@@ -101,21 +99,37 @@ if (isset($p_get['type']) && $p_get['type'] != 1) {
                         ],
                     ]);
                 } else {
+                    $searchModel = new TraceLogSearch();
+                    $params = \Yii::$app->request->queryParams;
+                    $dataProvider = $searchModel->search($params);
                     echo GridView::widget([
                         'dataProvider' => $dataProvider,
+                        'filterModel' => $searchModel,
                         'columns' => [
                             ['class' => 'yii\grid\SerialColumn'],
                             [
                                 'attribute' => 'ApplicationName',
                                 'label' => '类型',
+                                'value' =>
+                                function($model) {
+                                    return Html::encode($model->ApplicationName);
+                                },
                             ],
                             [
                                 'attribute' => 'Method',
-                                'label' => '函数'
+                                'label' => '函数',
+                                'value' =>
+                                function($model) {
+                                    return Html::encode($model->Method);
+                                },
                             ],
                             [
                                 'attribute' => 'Parameter',
-                                'label' => '参数'
+                                'label' => '参数',
+                                'value' =>
+                                function($model) {
+                                    return Html::encode($model->Parameter);
+                                },
                             ],
                             [
                                 'attribute' => 'Content',
@@ -127,8 +141,29 @@ if (isset($p_get['type']) && $p_get['type'] != 1) {
                                 },
                             ],
                             [
-                                'attribute' => 'AddDate',
-                                'label' => '日期',
+                                'attribute' => 'start_date',
+                                'label' => '开始时间',
+                                'value' => 'AddDate',
+                                'filter' => \yii\jui\DatePicker::widget([
+                                    'model' => $searchModel,
+                                    'attribute' => 'start_date',
+                                    'language' => 'zh-CN',
+                                    'dateFormat' => 'yyyy-MM-dd'
+                                ]),
+                                'format' => 'html',
+                            ],
+                            [
+                                'attribute' => 'end_date',
+                                'label' => '结束时间',
+                                'value' => 'AddDate',
+                                'filter' => \yii\jui\DatePicker::widget([
+                                    'model' => $searchModel,
+                                    'attribute' => 'end_date',
+                                    'language' => 'zh-CN',
+                                    'dateFormat' => 'yyyy-MM-dd',
+                                    'value' => date('Y-m-d'),
+                                ]),
+                                'format' => 'html',
                             ],
                         ],
                     ]);

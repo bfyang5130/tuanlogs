@@ -1,5 +1,4 @@
 <?php
-
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
 /* @var $model \common\models\LoginForm */
@@ -7,17 +6,20 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
-$this->title = 'Login';
+$this->title = '系统登录';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>Please fill out the following fields to login:</p>
-
-    <div class="row">
-        <div class="col-lg-5">
-            <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+<div id="page-login" class="row">
+    <div class="col-xs-12 col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
+        <div class="text-right">
+            <a href="page_register.html" class="txt-default">没有帐号?</a>
+        </div>
+        <div class="box">
+            <div class="box-content">
+                <div class="text-center">
+                    <h1 class="page-header"><?= Html::encode($this->title) ?></h1>
+                </div>
+                <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
                 <?= $form->field($model, 'username') ?>
 
@@ -29,7 +31,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
                 </div>
 
-            <?php ActiveForm::end(); ?>
+                <?php ActiveForm::end(); ?>
+            </div>
         </div>
     </div>
 </div>

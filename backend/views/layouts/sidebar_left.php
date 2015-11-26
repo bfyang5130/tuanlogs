@@ -21,6 +21,26 @@ use yii\helpers\Url;
                 <li><a class="ajax-link" href="<?= Url::toRoute('/ajax/trace/index') ?>">跟踪日志</a></li>
             </ul>
         </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle">
+          <i class="fa fa-list"></i>
+          <span class="hidden-xs">Pages</span>
+          </a>
+          <ul class="dropdown-menu">
+          <li><a href="/devoops/ajax/page_login.html">Login</a></li>
+          <li><a href="/devoops/ajax/page_register.html">Register</a></li>
+          <li><a id="locked-screen" class="submenu" href="/devoops/ajax/page_locked.html">Locked Screen</a></li>
+          <li><a class="ajax-link" href="/devoops/ajax/page_contacts.html">Contacts</a></li>
+          <li><a class="ajax-link" href="/devoops/ajax/page_feed.html">Feed</a></li>
+          <li><a class="ajax-link add-full" href="/devoops/ajax/page_messages.html">Messages</a></li>
+          <li><a class="ajax-link" href="/devoops/ajax/page_pricing.html">Pricing</a></li>
+          <li><a class="ajax-link" href="/devoops/ajax/page_product.html">Product</a></li>
+          <li><a class="ajax-link" href="/devoops/ajax/page_invoice.html">Invoice</a></li>
+          <li><a class="ajax-link" href="/devoops/ajax/page_search.html">Search Results</a></li>
+          <li><a class="ajax-link" href="/devoops/ajax/page_404.html">Error 404</a></li>
+          <li><a href="/devoops/ajax/page_500.html">Error 500</a></li>
+          </ul>
+          </li>
         <?php /** /?>
           <li>
           <a href="/devoops/ajax/dashboard.html" class="ajax-link">

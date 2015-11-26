@@ -61,6 +61,17 @@ $params = \Yii::$app->request->queryParams;
                 </div>
                 <div class="no-move"></div>
             </div>
+            <script type="text/javascript">
+                function showDetaildiv(obj) {
+                    var showHtml = $("#"+obj).val();
+                    $("#modalbox .devoops-modal .modal-header-name").html("错误详情");
+                    $("#modalbox .devoops-modal").css("width", "70%");
+                    $("#modalbox .devoops-modal .devoops-modal-inner").css("word-break", "break-all");
+                    $("#modalbox .devoops-modal .devoops-modal-inner").html(showHtml);
+                    $("#modalbox").show();
+                    return false;
+                }
+            </script>
             <div class="box-content">
                 <?php
                 Pjax::begin(['id' => 'countries']);
@@ -149,8 +160,8 @@ if (isset($params['ErrorLogSearch']['end_date']) && !empty($params['ErrorLogSear
                                         'aria-label' => Yii::t('yii', 'View'),
                                         'class' => 'show_model',
                                     ];
-                                    $url = '#';
-                                    return Html::textarea('text' . $model->Id, Html::encode($model->Content), ['style' => 'display:none;']) . Html::a('<button type="button" class="btn btn-sm btn-info">查看详情</button>', $url, $options);
+                                    $url = 'javascript:showDetaildiv("text'.$model->Id.'");';
+                                    return Html::textarea('text' . $model->Id, Html::encode($model->Content), ['style' => 'display:none;', 'id' => 'text' . $model->Id]) . Html::a('<button type="button" class="btn btn-sm btn-info">查看详情</button>', $url, $options);
                                 }]
                         ],
                     ],
@@ -172,15 +183,6 @@ if (isset($params['ErrorLogSearch']['end_date']) && !empty($params['ErrorLogSear
             var thisurl = $(this).attr("href");
             htmlobj = $.ajax({url: thisurl, async: false});
             $("#ajax-content").html(htmlobj.responseText);
-            return false;
-        });
-        $(".show_model").on("click", function() {
-            var showHtml = $(this).prev().val();
-            $("#modalbox .devoops-modal .modal-header-name").html("错误详情");
-            $("#modalbox .devoops-modal").css("width", "90%");
-            $("#modalbox .devoops-modal .devoops-modal-inner").css("word-break", "break-all");
-            $("#modalbox .devoops-modal .devoops-modal-inner").html(showHtml);
-            $("#modalbox").show();
             return false;
         });
     });

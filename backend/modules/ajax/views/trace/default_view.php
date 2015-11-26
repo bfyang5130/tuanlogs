@@ -62,187 +62,110 @@ $params = \Yii::$app->request->queryParams;
                 <div class="no-move"></div>
             </div>
             <div class="box-content">
+                <script type="text/javascript">
+                    function showDetaildiv(obj) {
+                         var showHtml = $("#"+obj).val();
+                        $("#modalbox .devoops-modal .modal-header-name").html("错误详情");
+                        $("#modalbox .devoops-modal").css("width", "70%");
+                        $("#modalbox .devoops-modal .devoops-modal-inner").css("word-break", "break-all");
+                        $("#modalbox .devoops-modal .devoops-modal-inner").html(showHtml);
+                        $("#modalbox").show();
+                        return false;
+                    }
+                </script>
                 <?php
                 Pjax::begin(['id' => 'countries']);
-                if (isset($p_get['type']) && $p_get['type'] != 1) {
-                    $searchModel = new ErrorLogSearch();
-                    $dataProvider = $searchModel->search($params);
-                    ?>
-                    <script type="text/javascript">
-                        $(document).ready(function() {
-    <?php
-    if (isset($params['ErrorLogSearch']['start_date']) && !empty($params['ErrorLogSearch']['start_date'])) {
-        ?>
-                                $("#ErrorLogSearch-start_date").val("<?= $params['ErrorLogSearch']['start_date'] ?>");
-        <?php
-    }
-    if (isset($params['ErrorLogSearch']['end_date']) && !empty($params['ErrorLogSearch']['end_date'])) {
-        ?>
-                                $("#ErrorLogSearch-end_date").val("<?= $params['ErrorLogSearch']['end_date'] ?>");
-        <?php
-    }
+                $searchModel = new TraceLogSearch();
+                $dataProvider = $searchModel->search($params);
+                ?>
+                <script type="text/javascript">
+                    $(document).ready(function() {
+<?php
+if (isset($params['TraceLogSearch']['start_date']) && !empty($params['TraceLogSearch']['start_date'])) {
     ?>
-                        });
-                    </script>
-                    <?php
-                    echo GridView::widget([
-                        'dataProvider' => $dataProvider,
-                        'filterModel' => $searchModel,
-                        'columns' => [
-                            ['class' => 'yii\grid\SerialColumn'],
-                            [
-                                'attribute' => 'ApplicationName',
-                                'label' => '类型',
-                                'value' =>
-                                function($model) {
-                                    return Html::encode($model->ApplicationName);
-                                },
-                            ],
-                            [
-                                'attribute' => 'Method',
-                                'label' => '函数',
-                                'value' =>
-                                function($model) {
-                                    return Html::encode($model->Method);
-                                },
-                            ],
-                            [
-                                'attribute' => 'Parameter',
-                                'label' => '参数',
-                                'value' =>
-                                function($model) {
-                                    return Html::encode($model->Parameter);
-                                },
-                            ],
-                            [
-                                'attribute' => 'Content',
-                                'label' => '详情',
-                                'headerOptions' => ['class' => 'maxwidth'],
-                                'value' =>
-                                function($model) {
-                                    return Html::encode($model->Content);
-                                },
-                            ],
-                            [
-                                'attribute' => 'start_date',
-                                'label' => '开始时间',
-                                'value' => 'AddDate',
-                                'filter' => \yii\jui\DatePicker::widget([
-                                    'model' => $searchModel,
-                                    'attribute' => 'start_date',
-                                    'language' => 'zh-CN',
-                                    'dateFormat' => 'yyyy-MM-dd'
-                                ]),
-                                'format' => 'html',
-                            ],
-                            [
-                                'attribute' => 'end_date',
-                                'label' => '结束时间',
-                                'value' => 'AddDate',
-                                'filter' => \yii\jui\DatePicker::widget([
-                                    'model' => $searchModel,
-                                    'attribute' => 'end_date',
-                                    'language' => 'zh-CN',
-                                    'dateFormat' => 'yyyy-MM-dd',
-                                    'value' => date('Y-m-d'),
-                                ]),
-                                'format' => 'html',
-                            ],
-                        ],
-                    ]);
-                } else {
-                    $searchModel = new TraceLogSearch();
-                    $dataProvider = $searchModel->search($params);
-                    ?>
-                    <script type="text/javascript">
-                        $(document).ready(function() {
+                            $("#tracelogsearch-start_date").val("<?= $params['TraceLogSearch']['start_date'] ?>");
     <?php
-    if (isset($params['TraceLogSearch']['start_date']) && !empty($params['TraceLogSearch']['start_date'])) {
-        ?>
-                                $("#tracelogsearch-start_date").val("<?= $params['TraceLogSearch']['start_date'] ?>");
-        <?php
-    }
-    if (isset($params['TraceLogSearch']['end_date']) && !empty($params['TraceLogSearch']['end_date'])) {
-        ?>
-                                $("#tracelogsearch-end_date").val("<?= $params['TraceLogSearch']['end_date'] ?>");
-        <?php
-    }
+}
+if (isset($params['TraceLogSearch']['end_date']) && !empty($params['TraceLogSearch']['end_date'])) {
     ?>
-                        });
-                    </script>
-                    <?php
-                    echo GridView::widget([
-                        'dataProvider' => $dataProvider,
-                        'filterModel' => $searchModel,
-                        'columns' => [
-                            ['class' => 'yii\grid\SerialColumn'],
-                            [
-                                'attribute' => 'ApplicationName',
-                                'label' => '类型',
-                                'value' =>
-                                function($model) {
-                                    return Html::encode($model->ApplicationName);
-                                },
-                            ],
-                            [
-                                'attribute' => 'Method',
-                                'label' => '函数',
-                                'value' =>
-                                function($model) {
-                                    return Html::encode($model->Method);
-                                },
-                            ],
-                            [
-                                'attribute' => 'Parameter',
-                                'label' => '参数',
-                                'value' =>
-                                function($model) {
-                                    return Html::encode($model->Parameter);
-                                },
-                            ],
-                            [
-                                'attribute' => 'start_date',
-                                'label' => '开始时间',
-                                'value' => 'AddDate',
-                                'filter' => \yii\jui\DatePicker::widget([
-                                    'model' => $searchModel,
-                                    'attribute' => 'start_date',
-                                    'language' => 'zh-CN',
-                                    'dateFormat' => 'yyyy-MM-dd'
-                                ]),
-                                'format' => 'html',
-                            ],
-                            [
-                                'attribute' => 'end_date',
-                                'label' => '结束时间',
-                                'value' => 'AddDate',
-                                'filter' => \yii\jui\DatePicker::widget([
-                                    'model' => $searchModel,
-                                    'attribute' => 'end_date',
-                                    'language' => 'zh-CN',
-                                    'dateFormat' => 'yyyy-MM-dd',
-                                    'value' => date('Y-m-d'),
-                                ]),
-                                'format' => 'html',
-                            ],
-                            [
-                                'class' => 'yii\grid\ActionColumn',
-                                'template' => '{view}',
-                                'buttons' => [
-                                    // 下面代码来自于 yii\grid\ActionColumn 简单修改了下
-                                    'view' => function ($url, $model, $key) {
-                                        $options = [
-                                            'title' => Yii::t('yii', 'View'),
-                                            'aria-label' => Yii::t('yii', 'View'),
-                                            'class' => 'show_model',
-                                        ];
-                                        $url = '#';
-                                        return Html::textarea('text' . $model->Id, Html::encode($model->Content), ['style' => 'display:none;']) . Html::a('<button type="button" class="btn btn-sm btn-info">查看详情</button>', $url, $options);
-                                    }]
-                            ],
+                            $("#tracelogsearch-end_date").val("<?= $params['TraceLogSearch']['end_date'] ?>");
+    <?php
+}
+?>
+                    });
+                </script>
+                <?php
+                echo GridView::widget([
+                    'dataProvider' => $dataProvider,
+                    'filterModel' => $searchModel,
+                    'columns' => [
+                        ['class' => 'yii\grid\SerialColumn'],
+                        [
+                            'attribute' => 'ApplicationName',
+                            'label' => '类型',
+                            'value' =>
+                            function($model) {
+                                return Html::encode($model->ApplicationName);
+                            },
                         ],
-                    ]);
-                }
+                        [
+                            'attribute' => 'Method',
+                            'label' => '函数',
+                            'value' =>
+                            function($model) {
+                                return Html::encode($model->Method);
+                            },
+                        ],
+                        [
+                            'attribute' => 'Parameter',
+                            'label' => '参数',
+                            'value' =>
+                            function($model) {
+                                return Html::encode($model->Parameter);
+                            },
+                        ],
+                        [
+                            'attribute' => 'start_date',
+                            'label' => '开始时间',
+                            'value' => 'AddDate',
+                            'filter' => \yii\jui\DatePicker::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'start_date',
+                                'language' => 'zh-CN',
+                                'dateFormat' => 'yyyy-MM-dd'
+                            ]),
+                            'format' => 'html',
+                        ],
+                        [
+                            'attribute' => 'end_date',
+                            'label' => '结束时间',
+                            'value' => 'AddDate',
+                            'filter' => \yii\jui\DatePicker::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'end_date',
+                                'language' => 'zh-CN',
+                                'dateFormat' => 'yyyy-MM-dd',
+                                'value' => date('Y-m-d'),
+                            ]),
+                            'format' => 'html',
+                        ],
+                        [
+                            'class' => 'yii\grid\ActionColumn',
+                            'template' => '{view}',
+                            'buttons' => [
+                                // 下面代码来自于 yii\grid\ActionColumn 简单修改了下
+                                'view' => function ($url, $model, $key) {
+                                    $options = [
+                                        'title' => Yii::t('yii', 'View'),
+                                        'aria-label' => Yii::t('yii', 'View'),
+                                        'class' => 'show_model',
+                                    ];
+                                    $url = 'javascript:showDetaildiv("text'.$model->Id.'");';
+                                    return Html::textarea('text' . $model->Id, Html::encode($model->Content), ['style' => 'display:none;','id'=>'text' . $model->Id]) . Html::a('<button type="button" class="btn btn-sm btn-info">查看详情</button>', $url, $options);
+                                }]
+                        ],
+                    ],
+                ]);
                 Pjax::end();
                 ?>
             </div>
@@ -259,15 +182,6 @@ $params = \Yii::$app->request->queryParams;
             var thisurl = $(this).attr("href");
             htmlobj = $.ajax({url: thisurl, async: false});
             $("#ajax-content").html(htmlobj.responseText);
-            return false;
-        });
-        $(".show_model").on("click", function() {
-            var showHtml = $(this).prev().val();
-            $("#modalbox .devoops-modal .modal-header-name").html("错误详情");
-            $("#modalbox .devoops-modal").css("width", "90%");
-            $("#modalbox .devoops-modal .devoops-modal-inner").css("word-break", "break-all");
-            $("#modalbox .devoops-modal .devoops-modal-inner").html(showHtml);
-            $("#modalbox").show();
             return false;
         });
     });

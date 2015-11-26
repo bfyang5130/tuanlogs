@@ -18,6 +18,9 @@
         <link href="/devoops/plugins/justified-gallery/justifiedGallery.css" rel="stylesheet">
         <link href="/devoops/css/style_v1.css" rel="stylesheet">
         <link href="/devoops/plugins/chartist/chartist.min.css" rel="stylesheet">
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <!--<script src="http://code.jquery.com/jquery.js"></script>-->
+        <script src="/devoops/plugins/jquery/jquery.min.js"></script>
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
                         <script src="http://getbootstrap.com/docs-assets/js/html5shiv.js"></script>
@@ -58,9 +61,6 @@
             </div>
         </div>
         <!--End Container-->
-        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <!--<script src="http://code.jquery.com/jquery.js"></script>-->
-        <script src="/devoops/plugins/jquery/jquery.min.js"></script>
         <script src="/devoops/plugins/jquery-ui/jquery-ui.min.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="/devoops/plugins/bootstrap/bootstrap.min.js"></script>

@@ -19,7 +19,7 @@ use yii\widgets\Breadcrumbs;
                 'links' => [
                     [
                         'label' => '错误信息',
-                        'url' => ['/ajax/default/index'],
+                        'url' => ['/ajax/trace/index'],
                         'class' => 'ajax-link',
                     ]
                 ]
@@ -201,15 +201,6 @@ $params = \Yii::$app->request->queryParams;
                                 },
                             ],
                             [
-                                'attribute' => 'Content',
-                                'label' => '详情',
-                                'headerOptions' => ['class' => 'maxwidth'],
-                                'value' =>
-                                function($model) {
-                                    return Html::encode($model->Content);
-                                },
-                            ],
-                            [
                                 'attribute' => 'start_date',
                                 'label' => '开始时间',
                                 'value' => 'AddDate',
@@ -234,6 +225,21 @@ $params = \Yii::$app->request->queryParams;
                                 ]),
                                 'format' => 'html',
                             ],
+                            [
+                                'class' => 'yii\grid\ActionColumn',
+                                'template' => '{view}',
+                                'buttons' => [
+                                    // 下面代码来自于 yii\grid\ActionColumn 简单修改了下
+                                    'view' => function ($url, $model, $key) {
+                                        $options = [
+                                            'title' => Yii::t('yii', 'View'),
+                                            'aria-label' => Yii::t('yii', 'View'),
+                                            'class' => 'show_model',
+                                        ];
+                                        $url = '#';
+                                        return Html::textarea('text' . $model->Id, Html::encode($model->Content), ['style' => 'display:none;']) . Html::a('<button type="button" class="btn btn-sm btn-info">查看详情</button>', $url, $options);
+                                    }]
+                            ],
                         ],
                     ]);
                 }
@@ -244,15 +250,24 @@ $params = \Yii::$app->request->queryParams;
     </div>
 </div>
 <script type="text/javascript">
-        var logo = document.getElementById("logo");
-    if(logo===null){
-       window.location.href='/?url=<?= $_SERVER['REQUEST_URI'] ?>';
+    var logo = document.getElementById("logo");
+    if (logo === null) {
+        window.location.href = '/?url=<?= $_SERVER['REQUEST_URI'] ?>';
     }
     $(document).ready(function() {
         $(".ajax-link").on("click", function() {
             var thisurl = $(this).attr("href");
             htmlobj = $.ajax({url: thisurl, async: false});
             $("#ajax-content").html(htmlobj.responseText);
+            return false;
+        });
+        $(".show_model").on("click", function() {
+            var showHtml = $(this).prev().val();
+            $("#modalbox .devoops-modal .modal-header-name").html("错误详情");
+            $("#modalbox .devoops-modal").css("width", "90%");
+            $("#modalbox .devoops-modal .devoops-modal-inner").css("word-break", "break-all");
+            $("#modalbox .devoops-modal .devoops-modal-inner").html(showHtml);
+            $("#modalbox").show();
             return false;
         });
     });

@@ -1,8 +1,19 @@
+<?php
+$ul_get = \Yii::$app->request->get();
+?>
 <header class="navbar">
     <div class="container-fluid expanded-panel">
         <div class="row">
             <div id="logo" class="col-xs-12 col-sm-2">
                 <a href="/">日志系统</a>
+                <?php
+                if (isset($ul_get['url']) && !empty($ul_get['url'])):
+                    $url=  substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], 'url')+4);
+                    ?>
+                    <input type="hidden" id="re_url" name="re_url" value="<?= $url ?>"/>
+                    <?php
+                endif;
+                ?>
             </div>
             <div id="top-panel" class="col-xs-12 col-sm-10">
                 <div class="row">

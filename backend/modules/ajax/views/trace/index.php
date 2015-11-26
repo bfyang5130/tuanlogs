@@ -18,7 +18,7 @@ use yii\widgets\Breadcrumbs;
                 'links' => [
                     [
                         'label' => '导航面板',
-                        'url' => ['/ajax/default/index'],
+                        'url' => ['/ajax/trace/index'],
                         'class' => 'ajax-link',
                     ]
                 ]
@@ -38,7 +38,7 @@ use yii\widgets\Breadcrumbs;
 </div>
 <?php
 #获得日志统计记录
-$dataProvider = AppcationNameService::findApplicationName();
+$dataProvider = AppcationNameService::findApplicationName("logtype=:logtype",[':logtype'=>1]);
 ?>
 <div class="row">
     <div class="col-xs-12">
@@ -99,8 +99,7 @@ $dataProvider = AppcationNameService::findApplicationName();
                                         'aria-label' => Yii::t('yii', 'View'),
                                         'class' => 'ajax-link',
                                     ];
-                                    $midurl=$model->logtype==1?'trace':'error';
-                                    $url = 'ajax/'.$midurl.'/view.html?id='.$model->id;
+                                    $url = $url . "&type=" . $model->logtype;
                                     return Html::a('<button type="button" class="btn btn-sm btn-info">查看</button>', $url, $options);
                                 }]
                         ],

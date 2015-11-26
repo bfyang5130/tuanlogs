@@ -3401,6 +3401,10 @@ $(document).ready(function() {
         setTimeout(MessagesMenuWidth, 250);
     });
     var ajax_url = location.hash.replace(/^#/, '');
+    var re_url = $("#re_url").val();
+    if (re_url) {
+        ajax_url = re_url;
+    }
     if (ajax_url.length < 1) {
         ajax_url = '/ajax/default/index.html';
     }

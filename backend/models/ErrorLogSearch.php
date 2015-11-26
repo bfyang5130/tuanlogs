@@ -2,7 +2,7 @@
 
 namespace backend\models;
 
-use common\models\TraceLog;
+use common\models\ErrorLog;
 use yii\data\ActiveDataProvider;
 use yii\base\Model;
 
@@ -16,7 +16,7 @@ use yii\base\Model;
  *
  * @author Administrator
  */
-class TraceLogSearch extends TraceLog {
+class ErrorLogSearch extends ErrorLog {
 
     public $start_date;
     public $end_date;
@@ -43,7 +43,7 @@ class TraceLogSearch extends TraceLog {
 
     //put your code here
     public function search($params) {
-        $query = TraceLog::find();
+        $query = ErrorLog::find();
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -52,11 +52,11 @@ class TraceLogSearch extends TraceLog {
             return $dataProvider;
         }
         $query->andWhere(['ApplicationId' => $params['id']]);
-        if (isset($params['TraceLogSearch']['start_date'])&&!empty($params['TraceLogSearch']['start_date'])) {
-            $query->andWhere(" AddDate>=:start_date",[':start_date'=>$params['TraceLogSearch']['start_date']]);
+        if (isset($params['ErrorLogSearch']['start_date']) && !empty($params['ErrorLogSearch']['start_date'])) {
+            $query->andWhere(" AddDate>=:start_date", [':start_date' => $params['ErrorLogSearch']['start_date']]);
         }
-        if (isset($params['TraceLogSearch']['end_date'])&&!empty($params['TraceLogSearch']['end_date'])) {
-            $query->andWhere(" AddDate<=:end_date",[':end_date'=>$params['TraceLogSearch']['end_date']]);
+        if (isset($params['ErrorLogSearch']['end_date']) && !empty($params['ErrorLogSearch']['end_date'])) {
+            $query->andWhere(" AddDate<=:end_date", [':end_date' => $params['ErrorLogSearch']['end_date']]);
         }
 
         return $dataProvider;

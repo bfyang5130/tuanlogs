@@ -21,15 +21,23 @@ class AppcationNameService {
      * 
      * @return \yii\data\ActiveDataProvider
      */
-    public static function findApplicationName() {
+    public static function findApplicationName($whereCondition='',$whereArray=[]) {
         $model = new ApplicateName();
         $dataProvider = new ActiveDataProvider([
-            'query' => $model->find(),
+            'query' => $model->find()->where($whereCondition,$whereArray),
             'pagination' => [
                 'pagesize' => 20,
             ]
         ]);
         return $dataProvider;
+    }
+
+    /**
+     * 
+     * @return type
+     */
+    public static function findAll() {
+        return ApplicateName::findAll($condition);
     }
 
 }

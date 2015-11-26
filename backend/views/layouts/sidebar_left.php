@@ -1,12 +1,27 @@
+<?php
+
+use backend\services\AppcationNameService;
+use yii\helpers\Url;
+?>
 <div id="sidebar-left" class="col-xs-2 col-sm-2">
     <ul class="nav main-menu">
         <li>
-            <a href="/ajax/default/index.html" class="ajax-link">
+            <a href="/ajax/default/index.html">
                 <i class="fa fa-dashboard"></i>
                 <span class="hidden-xs">首页</span>
             </a>
         </li>
-        <?php /**
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle">
+                <i class="fa fa-bar-chart-o"></i>
+                <span class="hidden-xs">日志类型</span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="ajax-link" href="<?= Url::toRoute('/ajax/error/index') ?>">错误日志</a></li>
+                <li><a class="ajax-link" href="<?= Url::toRoute('/ajax/trace/index') ?>">跟踪日志</a></li>
+            </ul>
+        </li>
+        <?php /** /?>
           <li>
           <a href="/devoops/ajax/dashboard.html" class="ajax-link">
           <i class="fa fa-dashboard"></i>

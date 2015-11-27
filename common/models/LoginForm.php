@@ -30,13 +30,6 @@ class LoginForm extends Model
             ['password', 'validatePassword'],
         ];
     }
-    public function attributes() {
-        return [
-            'username'=>'管理员帐号',
-            'password'=>'管理员密码',
-            'rememberMe'=>'记住登录',
-        ];
-    }
 
     /**
      * Validates the password.

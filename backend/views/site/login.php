@@ -19,16 +19,25 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="text-center">
                     <h1 class="page-header"><?= Html::encode($this->title) ?></h1>
                 </div>
-                <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+                <?php
+                $form = ActiveForm::begin([
+                            'id' => 'login-form'
+                ]);
+                ?>
 
-                <?= $form->field($model, 'username') ?>
+                <?= $form->field($model, 'username', [ 'labelOptions' => ['label' => '管理员帐号']]) ?>
 
-                <?= $form->field($model, 'password')->passwordInput() ?>
+                <?= $form->field($model, 'password', [ 'labelOptions' => ['label' => '管理员密码']])->passwordInput() ?>
 
-                <?= $form->field($model, 'rememberMe')->checkbox() ?>
+                <div class="checkbox">
+                    <label>
+                        <input name ="LoginForm[remeberMe]"type="checkbox" checked=""> 记住我?
+                        <i class="fa fa-square-o small"></i>
+                    </label>
+                </div>
 
-                <div class="form-group">
-                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                <div class="text-center">
+                    <?= Html::submitButton('确认登录', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
                 </div>
 
                 <?php ActiveForm::end(); ?>

@@ -1,4 +1,5 @@
 <?php
+use yii\helpers\Url;
 $ul_get = \Yii::$app->request->get();
 ?>
 <header class="navbar">
@@ -89,9 +90,9 @@ $ul_get = \Yii::$app->request->get();
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#">
+                                        <a href="<?= Url::toRoute('/site/logout') ?>">
                                             <i class="fa fa-power-off"></i>
-                                            <span>Logout</span>
+                                            <span>退出系统</span>
                                         </a>
                                     </li>
                                 </ul>

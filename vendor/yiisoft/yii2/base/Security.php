@@ -591,7 +591,6 @@ class Security extends Component
         if (!preg_match('/^\$2[axy]\$(\d\d)\$[\.\/0-9A-Za-z]{22}/', $hash, $matches) || $matches[1] < 4 || $matches[1] > 30) {
             throw new InvalidParamException('Hash is invalid.');
         }
-
         switch ($this->passwordHashStrategy) {
             case 'password_hash':
                 if (!function_exists('password_verify')) {

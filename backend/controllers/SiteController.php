@@ -35,7 +35,7 @@ class SiteController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'logout' => ['post'],
+                    'logout' => ['get'],
                 ],
             ],
         ];
@@ -76,6 +76,7 @@ class SiteController extends Controller
 
     public function actionLogout()
     {
+        $this->layout="layout_login";
         Yii::$app->user->logout();
 
         return $this->goHome();

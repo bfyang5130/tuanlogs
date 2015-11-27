@@ -88,11 +88,6 @@ $ul_get = \Yii::$app->request->get();
                                             </a>
                                         </li>
                                     <?php endforeach; ?>
-                                    <li>
-                                        <a href="<?= Url::toRoute('/admin/rbac') ?>">
-                                            <span>所有用户</span>
-                                        </a>
-                                    </li>
                                 </ul>
                             </li>
                             <li class="dropdown">

@@ -20,11 +20,15 @@ $ul_get = \Yii::$app->request->get();
             </div>
             <div id="top-panel" class="col-xs-12 col-sm-10">
                 <div class="row">
+                    
                     <div class="col-xs-8 col-sm-4">
+                        <?/**
                         <div id="search">
                             <input type="text" placeholder="search"/>
                             <i class="fa fa-search"></i>
                         </div>
+                         * * 8/
+                     */?>
                     </div>
                     <div class="col-xs-4 col-sm-8 top-panel-right">
                         <a href="#" class="about">系统介绍</a>

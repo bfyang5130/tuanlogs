@@ -27,11 +27,14 @@ use yii\widgets\Breadcrumbs;
             ?>
         </ol>
         <div id="social" class="pull-right">
-            <a href="#"><i class="fa fa-google-plus"></i></a>
-            <a href="#"><i class="fa fa-facebook"></i></a>
-            <a href="#"><i class="fa fa-twitter"></i></a>
-            <a href="#"><i class="fa fa-linkedin"></i></a>
-            <a href="#"><i class="fa fa-youtube"></i></a>
+            <?php /**
+              <a href="#"><i class="fa fa-google-plus"></i></a>
+              <a href="#"><i class="fa fa-facebook"></i></a>
+              <a href="#"><i class="fa fa-twitter"></i></a>
+              <a href="#"><i class="fa fa-linkedin"></i></a>
+              <a href="#"><i class="fa fa-youtube"></i></a>
+             * 
+             */ ?>
         </div>
     </div>
 </div>
@@ -64,7 +67,7 @@ $params = \Yii::$app->request->queryParams;
             <div class="box-content">
                 <script type="text/javascript">
                     function showDetaildiv(obj) {
-                         var showHtml = $("#"+obj).val();
+                        var showHtml = $("#" + obj).val();
                         $("#modalbox .devoops-modal .modal-header-name").html("错误详情");
                         $("#modalbox .devoops-modal").css("width", "70%");
                         $("#modalbox .devoops-modal .devoops-modal-inner").css("word-break", "break-all");
@@ -160,8 +163,8 @@ if (isset($params['TraceLogSearch']['end_date']) && !empty($params['TraceLogSear
                                         'aria-label' => Yii::t('yii', 'View'),
                                         'class' => 'show_model',
                                     ];
-                                    $url = 'javascript:showDetaildiv("text'.$model->Id.'");';
-                                    return Html::textarea('text' . $model->Id, Html::encode($model->Content), ['style' => 'display:none;','id'=>'text' . $model->Id]) . Html::a('<button type="button" class="btn btn-sm btn-info">查看详情</button>', $url, $options);
+                                    $url = 'javascript:showDetaildiv("text' . $model->Id . '");';
+                                    return Html::textarea('text' . $model->Id, Html::encode($model->Content), ['style' => 'display:none;', 'id' => 'text' . $model->Id]) . Html::a('<button type="button" class="btn btn-sm btn-info">查看详情</button>', $url, $options);
                                 }]
                         ],
                     ],

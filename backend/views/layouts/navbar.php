@@ -57,43 +57,37 @@ $ul_get = \Yii::$app->request->get();
                                     </div>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <?php /**
-                                      <li>
-                                      <a href="#">
-                                      <i class="fa fa-user"></i>
-                                      <span>Profile</span>
-                                      </a>
-                                      </li>
-                                      <li>
-                                      <a href="/devoops/ajax/page_messages.html" class="ajax-link">
-                                      <i class="fa fa-envelope"></i>
-                                      <span>Messages</span>
-                                      </a>
-                                      </li>
-                                      <li>
-                                      <a href="/devoops/ajax/gallery_simple.html" class="ajax-link">
-                                      <i class="fa fa-picture-o"></i>
-                                      <span>Albums</span>
-                                      </a>
-                                      </li>
-                                      <li>
-                                      <a href="/devoops/ajax/calendar.html" class="ajax-link">
-                                      <i class="fa fa-tasks"></i>
-                                      <span>Tasks</span>
-                                      </a>
-                                      </li>
-                                      <li>
-                                      <a href="#">
-                                      <i class="fa fa-cog"></i>
-                                      <span>Settings</span>
-                                      </a>
-                                      </li>
-                                     */ ?>
-                                    <li>
-                                        <a href="<?= Url::toRoute('/admin/rbac/permission') ?>">
-                                            <span>所有用户</span>
-                                        </a>
-                                    </li>
+                                    <?php
+                                    $menuItems = [
+                                        [
+                                            'label' => '权限展示',
+                                            'url' => ['/admin/rbac/assignment/index'],
+                                        ],
+                                        [
+                                            'label' => '角色管理',
+                                            'url' => ['/admin/rbac/role/index'],
+                                        ],
+                                        [
+                                            'label' => '权限管理',
+                                            'url' => ['/admin/rbac/permission/index'],
+                                        ],
+                                        [
+                                            'label' => '路由管理',
+                                            'url' => ['/admin/rbac/route/index'],
+                                        ],
+                                        [
+                                            'label' => '规则管理',
+                                            'url' => ['/admin/rbac/rule/index'],
+                                        ]
+                                    ];
+                                    foreach ($menuItems as $oneItem):
+                                        ?>
+                                        <li>
+                                            <a href="<?= Url::toRoute($oneItem['url']) ?>">
+                                                <span><?= $oneItem['label'] ?></span>
+                                            </a>
+                                        </li>
+                                    <?php endforeach; ?>
                                     <li>
                                         <a href="<?= Url::toRoute('/admin/rbac') ?>">
                                             <span>所有用户</span>

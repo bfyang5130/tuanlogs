@@ -15,6 +15,7 @@ return [
             'modules' => [
                 'rbac' => [
                     'class' => 'yii2mod\rbac\Module',
+                    'layout'=>'rbac',
                     //Some controller property maybe need to change. 
                     'controllerMap' => [
                         'assignment' => [

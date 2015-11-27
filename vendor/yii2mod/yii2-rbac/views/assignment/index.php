@@ -25,10 +25,18 @@ $this->render('/layouts/_sidebar');
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{view}'
+                'template' => '{view}',
             ],
         ],
     ]);
     ?>
     <?php Pjax::end(); ?>
 </div>
+<script type="text/javascript">
+    $(".ajax-link").on("click", function() {
+        var thisurl = $(this).attr("href");
+        htmlobj = $.ajax({url: thisurl, async: false});
+        $("#ajax-content").html(htmlobj.responseText);
+        return false;
+    });
+</script>

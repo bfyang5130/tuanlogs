@@ -27,7 +27,6 @@ $ul_get = \Yii::$app->request->get();
                             <input type="text" placeholder="search"/>
                             <i class="fa fa-search"></i>
                         </div>
-                         * * 8/
                      */?>
                     </div>
                     <div class="col-xs-4 col-sm-8 top-panel-right">

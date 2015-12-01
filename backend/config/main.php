@@ -15,7 +15,7 @@ return [
             'modules' => [
                 'rbac' => [
                     'class' => 'yii2mod\rbac\Module',
-                    'layout'=>'rbac',
+                    'layout' => 'rbac',
                     //Some controller property maybe need to change. 
                     'controllerMap' => [
                         'assignment' => [
@@ -55,6 +55,16 @@ return [
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
+        ],
+        'view' => [
+            'theme' => [
+                'pathMap' => [
+                    '@app/views' => '@app/themes/adminlte',
+                    '@app/modules' => '@app/themes/adminlte/modules',
+                    '@app/widgets' => '@app/themes/adminlte/widgets'
+                ],
+                'baseUrl' => '@web/adminlte',
+            ],
         ],
     ],
     'params' => $params,

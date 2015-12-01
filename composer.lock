@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "59721782222870721d490f3cc2bea8c1",
-    "content-hash": "cee42e35f3ddf029130b3eec00093bda",
+    "hash": "ee6eb6ded86a93244c201ea27e3f9e93",
+    "content-hash": "80baee915910b9152c8fa7c1abb799f2",
     "packages": [
         {
             "name": "2amigos/yii2-date-picker-widget",
@@ -810,6 +810,39 @@
                 "html"
             ],
             "time": "2013-11-30 08:25:19"
+        },
+        {
+            "name": "kucha/ueditor",
+            "version": "1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/BigKuCha/yii2-ueditor-widget.git",
+                "reference": "b41439ee0c69efc800a53087c20d8bfcea0f9507"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/BigKuCha/yii2-ueditor-widget/zipball/b41439ee0c69efc800a53087c20d8bfcea0f9507",
+                "reference": "b41439ee0c69efc800a53087c20d8bfcea0f9507",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "kucha\\ueditor\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "null"
+            ],
+            "authors": [
+                {
+                    "name": "BigKuCha",
+                    "email": "nevermore1989@vip.qq.com"
+                }
+            ],
+            "description": "desc",
+            "time": "2015-02-06 02:01:30"
         },
         {
             "name": "swiftmailer/swiftmailer",

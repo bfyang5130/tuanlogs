@@ -21,7 +21,17 @@ use yii\helpers\Url;
                 <li><a class="ajax-link" href="<?= Url::toRoute('/ajax/trace/index') ?>">跟踪日志</a></li>
             </ul>
         </li>
-        <?php /** /?>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle">
+                <i class="fa fa-bar-chart-o"></i>
+                <span class="hidden-xs">自定义日志</span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="ajax-link" href="<?= Url::toRoute('/ajax/logtype/index') ?>">日志类型</a></li>
+                <li><a class="ajax-link" href="<?= Url::toRoute('/ajax/customlog/index') ?>">日志记录</a></li>
+            </ul>
+        </li>
+        <?php /** */?>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle">
           <i class="fa fa-list"></i>
@@ -42,7 +52,19 @@ use yii\helpers\Url;
           <li><a href="/devoops/ajax/page_500.html">Error 500</a></li>
           </ul>
           </li>
-        
+          <li class="dropdown">
+          <a href="#" class="dropdown-toggle">
+          <i class="fa fa-pencil-square-o"></i>
+          <span class="hidden-xs">Forms</span>
+          </a>
+          <ul class="dropdown-menu">
+          <li><a class="ajax-link" href="/devoops/ajax/forms_elements.html">Elements</a></li>
+          <li><a class="ajax-link" href="/devoops/ajax/forms_layouts.html">Layouts</a></li>
+          <li><a class="ajax-link" href="/devoops/ajax/forms_file_uploader.html">File Uploader</a></li>
+          <li><a class="ajax-link" href="/devoops/ajax/ui_icons.html">Icons</a></li>
+          </ul>
+          </li>
+        <?php /**
           <li>
           <a href="/devoops/ajax/dashboard.html" class="ajax-link">
           <i class="fa fa-dashboard"></i>

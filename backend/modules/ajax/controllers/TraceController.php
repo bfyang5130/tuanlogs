@@ -8,10 +8,10 @@ class TraceController extends Controller
 {
     public function actionIndex()
     {
-        return $this->renderAjax('index');
+        return $this->render('index');
     }
     public function actionView()
     {
-        return $this->renderAjax('default_view');
+        return $this->render('default_view');
     }
 }

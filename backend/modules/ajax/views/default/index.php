@@ -100,7 +100,7 @@ $dataProvider = AppcationNameService::findApplicationName();
                                         'class' => 'ajax-link',
                                     ];
                                     $midurl=$model->logtype==1?'trace':'error';
-                                    $url = 'ajax/'.$midurl.'/view.html?id='.$model->id;
+                                    $url = 'ajax/'.$midurl.'/view.html?' . "id=".$model->ApplicationName."&type=" . $model->logtype;
                                     return Html::a('<button type="button" class="btn btn-sm btn-info">查看</button>', $url, $options);
                                 }]
                         ],

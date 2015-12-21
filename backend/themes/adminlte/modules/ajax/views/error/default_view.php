@@ -60,7 +60,7 @@ $params = \Yii::$app->request->queryParams;
                                     'label' => '类型',
                                     'value' =>
                                     function($model) {
-                                        return Html::encode($model->ApplicationName);
+                                        return Html::encode($model->ApplicationId);
                                     },
                                 ],
                                 [

@@ -108,7 +108,7 @@ if (isset($params['TraceLogSearch']['end_date']) && !empty($params['TraceLogSear
                             'label' => '类型',
                             'value' =>
                             function($model) {
-                                return Html::encode($model->ApplicationName);
+                                return Html::encode($model->ApplicationId);
                             },
                         ],
                         [

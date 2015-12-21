@@ -79,7 +79,7 @@ $this->title = "日志系统";
                                                 'aria-label' => Yii::t('yii', 'View'),
                                                 'class' => 'ajax-link',
                                             ];
-                                            $url = $url . "&type=" . $model->logtype;
+                                            $url = '/ajax/trace/view.html?id='.$model->appname."&type=" . $model->logtype;
                                             return Html::a('<button type="button" class="btn btn-sm btn-info">查看</button>', $url, $options);
                                         }]
                                 ],

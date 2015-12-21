@@ -52,13 +52,13 @@ class TraceLogSearch extends TraceLog {
             return $dataProvider;
         }
         $query->andWhere(['ApplicationId' => $params['id']]);
-        if (isset($params['TraceLogSearch']['start_date'])&&!empty($params['TraceLogSearch']['start_date'])) {
-            $query->andWhere(" AddDate>=:start_date",[':start_date'=>$params['TraceLogSearch']['start_date']]);
+        if (isset($params['TraceLogSearch']['start_date']) && !empty($params['TraceLogSearch']['start_date'])) {
+            $query->andWhere(" AddDate>=:start_date", [':start_date' => $params['TraceLogSearch']['start_date']]);
         }
-        if (isset($params['TraceLogSearch']['end_date'])&&!empty($params['TraceLogSearch']['end_date'])) {
-            $query->andWhere(" AddDate<=:end_date",[':end_date'=>$params['TraceLogSearch']['end_date']]);
+        if (isset($params['TraceLogSearch']['end_date']) && !empty($params['TraceLogSearch']['end_date'])) {
+            $query->andWhere(" AddDate<=:end_date", [':end_date' => $params['TraceLogSearch']['end_date']]);
         }
-
+        $query->orderBy('AddDate desc ');
         return $dataProvider;
     }
 

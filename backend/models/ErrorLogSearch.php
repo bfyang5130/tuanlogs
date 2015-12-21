@@ -58,7 +58,7 @@ class ErrorLogSearch extends ErrorLog {
         if (isset($params['ErrorLogSearch']['end_date']) && !empty($params['ErrorLogSearch']['end_date'])) {
             $query->andWhere(" AddDate<=:end_date", [':end_date' => $params['ErrorLogSearch']['end_date']]);
         }
-
+        $query->orderBy('AddDate desc ');
         return $dataProvider;
     }
 

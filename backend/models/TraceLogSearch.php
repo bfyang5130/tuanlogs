@@ -58,6 +58,12 @@ class TraceLogSearch extends TraceLog {
         if (isset($params['TraceLogSearch']['end_date']) && !empty($params['TraceLogSearch']['end_date'])) {
             $query->andWhere(" AddDate<=:end_date", [':end_date' => $params['TraceLogSearch']['end_date']]);
         }
+        if (isset($params['ErrorLogSearch']['Parameter']) && !empty($params['ErrorLogSearch']['Parameter'])) {
+            $query->andWhere(['like', 'Parameter', $params['ErrorLogSearch']['Parameter']]);
+        }
+        if (isset($params['ErrorLogSearch']['Method']) && !empty($params['ErrorLogSearch']['Method'])) {
+            $query->andWhere(['like', 'Method', $params['ErrorLogSearch']['Method']]);
+        }
         $query->orderBy('AddDate desc ');
         return $dataProvider;
     }

@@ -64,18 +64,18 @@ $params = \Yii::$app->request->queryParams;
                                     },
                                 ],
                                 [
-                                    'attribute' => 'Method',
                                     'label' => '函数',
-                                    'value' =>
-                                    function($model) {
+                                    'filter' => Html::activeTextInput($searchModel, 'Method', ['class' => 'form-control']),
+                                    'format' => 'raw',
+                                    'value' => function($model) {
                                         return Html::encode($model->Method);
                                     },
                                 ],
                                 [
-                                    'attribute' => 'Parameter',
                                     'label' => '参数',
-                                    'value' =>
-                                    function($model) {
+                                    'filter' => Html::activeTextInput($searchModel, 'Parameter', ['class' => 'form-control']),
+                                    'format' => 'raw',
+                                    'value' => function($model) {
                                         return Html::encode($model->Parameter);
                                     },
                                 ],
@@ -133,16 +133,26 @@ $params = \Yii::$app->request->queryParams;
 <script type="text/javascript">
     $(document).ready(function() {
 <?php
-if (isset($params['ErrorLogSearch']['start_date']) && !empty($params['ErrorLogSearch']['start_date'])) {
+if (isset($params['ErrorLogSearch']['Parameter']) && !empty($params['ErrorLogSearch']['Parameter'])):
+    ?>
+            $("#errorlogsearch-parameter").val("<?= $params['ErrorLogSearch']['Parameter'] ?>");
+    <?php
+endif;
+if (isset($params['ErrorLogSearch']['Method']) && !empty($params['ErrorLogSearch']['Method'])):
+    ?>
+            $("#errorlogsearch-method").val("<?= $params['ErrorLogSearch']['Method'] ?>");
+    <?php
+endif;
+if (isset($params['ErrorLogSearch']['start_date']) && !empty($params['ErrorLogSearch']['start_date'])):
     ?>
             $("#errorlogsearch-start_date").val("<?= $params['ErrorLogSearch']['start_date'] ?>");
     <?php
-}
-if (isset($params['ErrorLogSearch']['end_date']) && !empty($params['ErrorLogSearch']['end_date'])) {
+endif;
+if (isset($params['ErrorLogSearch']['end_date']) && !empty($params['ErrorLogSearch']['end_date'])):
     ?>
             $("#errorlogsearch-end_date").val("<?= $params['ErrorLogSearch']['end_date'] ?>");
     <?php
-}
+endif;
 ?>
     });
 </script>

@@ -65,18 +65,18 @@ $params = \Yii::$app->request->queryParams;
                                     },
                                 ],
                                 [
-                                    'attribute' => 'Method',
                                     'label' => '函数',
-                                    'value' =>
-                                    function($model) {
+                                    'filter' => Html::activeTextInput($searchModel, 'Method', ['class' => 'form-control']),
+                                    'format' => 'raw',
+                                    'value' => function($model) {
                                         return Html::encode($model->Method);
                                     },
                                 ],
                                 [
-                                    'attribute' => 'Parameter',
                                     'label' => '参数',
-                                    'value' =>
-                                    function($model) {
+                                    'filter' => Html::activeTextInput($searchModel, 'Parameter', ['class' => 'form-control']),
+                                    'format' => 'raw',
+                                    'value' => function($model) {
                                         return Html::encode($model->Parameter);
                                     },
                                 ],
@@ -135,6 +135,16 @@ $params = \Yii::$app->request->queryParams;
 
 
 <?php
+if (isset($params['TraceLogSearch']['Parameter']) && !empty($params['TraceLogSearch']['Parameter'])):
+    ?>
+            $("#tracelogsearch-parameter").val("<?= $params['TraceLogSearch']['Parameter'] ?>");
+    <?php
+endif;
+if (isset($params['TraceLogSearch']['Method']) && !empty($params['TraceLogSearch']['Method'])):
+    ?>
+            $("#tracelogsearch-method").val("<?= $params['TraceLogSearch']['Method'] ?>");
+    <?php
+endif;
 if (isset($params['TraceLogSearch']['start_date']) && !empty($params['TraceLogSearch']['start_date'])) {
     ?>
             $("#tracelogsearch-start_date").val("<?= $params['TraceLogSearch']['start_date'] ?>");

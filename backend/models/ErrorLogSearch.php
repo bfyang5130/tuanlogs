@@ -48,7 +48,9 @@ class ErrorLogSearch extends ErrorLog {
         if (!$this->validate()) {
             return $dataProvider;
         }
-        $query->andWhere(['ApplicationId' => $params['id']]);
+        if (isset($params['id'])) {
+            $query->andWhere(['ApplicationId' => $params['id']]);
+        }
         if (isset($params['ErrorLogSearch']['start_date']) && !empty($params['ErrorLogSearch']['start_date'])) {
             $query->andWhere(" AddDate>=:start_date", [':start_date' => $params['ErrorLogSearch']['start_date']]);
         }
@@ -56,16 +58,16 @@ class ErrorLogSearch extends ErrorLog {
             $query->andWhere(" AddDate<=:end_date", [':end_date' => $params['ErrorLogSearch']['end_date']]);
         }
         if (isset($params['ErrorLogSearch']['Parameter']) && !empty($params['ErrorLogSearch']['Parameter'])) {
-            $query->andWhere(['like','Parameter',$params['ErrorLogSearch']['Parameter']]);
+            $query->andWhere(['like', 'Parameter', $params['ErrorLogSearch']['Parameter']]);
         }
         if (isset($params['ErrorLogSearch']['Method']) && !empty($params['ErrorLogSearch']['Method'])) {
-            $query->andWhere(['like','Method',$params['ErrorLogSearch']['Method']]);
+            $query->andWhere(['like', 'Method', $params['ErrorLogSearch']['Method']]);
         }
         $query->orderBy('AddDate desc ');
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-        
+
         return $dataProvider;
     }
 

@@ -51,18 +51,20 @@ class TraceLogSearch extends TraceLog {
         if (!$this->validate()) {
             return $dataProvider;
         }
-        $query->andWhere(['ApplicationId' => $params['id']]);
+        if (isset($params['id'])) {
+            $query->andWhere(['ApplicationId' => $params['id']]);
+        }
         if (isset($params['TraceLogSearch']['start_date']) && !empty($params['TraceLogSearch']['start_date'])) {
             $query->andWhere(" AddDate>=:start_date", [':start_date' => $params['TraceLogSearch']['start_date']]);
         }
         if (isset($params['TraceLogSearch']['end_date']) && !empty($params['TraceLogSearch']['end_date'])) {
             $query->andWhere(" AddDate<=:end_date", [':end_date' => $params['TraceLogSearch']['end_date']]);
         }
-        if (isset($params['ErrorLogSearch']['Parameter']) && !empty($params['ErrorLogSearch']['Parameter'])) {
-            $query->andWhere(['like', 'Parameter', $params['ErrorLogSearch']['Parameter']]);
+        if (isset($params['TraceLogSearch']['Parameter']) && !empty($params['TraceLogSearch']['Parameter'])) {
+            $query->andWhere(['like', 'Parameter', $params['TraceLogSearch']['Parameter']]);
         }
-        if (isset($params['ErrorLogSearch']['Method']) && !empty($params['ErrorLogSearch']['Method'])) {
-            $query->andWhere(['like', 'Method', $params['ErrorLogSearch']['Method']]);
+        if (isset($params['TraceLogSearch']['Method']) && !empty($params['TraceLogSearch']['Method'])) {
+            $query->andWhere(['like', 'Method', $params['TraceLogSearch']['Method']]);
         }
         $query->orderBy('AddDate desc ');
         return $dataProvider;

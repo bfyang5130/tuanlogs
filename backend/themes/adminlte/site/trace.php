@@ -42,18 +42,19 @@ $this->title = "日志系统";
                 <div class="box">
                     <div class="box-header">
                         <h3 class="box-title">所有日志记录</h3>
-                        <p><?php $pri = \Yii::$app->controller->action->id; ?>
+                        <p><?php $pri=\Yii::$app->controller->action->id; ?>
                             <br/>
-                            <a href="<?= Url::toRoute("/site/index") ?>" class="btn btn-sm btn-<?= $pri != 'trace' ? 'primary' : 'default'; ?>">错误日志</a>
-                            <a href="<?= Url::toRoute("/site/trace") ?>" class="btn btn-sm btn-<?= $pri == 'trace' ? 'primary' : 'default'; ?>">跟踪日志</a>
+                            <a href="<?= Url::toRoute("/site/index") ?>" class="btn btn-sm btn-<?= $pri!='trace'?'primary':'default'; ?>">错误日志</a>
+                            <a href="<?= Url::toRoute("/site/trace") ?>" class="btn btn-sm btn-<?= $pri=='trace'?'primary':'default'; ?>">跟踪日志</a>
                         </p>
                     </div><!-- /.box-header -->
                     <div class="box-body">
                         <?php
                         Pjax::begin(['id' => 'countries']);
-                        $searchModel = new ErrorLogSearch();
+                        $searchModel = new TraceLogSearch();
                         $dataProvider = $searchModel->search($params);
                         ?>
+
                         <?php
                         echo GridView::widget([
                             'dataProvider' => $dataProvider,
@@ -126,7 +127,6 @@ $this->title = "日志系统";
                                 ],
                             ],
                         ]);
-
                         Pjax::end();
                         ?>
                     </div><!-- /.box -->
@@ -137,27 +137,29 @@ $this->title = "日志系统";
 </div>
 <script type="text/javascript">
     $(document).ready(function() {
+
+
 <?php
-if (isset($params['ErrorLogSearch']['Parameter']) && !empty($params['ErrorLogSearch']['Parameter'])):
+if (isset($params['TraceLogSearch']['Parameter']) && !empty($params['TraceLogSearch']['Parameter'])):
     ?>
-            $("#errorlogsearch-parameter").val("<?= $params['ErrorLogSearch']['Parameter'] ?>");
+            $("#tracelogsearch-parameter").val("<?= $params['TraceLogSearch']['Parameter'] ?>");
     <?php
 endif;
-if (isset($params['ErrorLogSearch']['Method']) && !empty($params['ErrorLogSearch']['Method'])):
+if (isset($params['TraceLogSearch']['Method']) && !empty($params['TraceLogSearch']['Method'])):
     ?>
-            $("#errorlogsearch-method").val("<?= $params['ErrorLogSearch']['Method'] ?>");
+            $("#tracelogsearch-method").val("<?= $params['TraceLogSearch']['Method'] ?>");
     <?php
 endif;
-if (isset($params['ErrorLogSearch']['start_date']) && !empty($params['ErrorLogSearch']['start_date'])):
+if (isset($params['TraceLogSearch']['start_date']) && !empty($params['TraceLogSearch']['start_date'])) {
     ?>
-            $("#errorlogsearch-start_date").val("<?= $params['ErrorLogSearch']['start_date'] ?>");
+            $("#tracelogsearch-start_date").val("<?= $params['TraceLogSearch']['start_date'] ?>");
     <?php
-endif;
-if (isset($params['ErrorLogSearch']['end_date']) && !empty($params['ErrorLogSearch']['end_date'])):
+}
+if (isset($params['TraceLogSearch']['end_date']) && !empty($params['TraceLogSearch']['end_date'])) {
     ?>
-            $("#errorlogsearch-end_date").val("<?= $params['ErrorLogSearch']['end_date'] ?>");
+            $("#tracelogsearch-end_date").val("<?= $params['TraceLogSearch']['end_date'] ?>");
     <?php
-endif;
+}
 ?>
     });
 </script>

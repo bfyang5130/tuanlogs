@@ -26,7 +26,7 @@ class SiteController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index', 'trace'],
+                        'actions' => ['logout', 'index', 'trace', 'sql', 'errorgraph', 'getdata','doing'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -35,7 +35,7 @@ class SiteController extends Controller {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'logout' => ['get'],
+                    'logout' => ['post'],
                 ],
             ],
         ];
@@ -51,6 +51,24 @@ class SiteController extends Controller {
             ],
         ];
     }
+    /**
+     * 内容建设中
+     * @return type
+     */
+    public function actionDoing(){
+        return $this->render("doing");
+    }
+
+    public function actionGetdata() {
+        
+    }
+
+    /**
+     * 错误的图标显示
+     */
+    public function actionErrorgraph() {
+        return $this->render('errorgraph');
+    }
 
     public function actionIndex() {
         return $this->render('index');
@@ -60,11 +78,17 @@ class SiteController extends Controller {
         return $this->render('trace');
     }
 
+    /**
+     * 数据库信息
+     */
+    public function actionSql() {
+        return $this->render('sql');
+    }
+
     public function actionLogin() {
         if (!\Yii::$app->user->isGuest) {
             return $this->goHome();
         }
-        $this->layout = "layout_login";
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
@@ -76,7 +100,6 @@ class SiteController extends Controller {
     }
 
     public function actionLogout() {
-        $this->layout = "layout_login";
         Yii::$app->user->logout();
 
         return $this->goHome();

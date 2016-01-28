@@ -21,7 +21,8 @@
         "yii2mod/yii2-rbac": "*",
         "2amigos/yii2-date-picker-widget": "~1.0",
         "2amigos/yii2-file-upload-widget": "~1.0",
-        "kucha/ueditor": "*"
+        "kucha/ueditor": "*",
+        "nirvana-msu/yii2-showloading": "1.0.*@dev"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

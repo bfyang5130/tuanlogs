@@ -6,6 +6,7 @@ $params = array_merge(
 
 return [
     'id' => 'app-backend',
+    'language'=>'zh-CN',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
@@ -59,11 +60,11 @@ return [
         'view' => [
             'theme' => [
                 'pathMap' => [
-                    '@app/views' => '@app/themes/adminlte',
-                    '@app/modules' => '@app/themes/adminlte/modules',
-                    '@app/widgets' => '@app/themes/adminlte/widgets'
+                    '@app/views' => '@app/themes/base',
+                    '@app/modules' => '@app/themes/base/modules',
+                    '@app/widgets' => '@app/themes/base/widgets'
                 ],
-                'baseUrl' => '@web/adminlte',
+                'baseUrl' => '@web/base',
             ],
         ],
     ],

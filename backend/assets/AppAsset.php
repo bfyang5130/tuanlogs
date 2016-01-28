@@ -18,10 +18,9 @@ use yii\web\View;
 class AppAsset extends AssetBundle {
 
     public $basePath = '@webroot';
-    public $baseUrl = '@web/adminlte';
+    public $baseUrl = '@web/base';
     public $css = [
-        'css/AdminLTE.min.css',
-        'css/skins/skin-blue.min.css',
+        'css/site.css',
     ];
     public $js = [
         'js/app.js',

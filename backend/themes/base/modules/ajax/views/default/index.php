@@ -5,9 +5,6 @@ use yii\grid\GridView;
 use yii\widgets\Pjax;
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
-
-
-$params = \Yii::$app->request->queryParams;
 ?>
 <div class="row">
     <div id="breadcrumb" class="col-xs-12">

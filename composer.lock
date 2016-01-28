@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ee6eb6ded86a93244c201ea27e3f9e93",
-    "content-hash": "80baee915910b9152c8fa7c1abb799f2",
+    "hash": "2ad1f79b8af94e6a3b0bcb7439b1c3d4",
+    "content-hash": "a22a25cbe1c06b8064bd9e48747313f9",
     "packages": [
         {
             "name": "2amigos/yii2-date-picker-widget",
@@ -845,6 +845,59 @@
             "time": "2015-02-06 02:01:30"
         },
         {
+            "name": "nirvana-msu/yii2-showloading",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nirvana-msu/yii2-showloading.git",
+                "reference": "23a3b97ec6323b88fbfbf881270cee01b2534e25"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nirvana-msu/yii2-showloading/zipball/23a3b97ec6323b88fbfbf881270cee01b2534e25",
+                "reference": "23a3b97ec6323b88fbfbf881270cee01b2534e25",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "*"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "nirvana\\showloading\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alexander Stepanov",
+                    "email": "student_vmk@mail.ru"
+                },
+                {
+                    "name": "Jim Keller",
+                    "homepage": "http://www.contextllc.com"
+                }
+            ],
+            "description": "Yii2 extension for showLoading jQuery plugin",
+            "keywords": [
+                "ajax",
+                "jquery",
+                "plugin",
+                "showLoading",
+                "widget",
+                "yii2"
+            ],
+            "time": "2015-01-11 18:55:14"
+        },
+        {
             "name": "swiftmailer/swiftmailer",
             "version": "v5.4.1",
             "source": {
@@ -1578,7 +1631,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "nirvana-msu/yii2-showloading": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

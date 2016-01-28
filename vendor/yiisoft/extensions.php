@@ -111,4 +111,13 @@ return array (
       '@dosamigos/fileupload' => $vendorDir . '/2amigos/yii2-file-upload-widget/src',
     ),
   ),
+  'nirvana-msu/yii2-showloading' => 
+  array (
+    'name' => 'nirvana-msu/yii2-showloading',
+    'version' => '9999999-dev',
+    'alias' => 
+    array (
+      '@nirvana/showloading' => $vendorDir . '/nirvana-msu/yii2-showloading',
+    ),
+  ),
 );

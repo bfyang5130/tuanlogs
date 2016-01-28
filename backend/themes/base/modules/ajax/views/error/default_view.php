@@ -130,3 +130,29 @@ $params = \Yii::$app->request->queryParams;
         </div>
     </section>
 </div>
+<script type="text/javascript">
+    $(document).ready(function() {
+<?php
+if (isset($params['ErrorLogSearch']['Parameter']) && !empty($params['ErrorLogSearch']['Parameter'])):
+    ?>
+            $("#errorlogsearch-parameter").val("<?= $params['ErrorLogSearch']['Parameter'] ?>");
+    <?php
+endif;
+if (isset($params['ErrorLogSearch']['Method']) && !empty($params['ErrorLogSearch']['Method'])):
+    ?>
+            $("#errorlogsearch-method").val("<?= $params['ErrorLogSearch']['Method'] ?>");
+    <?php
+endif;
+if (isset($params['ErrorLogSearch']['start_date']) && !empty($params['ErrorLogSearch']['start_date'])):
+    ?>
+            $("#errorlogsearch-start_date").val("<?= $params['ErrorLogSearch']['start_date'] ?>");
+    <?php
+endif;
+if (isset($params['ErrorLogSearch']['end_date']) && !empty($params['ErrorLogSearch']['end_date'])):
+    ?>
+            $("#errorlogsearch-end_date").val("<?= $params['ErrorLogSearch']['end_date'] ?>");
+    <?php
+endif;
+?>
+    });
+</script>

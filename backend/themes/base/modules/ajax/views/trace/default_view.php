@@ -15,7 +15,7 @@ $params = \Yii::$app->request->queryParams;
     <section class="content-header">
         <h1>
             <?php
-            $typename = \common\models\ApplicateName::find("id=:id", [':id' => $p_get['id']])->one();
+            $typename = \common\models\ApplicateName::find("appname=:id", [':id' => $p_get['id']])->one();
             ?>
             <?= $typename->newname ?>
         </h1>
@@ -25,8 +25,8 @@ $params = \Yii::$app->request->queryParams;
             'itemTemplate' => "<li>{link}</li>\n", // template for all links
             'links' => [
                 [
-                    'label' => '错误信息',
-                    'url' => ['/ajax/error/index']
+                    'label' => '跟踪日志',
+                    'url' => ['/ajax/trace/index']
                 ],
                 [
                     'label' => $typename->newname
@@ -41,14 +41,15 @@ $params = \Yii::$app->request->queryParams;
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">数据列表</h3>
+                        <h3 class="box-title">Hover Data Table</h3>
                     </div><!-- /.box-header -->
                     <div class="box-body">
                         <?php
                         Pjax::begin(['id' => 'countries']);
-                        $searchModel = new ErrorLogSearch();
+                        $searchModel = new TraceLogSearch();
                         $dataProvider = $searchModel->search($params);
                         ?>
+
                         <?php
                         echo GridView::widget([
                             'dataProvider' => $dataProvider,
@@ -121,7 +122,6 @@ $params = \Yii::$app->request->queryParams;
                                 ],
                             ],
                         ]);
-
                         Pjax::end();
                         ?>
                     </div><!-- /.box -->
@@ -130,3 +130,31 @@ $params = \Yii::$app->request->queryParams;
         </div>
     </section>
 </div>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+
+<?php
+if (isset($params['TraceLogSearch']['Parameter']) && !empty($params['TraceLogSearch']['Parameter'])):
+    ?>
+            $("#tracelogsearch-parameter").val("<?= $params['TraceLogSearch']['Parameter'] ?>");
+    <?php
+endif;
+if (isset($params['TraceLogSearch']['Method']) && !empty($params['TraceLogSearch']['Method'])):
+    ?>
+            $("#tracelogsearch-method").val("<?= $params['TraceLogSearch']['Method'] ?>");
+    <?php
+endif;
+if (isset($params['TraceLogSearch']['start_date']) && !empty($params['TraceLogSearch']['start_date'])) {
+    ?>
+            $("#tracelogsearch-start_date").val("<?= $params['TraceLogSearch']['start_date'] ?>");
+    <?php
+}
+if (isset($params['TraceLogSearch']['end_date']) && !empty($params['TraceLogSearch']['end_date'])) {
+    ?>
+            $("#tracelogsearch-end_date").val("<?= $params['TraceLogSearch']['end_date'] ?>");
+    <?php
+}
+?>
+    });
+</script>

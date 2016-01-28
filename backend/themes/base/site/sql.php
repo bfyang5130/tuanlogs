@@ -59,6 +59,15 @@ $dataProvider = $searchModel->search($params);
                                 return Html::encode($model->sqlusedtime);
                             },
                         ],
+                                    [
+                            'attribute' => 'databasetype',
+                            'label' => '数据库',
+                                        'headerOptions' => ['style' => 'width:120px;'],
+                            'value' =>
+                            function($model) {
+                                return ($model->databasetype)?Html::encode($model->databasetype):'无记录';
+                            },
+                        ],
                         [
                             'attribute' => 'start_date',
                             'label' => '开始时间',

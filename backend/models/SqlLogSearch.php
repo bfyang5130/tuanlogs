@@ -68,7 +68,9 @@ class SqlLogSearch extends SqlTrace {
         if (isset($params['SqlLogSearch']['sqltext']) && !empty($params['SqlLogSearch']['sqltext'])) {
             $query->andWhere(['like', 'sqltext', $params['SqlLogSearch']['sqltext']]);
         }
-        $query->orderBy('executedate desc ');
+        if (!isset($params['sort'])) {
+            $query->orderBy('executedate desc ');
+        }
         return $dataProvider;
     }
 

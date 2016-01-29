@@ -2,8 +2,10 @@
 
 namespace backend\controllers;
 
+use backend\services\ErrorLogService;
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use common\models\LoginForm;
 use yii\filters\VerbFilter;
@@ -60,14 +62,21 @@ class SiteController extends Controller {
     }
 
     public function actionGetdata() {
-        
+
     }
 
     /**
      * 错误的图标显示
      */
     public function actionErrorgraph() {
-        return $this->render('errorgraph');
+        $error_count_list = ErrorLogService::countErrorByApplicationId() ;
+        $appliaction_list = array() ;
+        $error_num_list = array();
+        foreach($error_count_list as $value){
+            $appliaction_list[] = $value['ApplicationId'] ;
+            $error_num_list[] = intval($value['total']) ;
+        }
+        return $this->render('errorgraph',['appliaction_list'=>$appliaction_list,"error_num_list"=>$error_num_list]);
     }
 
     public function actionIndex() {
@@ -94,7 +103,7 @@ class SiteController extends Controller {
             return $this->goBack();
         } else {
             return $this->render('login', [
-                        'model' => $model,
+                'model' => $model,
             ]);
         }
     }

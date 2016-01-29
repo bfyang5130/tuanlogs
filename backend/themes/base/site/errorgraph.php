@@ -4,6 +4,7 @@
 use yii\widgets\Breadcrumbs;
 use yii\helpers\Url;
 use nirvana\showloading\ShowLoadingAsset;
+use miloschuman\highcharts\Highcharts ;
 
 ShowLoadingAsset::register($this);
 
@@ -34,23 +35,64 @@ $params = \Yii::$app->request->queryParams;
                         <a href="<?= Url::toRoute('/site/errorgraph') ?>" class="btn btn-default">图形</a>
                     </div>
                 </div>
-                <div>正在生成最新数据,请稍候...</div>
+                <div>
+                    <?php
+                    echo Highcharts::widget([
+                        'options'=>[
+                            'chart' => [
+                                'defaultSeriesType'=> 'column',
+                                'plotShadow'=> false ,//设置阴影
+                                'height'=>450,
+                            ],
+                            'title' => [
+                                'text' => '错误日志'
+                            ],
+                            'credits' => [
+                                'enabled'=>false//不显示highCharts版权信息
+                            ],
+                            'xAxis' => [
+                                'categories' => $appliaction_list,
+                            ],
+                            'yAxis' => [
+                                'min' => 0,
+                                'title' => array('text' => '')
+                            ],
+                            'plotOptions'=>[
+                                'series'=>[
+                                    'dataLabels'=>[
+                                        'enabled'=>true
+                                    ]
+                                ]
+                            ],
+                            'tooltip'=>[
+                                'enabled'=>false,
+                            ],
+                            'legend' =>[
+                                'verticalAlign'=>"bottom" ,
+                            ],
+                            'series' => [
+                                ['name' => '数量', 'data' => $error_num_list, 'color' => '#DD0000'],
+                            ]
+                        ]
+                    ]);
+                    ?>
+                </div>
             </div>
         </div>
     </div>
 </div>
 <script type="text/javascript">
-    $(document).ready(function() {
-        $("#text_body_c").showLoading();
-        $.ajax({
-            url: "/site/getdata.html?type=1",
-            dataType: 'html',
-            success: function() {
-                $(this).addClass("done");
-            },
-            error: function() {
-                $(this).addClass("done");
-            }
-        });
-    });
+    //    $(document).ready(function() {
+    //        $("#text_body_c").showLoading();
+    //        $.ajax({
+    //            url: "/site/getdata.html?type=1",
+    //            dataType: 'html',
+    //            success: function() {
+    //                $(this).addClass("done");
+    //            },
+    //            error: function() {
+    //                $(this).addClass("done");
+    //            }
+    //        });
+    //    });
 </script>

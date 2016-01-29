@@ -120,4 +120,13 @@ return array (
       '@nirvana/showloading' => $vendorDir . '/nirvana-msu/yii2-showloading',
     ),
   ),
+  'miloschuman/yii2-highcharts-widget' => 
+  array (
+    'name' => 'miloschuman/yii2-highcharts-widget',
+    'version' => '4.2.1.0',
+    'alias' => 
+    array (
+      '@miloschuman/highcharts' => $vendorDir . '/miloschuman/yii2-highcharts-widget/src',
+    ),
+  ),
 );

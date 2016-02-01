@@ -44,7 +44,7 @@ $dataProvider = $searchModel->search($params);
                 $form = ActiveForm::begin([
                             'action' => ['/site/index'],
                             'method' => 'get',
-                            'options' => ['class' => 'form-inline'],
+                            'options' => ['class' => 'form-inline well'],
                 ]);
                 ?>
                 <?= $form->field($searchModel, 'Method', [ 'labelOptions' => ['label' => '函数'], 'inputOptions' => ['class' => 'form-control']]) ?>
@@ -102,10 +102,7 @@ $dataProvider = $searchModel->search($params);
                                 <td>参数：</td><td colspan="5"><?= Html::encode($oneError->Parameter) ?></td>
                             </tr>
                             <tr>
-                                <td colspan="6">内容详情</td>
-                            </tr>
-                            <tr>
-                                <td colspan="6"><?= Html::encode($oneError->Content) ?></td>
+                                <td>内容详情</td><td colspan="5"><pre><code><?= Html::encode($oneError->Content) ?></code></pre></td>
                             </tr>
                         </table>
                         <?php

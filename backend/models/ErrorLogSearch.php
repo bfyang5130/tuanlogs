@@ -66,6 +66,7 @@ class ErrorLogSearch extends ErrorLog {
         $query->orderBy('AddDate desc ');
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => ['pageSize' => 10],
         ]);
 
         return $dataProvider;

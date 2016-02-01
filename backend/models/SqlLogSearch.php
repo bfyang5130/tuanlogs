@@ -29,7 +29,7 @@ class SqlLogSearch extends SqlTrace {
     public function rules() {
         return [
             ['id', 'integer'],
-            ['type', 'safe'],
+            [['type','sqlusedtime','databasetype','start_date','end_date','sqltext'], 'safe'],
         ];
     }
 
@@ -62,11 +62,17 @@ class SqlLogSearch extends SqlTrace {
         if (isset($params['SqlLogSearch']['start_date']) && !empty($params['SqlLogSearch']['start_date'])) {
             $query->andWhere(" executedate>=:start_date", [':start_date' => $params['SqlLogSearch']['start_date']]);
         }
+        if (isset($params['SqlLogSearch']['sqlusedtime']) && !empty($params['SqlLogSearch']['sqlusedtime'])) {
+            $query->andWhere(" sqlusedtime>=:sqlusedtime", [':sqlusedtime' => $params['SqlLogSearch']['sqlusedtime']]);
+        }
         if (isset($params['SqlLogSearch']['end_date']) && !empty($params['SqlLogSearch']['end_date'])) {
             $query->andWhere(" executedate<=:end_date", [':end_date' => $params['SqlLogSearch']['end_date']]);
         }
         if (isset($params['SqlLogSearch']['sqltext']) && !empty($params['SqlLogSearch']['sqltext'])) {
             $query->andWhere(['like', 'sqltext', $params['SqlLogSearch']['sqltext']]);
+        }
+        if (isset($params['SqlLogSearch']['databasetype']) && !empty($params['SqlLogSearch']['databasetype'])) {
+            $query->andWhere(" databasetype=:dbtype",[':dbtype' => $params['SqlLogSearch']['databasetype']]);
         }
         if (!isset($params['sort'])) {
             $query->orderBy('executedate desc ');

@@ -6,6 +6,7 @@ use yii\grid\GridView;
 use yii\widgets\Pjax;
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
+use backend\services\SqlTraceService ;
 
 $this->title = '日志列表';
 #获得日志统计记录
@@ -13,6 +14,7 @@ $this->title = '日志列表';
 $params = \Yii::$app->request->queryParams;
 $searchModel = new SqlLogSearch();
 $dataProvider = $searchModel->search($params);
+$dbtypes = SqlTraceService::getSqlTraceDbType() ;
 ?>
 <div class="site-index">
     <?php
@@ -54,6 +56,7 @@ $dataProvider = $searchModel->search($params);
                             'attribute' => 'sqlusedtime',
                             'label' => '耗时(ms)',
                             'headerOptions' => ['style' => 'width:80px;'],
+                            'filter' => Html::activeTextInput($searchModel, 'sqlusedtime',['class' => 'form-control']),
                             'value' =>
                             function($model) {
                                 return Html::encode($model->sqlusedtime);
@@ -62,7 +65,8 @@ $dataProvider = $searchModel->search($params);
                                     [
                             'attribute' => 'databasetype',
                             'label' => '数据库',
-                                        'headerOptions' => ['style' => 'width:120px;'],
+                            'headerOptions' => ['style' => 'width:120px;'],
+                            'filter' => Html::activeDropDownList($searchModel, 'databasetype',$dbtypes,['class' => 'form-control']),
                             'value' =>
                             function($model) {
                                 return ($model->databasetype)?Html::encode($model->databasetype):'无记录';
@@ -107,22 +111,5 @@ $dataProvider = $searchModel->search($params);
 
 <script type="text/javascript">
     $(document).ready(function() {
-<?php
-if (isset($params['SqlLogSearch']['sqltext']) && !empty($params['SqlLogSearch']['sqltext'])):
-    ?>
-            $("#sqllogsearch-sqltext").val("<?= $params['SqlLogSearch']['sqltext'] ?>");
-    <?php
-endif;
-if (isset($params['SqlLogSearch']['end_date']) && !empty($params['SqlLogSearch']['end_date'])):
-    ?>
-            $("#sqllogsearch-end_date").val("<?= $params['SqlLogSearch']['end_date'] ?>");
-    <?php
-endif;
-if (isset($params['SqlLogSearch']['start_date']) && !empty($params['SqlLogSearch']['start_date'])):
-    ?>
-            $("#sqllogsearch-start_date").val("<?= $params['SqlLogSearch']['start_date'] ?>");
-    <?php
-endif;
-?>
     });
 </script>

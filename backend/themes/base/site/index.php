@@ -7,6 +7,8 @@ use yii\widgets\Pjax;
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
 use yii\helpers\Url;
+use yii\widgets\LinkPager;
+use yii\widgets\ActiveForm;
 
 $this->title = '日志列表';
 #获得日志统计记录
@@ -31,96 +33,86 @@ $dataProvider = $searchModel->search($params);
         <div class="panel panel-default">
             <?= $this->render('common_top.php'); ?>
             <div class="panel-body">
-                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin:10px 0px;">
                     <div class="btn-group pull-right" role="group" aria-label="First group">
                         <a href="<?= Url::toRoute('/site/index') ?>" class="btn btn-default">列表</a>
                         <a href="<?= Url::toRoute('/site/errorgraph') ?>" class="btn btn-default">图形</a>
                     </div>
                 </div>
-                <?php
-                Pjax::begin(['id' => 'countries']);
-                ?>
-                <?php
-                echo GridView::widget([
-                    'dataProvider' => $dataProvider,
-                    'filterModel' => $searchModel,
-                    'columns' => [
-                        [
-                            'class' => 'yii\grid\SerialColumn',
-                            'headerOptions' =>['style'=>'width:80px;'],
-                        ],
-                        [
-                            'attribute' => 'ApplicationName',
-                            'label' => '类型',
-                            'value' =>
-                            function($model) {
-                                return Html::encode($model->ApplicationId);
-                            },
-                        ],
-                        [
-                            'label' => '函数',
-                            'filter' => Html::activeTextInput($searchModel, 'Method', ['class' => 'form-control']),
-                            'format' => 'raw',
-                            'value' => function($model) {
-                                return '<div class="well">'.Html::encode($model->Method).'</div>';
-                            },
-                        ],
-                        [
-                            'label' => '参数',
-                            'headerOptions' =>['style'=>'width:45%;'],
-                            'filter' => Html::activeTextInput($searchModel, 'Parameter', ['class' => 'form-control']),
-                            'format' => 'raw',
-                            'value' => function($model) {
-                                return '<div class="well">'.Html::encode($model->Parameter).'</div>';
-                            },
-                        ],
-                        [
-                            'attribute' => 'start_date',
-                            'label' => '开始时间',
-                            'value' => 'AddDate',
-                            'filter' => \yii\jui\DatePicker::widget([
-                                'model' => $searchModel,
-                                'options'=>['style'=>'width:80px;'],
-                                'attribute' => 'start_date',
-                                'language' => 'zh-CN',
-                                'dateFormat' => 'yyyy-MM-dd'
-                            ]),
-                            'format' => 'html',
-                        ],
-                        [
-                            'attribute' => 'end_date',
-                            'label' => '结束时间',
-                            'value' => 'AddDate',
-                            'filter' => \yii\jui\DatePicker::widget([
-                                'model' => $searchModel,
-                                'options'=>['style'=>'width:80px;'],
-                                'attribute' => 'end_date',
-                                'language' => 'zh-CN',
-                                'dateFormat' => 'yyyy-MM-dd',
-                                'value' => date('Y-m-d'),
-                            ]),
-                            'format' => 'html',
-                        ],
-                        [
-                            'class' => 'yii\grid\ActionColumn',
-                            'template' => '{view}',
-                            'buttons' => [
-                                // 下面代码来自于 yii\grid\ActionColumn 简单修改了下
-                                'view' => function ($url, $model, $key) {
-                                    $options = [
-                                        'title' => Yii::t('yii', 'View'),
-                                        'aria-label' => Yii::t('yii', 'View'),
-                                        'class' => 'show_model',
-                                    ];
-                                    $url = 'javascript:showDetaildiv("text' . $model->Id . '");';
-                                    return Html::textarea('text' . $model->Id, Html::encode($model->Content), ['style' => 'display:none;', 'id' => 'text' . $model->Id]) . Html::a('<button type="button" class="btn btn-sm btn-info">查看详情</button>', $url, $options);
-                                }]
-                        ],
-                    ],
-                ]);
 
-                Pjax::end();
+                <?php
+                $form = ActiveForm::begin([
+                            'action' => ['/site/index'],
+                            'method' => 'get',
+                            'options' => ['class' => 'form-inline'],
+                ]);
                 ?>
+                <?= $form->field($searchModel, 'Method', [ 'labelOptions' => ['label' => '函数'], 'inputOptions' => ['class' => 'form-control']]) ?>
+
+                <?= $form->field($searchModel, 'Parameter', [ 'labelOptions' => ['label' => '参数'], 'inputOptions' => ['class' => 'form-control']]) ?>
+
+                <div class="form-group">
+                    <label for="exampleInputEmail2">时间：</label>
+                    <?=
+                    \yii\jui\DatePicker::widget([
+                        'model' => $searchModel,
+                        'options' => ['class' => 'form-control'],
+                        'attribute' => 'start_date',
+                        'language' => 'zh-CN',
+                        'dateFormat' => 'yyyy-MM-dd',
+                        'value' => date('Y-m-d'),
+                    ]);
+                    ?>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail2">至</label>
+                    <?=
+                    \yii\jui\DatePicker::widget([
+                        'model' => $searchModel,
+                        'options' => ['class' => 'form-control'],
+                        'attribute' => 'end_date',
+                        'language' => 'zh-CN',
+                        'dateFormat' => 'yyyy-MM-dd',
+                        'value' => date('Y-m-d'),
+                    ]);
+                    ?>
+                </div>
+                <button type="submit" class="btn btn-default btn-primary btn-sm">查询</button>
+                <?php ActiveForm::end(); ?>
+                <?php
+                $begin = $dataProvider->getPagination()->getPage() * $dataProvider->getPagination()->pageSize + 1;
+                $end = $begin + $dataProvider->getPagination()->getPageSize() - 1;
+                if ($begin > $end) {
+                    $begin = $end;
+                }
+                ?>
+                <div class="panel-body">
+                    <div class="summary">第<b><?= $begin . '-' . $end ?></b>条，共<b><?= $dataProvider->getTotalCount() ?></b>条数据.</div>
+                    <?php
+                    foreach ($dataProvider->getModels() as $oneError) {
+                        ?>
+                        <table class="table table-striped table-bordered">
+                            <tr style="background-color: #ddd;">
+                                <td width="80px;">ID:</td><td><?= $oneError->Id ?></td><td>类型:</td><td><?= Html::encode($oneError->ApplicationId) ?></td><td>时间:</td><td><?= Html::encode($oneError->AddDate) ?></td>
+                            </tr>
+                            <tr>
+                                <td>函数:</td><td colspan="5"><?= Html::encode($oneError->Method) ?></td>
+                            </tr>
+                            <tr>
+                                <td>参数：</td><td colspan="5"><?= Html::encode($oneError->Parameter) ?></td>
+                            </tr>
+                            <tr>
+                                <td colspan="6">内容详情</td>
+                            </tr>
+                            <tr>
+                                <td colspan="6"><?= Html::encode($oneError->Content) ?></td>
+                            </tr>
+                        </table>
+                        <?php
+                    }
+                    echo LinkPager::widget(['pagination' => $dataProvider->getPagination()]);
+                    ?>
+                </div>
             </div>
         </div>
     </div>

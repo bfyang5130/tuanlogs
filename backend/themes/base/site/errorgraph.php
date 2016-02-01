@@ -40,7 +40,7 @@ $params = \Yii::$app->request->queryParams;
                     echo Highcharts::widget([
                         'options'=>[
                             'chart' => [
-                                'defaultSeriesType'=> 'column',
+                                'defaultSeriesType'=> 'pie',
                                 'plotShadow'=> false ,//设置阴影
                                 'height'=>450,
                             ],
@@ -50,28 +50,22 @@ $params = \Yii::$app->request->queryParams;
                             'credits' => [
                                 'enabled'=>false//不显示highCharts版权信息
                             ],
-                            'xAxis' => [
-                                'categories' => $appliaction_list,
-                            ],
-                            'yAxis' => [
-                                'min' => 0,
-                                'title' => array('text' => '')
-                            ],
                             'plotOptions'=>[
-                                'series'=>[
+                                'pie'=>[
+                                    'allowPointSelect'=>true,
+                                    'cursor'=>'pointer',
                                     'dataLabels'=>[
-                                        'enabled'=>true
+                                        'enabled'=>true,
+                                        'format'=>'<b>{point.name}</b>: {point.y}'
                                     ]
                                 ]
+
                             ],
                             'tooltip'=>[
-                                'enabled'=>false,
-                            ],
-                            'legend' =>[
-                                'verticalAlign'=>"bottom" ,
+                                'pointFormat'=> '{series.name}: <b>{point.y}</b>'
                             ],
                             'series' => [
-                                ['name' => '数量', 'data' => $error_num_list, 'color' => '#DD0000'],
+                                ['name' => '数量', 'data' => $pie_data],
                             ]
                         ]
                     ]);

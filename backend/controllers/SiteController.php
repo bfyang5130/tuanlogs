@@ -69,14 +69,12 @@ class SiteController extends Controller {
      * 错误的图标显示
      */
     public function actionErrorgraph() {
-        $error_count_list = ErrorLogService::countErrorByApplicationId() ;
-        $appliaction_list = array() ;
-        $error_num_list = array();
-        foreach($error_count_list as $value){
-            $appliaction_list[] = $value['ApplicationId'] ;
-            $error_num_list[] = intval($value['total']) ;
+        $application_list = ErrorLogService::countErrorByApplicationId() ;
+        $pie_data = array() ;
+        foreach($application_list as $application){
+            $pie_data[] = [$application['ApplicationId'],floatval($application['total'])] ;
         }
-        return $this->render('errorgraph',['appliaction_list'=>$appliaction_list,"error_num_list"=>$error_num_list]);
+        return $this->render('errorgraph',['pie_data'=>$pie_data]);
     }
 
     public function actionIndex() {

@@ -6,12 +6,15 @@ use yii\grid\GridView;
 use yii\widgets\Pjax;
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
+use yii\helpers\ArrayHelper;
 
 $this->title = '日志列表';
 #获得日志统计记录
 
 $params = \Yii::$app->request->queryParams;
 $searchModel = new TraceLogSearch();
+$result = $searchModel->find()->groupBy(['ApplicationId'])->addSelect('ApplicationId')->asArray()->all();
+$category = ArrayHelper::map($result,'ApplicationId','ApplicationId');
 $dataProvider = $searchModel->search($params);
 ?>
 <div class="site-index">
@@ -45,16 +48,17 @@ $dataProvider = $searchModel->search($params);
                         [
                             'attribute' => 'ApplicationName',
                             'label' => '类型',
+                            'filter' => Html::activeDropDownList($searchModel,'ApplicationId',$category, ['class' => 'form-control','prompt' => '全部']),
                             'value' =>
-                            function($model) {
-                                return Html::encode($model->ApplicationId);
-                            },
+                                function ($model) {
+                                    return Html::encode($model->ApplicationId);
+                                },
                         ],
                         [
                             'label' => '函数',
                             'filter' => Html::activeTextInput($searchModel, 'Method', ['class' => 'form-control']),
                             'format' => 'raw',
-                            'value' => function($model) {
+                            'value' => function ($model) {
                                 return Html::encode($model->Method);
                             },
                         ],
@@ -62,7 +66,7 @@ $dataProvider = $searchModel->search($params);
                             'label' => '参数',
                             'filter' => Html::activeTextInput($searchModel, 'Parameter', ['class' => 'form-control']),
                             'format' => 'raw',
-                            'value' => function($model) {
+                            'value' => function ($model) {
                                 return Html::encode($model->Parameter);
                             },
                         ],
@@ -118,29 +122,3 @@ $dataProvider = $searchModel->search($params);
     </div>
 </div>
 
-<script type="text/javascript">
-    $(document).ready(function() {
-<?php
-if (isset($params['TraceLogSearch']['Parameter']) && !empty($params['TraceLogSearch']['Parameter'])):
-    ?>
-            $("#traceLogSearch-parameter").val("<?= $params['TraceLogSearch']['Parameter'] ?>");
-    <?php
-endif;
-if (isset($params['TraceLogSearch']['Method']) && !empty($params['TraceLogSearch']['Method'])):
-    ?>
-            $("#traceLogSearch-method").val("<?= $params['TraceLogSearch']['Method'] ?>");
-    <?php
-endif;
-if (isset($params['TraceLogSearch']['start_date']) && !empty($params['TraceLogSearch']['start_date'])):
-    ?>
-            $("#traceLogSearch-start_date").val("<?= $params['TraceLogSearch']['start_date'] ?>");
-    <?php
-endif;
-if (isset($params['TraceLogSearch']['end_date']) && !empty($params['TraceLogSearch']['end_date'])):
-    ?>
-            $("#traceLogSearch-end_date").val("<?= $params['TraceLogSearch']['end_date'] ?>");
-    <?php
-endif;
-?>
-    });
-</script>

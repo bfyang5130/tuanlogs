@@ -108,7 +108,7 @@ class ErrorLogService {
      * 按天统计错误数量
      */
     public static function countByDay($page){
-        //设置不超时
+        //设置不超时 首次运行会统计数据,比较慢
         set_time_limit(0) ;
         //查找Error的appname
         $application_query = new Query() ;
@@ -152,14 +152,12 @@ class ErrorLogService {
             $cur_count[$appname] = 0;
         }
 
+        $cur_time = strtotime(date("Y-m-d")) ;
+        $day = $page*2-1 ;
+        $before_time = strtotime("{$day} day", $cur_time);
+
         if(empty($page) || $page>0){
             //显示日统计数据
-            $errorlogday = ErrorLogDay::find()
-                ->orderBy('Date desc')
-                ->limit(1)
-                ->one();
-            $before_time = $errorlogday->Date ;
-
             $before_datas = ErrorLogDay::find()
                 ->where(["Date"=>$before_time])
                 ->all();
@@ -171,13 +169,13 @@ class ErrorLogService {
             }
 
             //当天统计错误日志的数量
-            $cur_time = date("Y-m-d 0:0:0",time()) ;
+            $cur_time_format = date("Y-m-d 0:0:0",time()) ;
             $cur_error_query = new Query() ;
             $cur_error_query->select("count(id) as total,ApplicationId")
                 ->from("ErrorLog")
                 ->where(["in","ApplicationId",$appname_list]) ;
 
-            $cur_error_query->andWhere("AddDate>=:adddate",array(":adddate"=>$cur_time)) ;
+            $cur_error_query->andWhere("AddDate>=:adddate",array(":adddate"=>$cur_time_format)) ;
 
             $cur_error_query->groupBy("ApplicationId") ;
             $cur_data = $cur_error_query->all() ;
@@ -190,9 +188,6 @@ class ErrorLogService {
             $format_before_time = date("Y-m-d",$before_time) ;
             $format_cur_time = date("Y-m-d") ;
         }else{
-            $cur_time = strtotime(date("Y-m-d")) ;
-            $day = $page*2-1 ;
-            $before_time = strtotime("{$day} day", $cur_time);
 //            $end_time = strtotime("+1 day", $str_time);
             $before_datas = ErrorLogDay::find()
                 ->where("Date=:str_time",[":str_time"=>$before_time])

@@ -66,6 +66,9 @@ class TraceLogSearch extends TraceLog {
         if (isset($params['TraceLogSearch']['Method']) && !empty($params['TraceLogSearch']['Method'])) {
             $query->andWhere(['like', 'Method', $params['TraceLogSearch']['Method']]);
         }
+        if(!empty($params['TraceLogSearch']['ApplicationId'])){
+            $query->andWhere(['ApplicationId'=> $params['TraceLogSearch']['ApplicationId']]);
+        }
         $query->orderBy('AddDate desc ');
         return $dataProvider;
     }

@@ -5,6 +5,7 @@ namespace backend\services;
 use common\models\ApplicateName;
 use common\models\ErrorLog;
 use common\models\ErrorLogDay;
+use common\models\ErrorLogMonth;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;
 use Yii ;
@@ -261,6 +262,178 @@ class ErrorLogService {
 
             $format_str_time = $format_end_time ;
             $end_time = strtotime('+1 day', $end_time);
+            $format_end_time = date("Y-m-d H:i:s",$end_time) ;
+
+        }
+    }
+
+
+    /**
+     * 按月统计错误数量
+     */
+    public static function countByMonth($page){
+        //设置不超时 首次运行会统计数据,比较慢
+        set_time_limit(0) ;
+        //查找Error的appname
+        $application_query = new Query() ;
+        $application_query->select("appname")
+            ->from("ApplicateName")
+            ->where("logtype=1") ;//1-Error类型 0-trace
+        $application_list = $application_query->all() ;
+        $appname_list = array() ;
+        foreach($application_list as $value){
+            $appname_list[] = $value['appname'] ;
+        }
+
+        $errorlogmonth = ErrorLogMonth::find()
+            ->orderBy('Month desc')
+            ->limit(1)
+            ->one();
+
+        //统计数据,写入日统计表
+        if(empty($errorlogmonth)){
+            //从第一天开始生成统计记录
+            //取ErrorLog的第一条数据,获取开始时间
+            $errorlog = ErrorLog::find()
+                ->where("AddDate>0")
+                ->orderBy("AddDate asc")
+                ->limit(1)
+                ->one() ;
+            $add_date = $errorlog->AddDate;
+            $str_add_date = strtotime(date("Y-m-01",strtotime($add_date))) ;
+            self::saveErrorLogMonth($str_add_date,$appname_list) ;
+        }else{
+            //从月统计表最后的month+1月统计数据
+            $last_time = strtotime(($errorlogmonth->Month)."01") ;
+
+            if($last_time<strtotime(date("Y-m-01"))){
+                $str_add_date = strtotime("+1 month",$last_time) ;
+                self::saveErrorLogMonth($str_add_date,$appname_list) ;
+            }
+        }
+
+        foreach($appname_list as $appname){
+            $before_count[$appname] = 0;
+            $cur_count[$appname] = 0;
+        }
+
+        $cur_time = strtotime(date("Y-m-01")) ;
+        $month = $page*2-1 ;
+        $before_time = strtotime("{$month} month", $cur_time);
+        $format_before_time = date("Ym",$before_time) ;
+
+        if(empty($page) || $page>0){
+            //显示日统计数据
+            $before_datas = ErrorLogMonth::find()
+                ->where(["Month"=>$format_before_time])
+                ->all();
+
+            foreach($before_datas as $before){
+                if(in_array($before['ApplicationId'],$appname_list)){
+                    $before_count[$before['ApplicationId']] = $before['Number'] ;
+                }
+            }
+
+            //当月统计错误日志的数量
+            $cur_time_format = date("Y-m-01 0:0:0",time()) ;
+            $cur_error_query = new Query() ;
+            $cur_error_query->select("count(id) as total,ApplicationId")
+                ->from("ErrorLog")
+                ->where(["in","ApplicationId",$appname_list]) ;
+
+            $cur_error_query->andWhere("AddDate>=:adddate",array(":adddate"=>$cur_time_format)) ;
+
+            $cur_error_query->groupBy("ApplicationId") ;
+            $cur_data = $cur_error_query->all() ;
+            foreach($cur_data as $cur){
+                if(in_array($cur['ApplicationId'],$appname_list)){
+                    $cur_count[$cur['ApplicationId']] = intval($cur['total']) ;
+                }
+            }
+
+            $format_before_time = date("Y-m",$before_time) ;
+            $format_cur_time = date("Y-m") ;
+        }else{
+            $before_datas = ErrorLogMonth::find()
+                ->where("Month=:str_time",[":str_time"=>$format_before_time])
+                ->orderBy("id asc")
+                ->all();
+
+            foreach($before_datas as $before){
+                if(in_array($before['ApplicationId'],$appname_list)){
+                    $before_count[$before['ApplicationId']] = $before['Number'] ;
+                }
+            }
+
+            $cur_time = strtotime("+1 month", $before_time);
+            $cur_data_time = date("Ym",$cur_time) ;
+            $cur_datas = ErrorLogMonth::find()
+                ->where("Month=:cur_time",[":cur_time"=>$cur_data_time])
+                ->orderBy("id asc")
+                ->all();
+
+            foreach($cur_datas as $cur){
+                if(in_array($cur['ApplicationId'],$appname_list)){
+                    $cur_count[$cur['ApplicationId']] = $cur['Number'] ;
+                }
+            }
+
+            $format_before_time = date("Y-m",$before_time) ;
+            $format_cur_time = date("Y-m",$cur_time) ;
+
+        }
+
+        return ["before_count"=>$before_count,"cur_count"=>$cur_count,"format_before_time"=>$format_before_time,"format_cur_time"=>$format_cur_time] ;
+    }
+
+    private static function saveErrorLogMonth($str_time,$appname_list){
+        $cur_time = time() ;
+        $cur_time_year = date("Y") ;
+        $cur_time_month = date("m") ;
+
+        $str_time_year = date("Y",$str_time) ;
+        $str_time_month = date("m",$str_time) ;
+
+        $diff_month = ($cur_time_year-$str_time_year)*12 +($cur_time_month-$str_time_month) ;
+
+        $end_time = strtotime('+1 month', $str_time);
+
+        $format_str_time = date("Y-m-d H:i:s",$str_time) ;
+        $format_end_time = date("Y-m-d H:i:s",$end_time) ;
+
+        for($i=0;$i<$diff_month;$i++){
+
+            //统计错误日志的数量
+            $error_query = new Query() ;
+            $error_query->select("count(id) as total,ApplicationId")
+                ->from("ErrorLog")
+                ->where(["in","ApplicationId",$appname_list]) ;
+
+            $error_query->andWhere("AddDate>=:str_time",array(":str_time"=>$format_str_time)) ;
+            $error_query->andWhere("AddDate<:end_time",array(":end_time"=>$format_end_time)) ;
+
+            $error_query->groupBy("ApplicationId") ;
+
+            $error_count_list = $error_query->all() ;
+
+            $log_arr = [] ;
+            $month = strtotime($format_str_time);
+            foreach($error_count_list as $key=>$value){
+                //保存数据在ErrorLog_month
+                $log_arr[] = [$value['ApplicationId'],$value['total'],date("Ym",$month),$cur_time] ;
+            }
+
+            if(!empty($log_arr)){
+                $command = \Yii::$app->db->createCommand() ;
+                $command->batchInsert(
+                    ErrorLogMonth::tableName(),
+                    ['ApplicationId','Number','Month','Updatetime'],
+                    $log_arr) ;
+                $command->execute();
+            }
+
+            $format_str_time = $format_end_time ;
+            $end_time = strtotime('+1 month', $end_time);
             $format_end_time = date("Y-m-d H:i:s",$end_time) ;
 
         }

@@ -28,7 +28,7 @@ class SiteController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index', 'trace', 'sql', 'errorgraph', 'getdata','doing','countday'],
+                        'actions' => ['logout', 'index', 'trace', 'sql', 'errorgraph', 'getdata','doing','countday','countmonth'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -137,6 +137,42 @@ class SiteController extends Controller {
         $cur_data = array_values($cur_arr) ;
 
         return $this->render('day_count',[
+            "before_categories"  =>$before_categories,
+            "before_data"        =>$before_data,
+            "cur_categories"     =>$cur_categories,
+            "cur_data"           =>$cur_data,
+            "format_before_time" =>$countday_arr['format_before_time'],
+            "format_cur_time"    =>$countday_arr['format_cur_time'],
+            "pre_page"           =>$pre_page ,
+            "next_page"          =>$next_page ,
+        ]);
+    }
+
+    public function actionCountmonth(){
+        $page = Yii::$app->request->get("page") ;
+        if(empty($page)){
+            $page = 0 ;
+        }
+        if(!empty($page) && $page>0){
+            $page = 0 ;
+        }
+        $pre_page = $page - 1 ;
+        $next_page = $page + 1 ;
+        if($next_page>0){
+            $next_page = 0 ;
+        }
+
+        $countday_arr = ErrorLogService::countByMonth($page) ;
+        $before_arr = $countday_arr['before_count'] ;
+        $cur_arr = $countday_arr['cur_count'] ;
+
+        $before_categories = array_keys($before_arr) ;
+        $before_data = array_values($before_arr) ;
+
+        $cur_categories = array_keys($cur_arr) ;
+        $cur_data = array_values($cur_arr) ;
+
+        return $this->render('month_count',[
             "before_categories"  =>$before_categories,
             "before_data"        =>$before_data,
             "cur_categories"     =>$cur_categories,

@@ -37,6 +37,7 @@ $params = \Yii::$app->request->queryParams;
 
                     <div class="btn-group pull-left" role="group" aria-label="First group">
                         <a href="<?= Url::toRoute('/site/countday') ?>" class="btn btn-default">日统计</a>
+                        <a href="<?= Url::toRoute('/site/countmonth') ?>" class="btn btn-default">月统计</a>
                     </div>
                 </div>
                 <div>

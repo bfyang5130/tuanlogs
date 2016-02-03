@@ -112,6 +112,10 @@ class SiteController extends Controller {
         return $this->goHome();
     }
 
+    /**
+     * 日统计ErrorLog
+     * @return string
+     */
     public function actionCountday(){
         $page = Yii::$app->request->get("page") ;
         if(empty($page)){
@@ -148,6 +152,10 @@ class SiteController extends Controller {
         ]);
     }
 
+    /**
+     * 月统计ErrorLog
+     * @return string
+     */
     public function actionCountmonth(){
         $page = Yii::$app->request->get("page") ;
         if(empty($page)){

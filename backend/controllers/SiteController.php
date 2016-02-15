@@ -28,7 +28,7 @@ class SiteController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index', 'trace', 'sql', 'errorgraph', 'getdata', 'doing'],
+                        'actions' => ['logout', 'index', 'trace', 'sql', 'errorgraph', 'getdata','doing'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -53,29 +53,28 @@ class SiteController extends Controller {
             ],
         ];
     }
-
     /**
      * 内容建设中
      * @return type
      */
-    public function actionDoing() {
+    public function actionDoing(){
         return $this->render("doing");
     }
 
     public function actionGetdata() {
-        
+
     }
 
     /**
      * 错误的图标显示
      */
     public function actionErrorgraph() {
-        $application_list = ErrorLogService::countErrorByApplicationId();
-        $pie_data = array();
-        foreach ($application_list as $application) {
-            $pie_data[] = [$application['ApplicationId'], floatval($application['total'])];
+        $application_list = ErrorLogService::countErrorByApplicationId() ;
+        $pie_data = array() ;
+        foreach($application_list as $application){
+            $pie_data[] = [$application['ApplicationId'],floatval($application['total'])] ;
         }
-        return $this->render('errorgraph', ['pie_data' => $pie_data]);
+        return $this->render('errorgraph',['pie_data'=>$pie_data]);
     }
 
     public function actionIndex() {
@@ -102,7 +101,7 @@ class SiteController extends Controller {
             return $this->goBack();
         } else {
             return $this->render('login', [
-                        'model' => $model,
+                'model' => $model,
             ]);
         }
     }

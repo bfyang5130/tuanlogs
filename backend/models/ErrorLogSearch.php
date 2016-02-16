@@ -44,6 +44,11 @@ class ErrorLogSearch extends ErrorLog {
     //put your code here
     public function search($params) {
         $query = ErrorLog::find();
+        $dataProvider = new ActiveDataProvider([
+                'query' => $query,
+                'pagination' => ['pageSize' => 10],
+        ]);
+        $query->orderBy('AddDate desc');
         $this->load($params);
         if (!$this->validate()) {
             return $dataProvider;
@@ -57,17 +62,15 @@ class ErrorLogSearch extends ErrorLog {
         if (isset($params['ErrorLogSearch']['end_date']) && !empty($params['ErrorLogSearch']['end_date'])) {
             $query->andWhere(" AddDate<=:end_date", [':end_date' => $params['ErrorLogSearch']['end_date']]);
         }
+        if (isset($params['ErrorLogSearch']['type']) && !empty($params['ErrorLogSearch']['type'])) {
+            $query->andWhere(" ApplicationId=:type", [':type' => $params['ErrorLogSearch']['type']]);
+        }
         if (isset($params['ErrorLogSearch']['Parameter']) && !empty($params['ErrorLogSearch']['Parameter'])) {
             $query->andWhere(['like', 'Parameter', $params['ErrorLogSearch']['Parameter']]);
         }
         if (isset($params['ErrorLogSearch']['Method']) && !empty($params['ErrorLogSearch']['Method'])) {
             $query->andWhere(['like', 'Method', $params['ErrorLogSearch']['Method']]);
         }
-        $query->orderBy('AddDate desc ');
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => ['pageSize' => 10],
-        ]);
 
         return $dataProvider;
     }

@@ -148,28 +148,18 @@ class ErrorLogService {
             }
         }
 
-        foreach($appname_list as $appname){
-            $before_count[$appname] = 0;
-            $cur_count[$appname] = 0;
-        }
-
+        //显示数据
         $cur_time = strtotime(date("Y-m-d")) ;
-        $day = $page*2-1 ;
-        $before_time = strtotime("{$day} day", $cur_time);
+        $day = $page*5-4 ;
+        $count_time = strtotime("{$day} day", $cur_time);
+        //返回5天内的数据
+        $items = self::errorLogItems($count_time,5,$appname_list) ;
 
         if(empty($page) || $page>0){
-            //显示日统计数据
-            $before_datas = ErrorLogDay::find()
-                ->where(["Date"=>$before_time])
-                ->all();
-
-            foreach($before_datas as $before){
-                if(in_array($before['ApplicationId'],$appname_list)){
-                    $before_count[$before['ApplicationId']] = $before['Number'] ;
-                }
-            }
 
             //当天统计错误日志的数量
+            $format_cur_time = date("Y-m-d") ;
+
             $cur_time_format = date("Y-m-d 0:0:0",time()) ;
             $cur_error_query = new Query() ;
             $cur_error_query->select("count(id) as total,ApplicationId")
@@ -182,43 +172,14 @@ class ErrorLogService {
             $cur_data = $cur_error_query->all() ;
             foreach($cur_data as $cur){
                 if(in_array($cur['ApplicationId'],$appname_list)){
-                    $cur_count[$cur['ApplicationId']] = intval($cur['total']) ;
+                    $items[$format_cur_time][$cur['ApplicationId']] = intval($cur['total']) ;
                 }
             }
-
-            $format_before_time = date("Y-m-d",$before_time) ;
-            $format_cur_time = date("Y-m-d") ;
-        }else{
-//            $end_time = strtotime("+1 day", $str_time);
-            $before_datas = ErrorLogDay::find()
-                ->where("Date=:str_time",[":str_time"=>$before_time])
-                ->orderBy("id asc")
-                ->all();
-
-            foreach($before_datas as $before){
-                if(in_array($before['ApplicationId'],$appname_list)){
-                    $before_count[$before['ApplicationId']] = $before['Number'] ;
-                }
-            }
-
-            $cur_time = strtotime("+1 day", $before_time);
-            $cur_datas = ErrorLogDay::find()
-                ->where("Date=:cur_time",[":cur_time"=>$cur_time])
-                ->orderBy("id asc")
-                ->all();
-
-            foreach($cur_datas as $cur){
-                if(in_array($cur['ApplicationId'],$appname_list)){
-                    $cur_count[$cur['ApplicationId']] = $cur['Number'] ;
-                }
-            }
-
-            $format_before_time = date("Y-m-d",$before_time) ;
-            $format_cur_time = date("Y-m-d",$cur_time) ;
 
         }
 
-        return ["before_count"=>$before_count,"cur_count"=>$cur_count,"format_before_time"=>$format_before_time,"format_cur_time"=>$format_cur_time] ;
+        return array("items"=>$items,"appnames"=>$appname_list) ;
+
     }
 
     private static function saveErrorLogDay($str_time,$appname_list){
@@ -437,6 +398,33 @@ class ErrorLogService {
             $format_end_time = date("Y-m-d H:i:s",$end_time) ;
 
         }
+    }
+
+
+    private static function errorLogItems($search_time,$times,$appname_list){
+        $item_arr =array() ;
+        for($i=1;$i<=$times;$i++){
+
+            $format_search_time = date("Y-m-d",$search_time) ;
+
+            foreach($appname_list as $appname){
+                $item_arr[$format_search_time][$appname] = 0;
+            }
+
+            $datas = ErrorLogDay::find()
+                ->where(["Date"=>$search_time])
+                ->all();
+
+            foreach($datas as $data){
+                if(in_array($data['ApplicationId'],$appname_list)){
+                    $item_arr[$format_search_time][$data['ApplicationId']] = $data['Number'] ;
+                }
+            }
+
+            $search_time = strtotime("+1 day", $search_time);
+
+        }
+        return $item_arr ;
     }
 
 }

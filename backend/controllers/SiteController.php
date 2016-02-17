@@ -73,11 +73,16 @@ class SiteController extends Controller {
      */
     public function actionErrorgraph() {
         $application_list = ErrorLogService::countErrorByApplicationId() ;
-        $pie_data = array() ;
-        foreach($application_list as $application){
-            $pie_data[] = [$application['ApplicationId'],floatval($application['total'])] ;
+        $appnames = array() ;
+        $data =array() ;
+        $sort_application_list = ToolService::array_sort($application_list,"total","desc");
+        foreach($sort_application_list as $application){
+            $appnames[] = $application['ApplicationId'] ;
+            $data[]   = floatval($application['total']) ;
         }
-        return $this->render('errorgraph',['pie_data'=>$pie_data]);
+        $series['name']="错误日志" ;
+        $series['data']=$data ;
+        return $this->render('errorgraph',['appnames'=>$appnames,'series'=>array($series)]);
     }
 
     public function actionIndex() {
@@ -202,5 +207,6 @@ class SiteController extends Controller {
             "next_page"  =>$next_page ,
         ]);
     }
+
 
 }

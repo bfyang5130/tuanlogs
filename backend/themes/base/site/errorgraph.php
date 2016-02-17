@@ -45,33 +45,51 @@ $params = \Yii::$app->request->queryParams;
                     echo Highcharts::widget([
                         'options'=>[
                             'chart' => [
-                                'defaultSeriesType'=> 'pie',
+                                'type'=> 'bar',
                                 'plotShadow'=> false ,//设置阴影
-                                'height'=>450,
+                                'height'=>1500,
                             ],
                             'title' => [
-                                'text' => '错误日志'
+                                'text' => ' 统计'
                             ],
                             'credits' => [
                                 'enabled'=>false//不显示highCharts版权信息
                             ],
+                            'xAxis' => [
+                                'categories' => $appnames,
+                                'title' => array('text' => null) ,
+                            ],
+                            'yAxis' => [
+                                'min' => 0,
+                                'title' => array('text' => ''),
+                                'align' => 'high',
+                                'labels'=> array("overflow"=>"justify")
+                            ],
                             'plotOptions'=>[
-                                'pie'=>[
-                                    'allowPointSelect'=>true,
-                                    'cursor'=>'pointer',
+                                'bar'=>[
                                     'dataLabels'=>[
-                                        'enabled'=>true,
-                                        'format'=>'<b>{point.name}</b>: {point.y}'
+                                        'enabled'=>true
                                     ]
-                                ]
-
+                                ],
+                            ],
+                            'legend'=>[
+                                'layout'=>'vertical',
+                                'align'=>'right',
+                                'verticalAlign'=>'top',
+                                'x'=>-40,
+                                'y'=>100,
+                                'floating'=>true,
+                                'borderWidth'=>1,
+                                'backgroundColor'=>'#FFFFFF',
+                                'shadow'=>true,
                             ],
                             'tooltip'=>[
-                                'pointFormat'=> '{series.name}: <b>{point.y}</b>'
+                                'enabled'=>false,
                             ],
-                            'series' => [
-                                ['name' => '数量', 'data' => $pie_data],
-                            ]
+                            'legend' =>[
+                                'verticalAlign'=>"bottom" ,
+                            ],
+                            'series' => $series
                         ]
                     ]);
                     ?>

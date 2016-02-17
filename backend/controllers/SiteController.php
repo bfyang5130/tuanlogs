@@ -2,8 +2,11 @@
 
 namespace backend\controllers;
 
+use backend\models\ErrorLogSearch;
 use backend\services\ErrorLogService;
+use backend\services\ToolService;
 use Yii;
+use yii\data\Sort;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -78,7 +81,19 @@ class SiteController extends Controller {
     }
 
     public function actionIndex() {
-        return $this->render('index');
+        $params = Yii::$app->request->get();
+        $searchModel = new ErrorLogSearch();
+        $dataProvider = $searchModel->search($params);
+        $query = $dataProvider->query;
+        $sort = new Sort([
+            'attributes' => [
+                'AddDate',
+            ],
+            'defaultOrder'=>['AddDate'=>SORT_DESC]
+        ]);
+        $locals = ToolService::getPagedRows($query,['orderBy'=>$sort->orders,'pageSize'=>10]);
+        $locals['searchModel']=$searchModel;
+        return $this->render('index',$locals);
     }
 
     public function actionTrace() {

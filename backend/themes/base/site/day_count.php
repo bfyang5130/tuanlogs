@@ -28,9 +28,12 @@ $page = Yii::$app->request->get("page") ;
             <?= $this->render('common_top.php'); ?>
             <div class="panel-body">
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                    <div class="btn-group" role="group" aria-label="First group">
+                    <div class="btn-group pull-left" role="group" aria-label="First group">
                         <a href="<?= Url::toRoute(['/site/countday',"page"=>$pre_page]) ?>" class="btn btn-default">上一页</a>
                         <a href="<?= Url::toRoute(['/site/countday',"page"=>$next_page]) ?>" class="btn btn-default">下一页</a>
+                    </div>
+                    <div class="btn-group pull-right" role="group" aria-label="First group">
+                        <a href="<?= Url::toRoute(['/site/errorgraph']) ?>" class="btn btn-default">返回</a>
                     </div>
                 </div>
                 <div>
@@ -75,7 +78,7 @@ $page = Yii::$app->request->get("page") ;
                                              var end_day = newdt.getDate() ;
                                              var end_year = newdt.getFullYear() ;
                                              var end_date = end_year+"-"+end_month+"-"+end_day ;
-                                            var target_url = "/site/index.html?ErrorLogSearch[start_date]="+this.name+"&ErrorLogSearch[end_date]="+end_date+"&ErrorLogSearch[type]="+e.point.category;
+                                            var target_url = "/site/index.html?ErrorLogSearch[start_date]="+this.name+"&ErrorLogSearch[end_date]="+end_date+"&ErrorLogSearch[ApplicationId]="+e.point.category;
                                             window.open(target_url);
                                          }'
                                     ))

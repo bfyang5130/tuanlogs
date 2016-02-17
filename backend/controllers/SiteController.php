@@ -154,6 +154,32 @@ class SiteController extends Controller {
         $appnames = $day_data["appnames"] ;
         $items = $day_data["items"] ;
 
+        //统计各个分类总数
+        $sort_items = array() ;
+        foreach($appnames as $a_val){
+            foreach($items as $key=>$item){
+                foreach($item as $i_key=>$i_val){
+                    if($i_key==$a_val){
+                        $sort_items[$a_val] = $sort_items[$a_val] + floatval($i_val) ;
+                    }
+                }
+            }
+        }
+
+        //降序排序
+        arsort($sort_items) ;
+
+        //取排序后的分类字段
+        $sort_appnames = array_keys($sort_items) ;
+
+        //按排完序的重新给值
+        foreach($items as $key=>$item){
+            foreach($sort_appnames as $t_appname){
+                $arr_item[$t_appname] = empty($item[$t_appname])?0:$item[$t_appname] ;
+            }
+            $items[$key] = $arr_item ;
+        }
+
         $series =array() ;
         $i = 0 ;
         foreach($items as $key=>$item){
@@ -163,7 +189,7 @@ class SiteController extends Controller {
         }
 
         return $this->render('day_count',[
-            "appnames"   =>$appnames,
+            "appnames"   =>$sort_appnames,
             "series"     =>$series,
             "pre_page"   =>$pre_page ,
             "next_page"  =>$next_page ,
@@ -192,8 +218,35 @@ class SiteController extends Controller {
         $appnames = $month_data["appnames"] ;
         $items = $month_data["items"] ;
 
+        //统计各个分类总数
+        $sort_items = array() ;
+        foreach($appnames as $a_val){
+            foreach($items as $key=>$item){
+                foreach($item as $i_key=>$i_val){
+                    if($i_key==$a_val){
+                        $sort_items[$a_val] = $sort_items[$a_val] + floatval($i_val) ;
+                    }
+                }
+            }
+        }
+
+        //降序排序
+        arsort($sort_items) ;
+
+        //取排序后的分类字段
+        $sort_appnames = array_keys($sort_items) ;
+
+        //按排完序的重新给值
+        foreach($items as $key=>$item){
+            foreach($sort_appnames as $t_appname){
+                $arr_item[$t_appname] = empty($item[$t_appname])?0:$item[$t_appname] ;
+            }
+            $items[$key] = $arr_item ;
+        }
+
         $series =array() ;
         $i = 0 ;
+
         foreach($items as $key=>$item){
             $series[$i]['name'] =$key ;
             $series[$i]['data']= array_values($item) ;
@@ -201,7 +254,7 @@ class SiteController extends Controller {
         }
 
         return $this->render('month_count',[
-            "appnames"   =>$appnames,
+            "appnames"   =>$sort_appnames,
             "series"     =>$series,
             "pre_page"   =>$pre_page ,
             "next_page"  =>$next_page ,

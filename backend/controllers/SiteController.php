@@ -160,6 +160,7 @@ class SiteController extends Controller {
             foreach($items as $key=>$item){
                 foreach($item as $i_key=>$i_val){
                     if($i_key==$a_val){
+                        $sort_items[$a_val] = empty($sort_items[$a_val])?0:$sort_items[$a_val] ;
                         $sort_items[$a_val] = $sort_items[$a_val] + floatval($i_val) ;
                     }
                 }
@@ -224,6 +225,7 @@ class SiteController extends Controller {
             foreach($items as $key=>$item){
                 foreach($item as $i_key=>$i_val){
                     if($i_key==$a_val){
+                        $sort_items[$a_val] = empty($sort_items[$a_val])?0:$sort_items[$a_val] ;
                         $sort_items[$a_val] = $sort_items[$a_val] + floatval($i_val) ;
                     }
                 }

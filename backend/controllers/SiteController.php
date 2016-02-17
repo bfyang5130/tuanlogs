@@ -183,25 +183,23 @@ class SiteController extends Controller {
             $next_page = 0 ;
         }
 
-        $countday_arr = ErrorLogService::countByMonth($page) ;
-        $before_arr = $countday_arr['before_count'] ;
-        $cur_arr = $countday_arr['cur_count'] ;
+        $month_data = ErrorLogService::countByMonth($page) ;
+        $appnames = $month_data["appnames"] ;
+        $items = $month_data["items"] ;
 
-        $before_categories = array_keys($before_arr) ;
-        $before_data = array_values($before_arr) ;
-
-        $cur_categories = array_keys($cur_arr) ;
-        $cur_data = array_values($cur_arr) ;
+        $series =array() ;
+        $i = 0 ;
+        foreach($items as $key=>$item){
+            $series[$i]['name'] =$key ;
+            $series[$i]['data']= array_values($item) ;
+            $i = $i + 1 ;
+        }
 
         return $this->render('month_count',[
-            "before_categories"  =>$before_categories,
-            "before_data"        =>$before_data,
-            "cur_categories"     =>$cur_categories,
-            "cur_data"           =>$cur_data,
-            "format_before_time" =>$countday_arr['format_before_time'],
-            "format_cur_time"    =>$countday_arr['format_cur_time'],
-            "pre_page"           =>$pre_page ,
-            "next_page"          =>$next_page ,
+            "appnames"   =>$appnames,
+            "series"     =>$series,
+            "pre_page"   =>$pre_page ,
+            "next_page"  =>$next_page ,
         ]);
     }
 

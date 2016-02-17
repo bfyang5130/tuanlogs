@@ -27,10 +27,13 @@ $page = Yii::$app->request->get("page") ;
         <div class="panel panel-default">
             <?= $this->render('common_top.php'); ?>
             <div class="panel-body">
-                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                <div class="btn-toolbar pull-let" role="toolbar" aria-label="Toolbar with button groups">
                     <div class="btn-group" role="group" aria-label="First group">
                         <a href="<?= Url::toRoute(['/site/countmonth',"page"=>$pre_page]) ?>" class="btn btn-default">上一页</a>
                         <a href="<?= Url::toRoute(['/site/countmonth',"page"=>$next_page]) ?>" class="btn btn-default">下一页</a>
+                    </div>
+                    <div class="btn-group pull-right" role="group" aria-label="First group">
+                        <a href="<?= Url::toRoute(['/site/errorgraph']) ?>" class="btn btn-default">返回</a>
                     </div>
                 </div>
                 <div>
@@ -38,29 +41,59 @@ $page = Yii::$app->request->get("page") ;
                     echo Highcharts::widget([
                         'options'=>[
                             'chart' => [
-                                'defaultSeriesType'=> 'column',
+                                'type'=> 'bar',
                                 'plotShadow'=> false ,//设置阴影
-                                'height'=>450,
+                                'height'=>2800,
                             ],
                             'title' => [
-                                'text' => $format_cur_time.' 统计'
+                                'text' => ' 统计'
                             ],
                             'credits' => [
                                 'enabled'=>false//不显示highCharts版权信息
                             ],
                             'xAxis' => [
-                                'categories' => $cur_categories,
+                                'categories' => $appnames,
+                                'title' => array('text' => null) ,
                             ],
                             'yAxis' => [
                                 'min' => 0,
-                                'title' => array('text' => '')
+                                'title' => array('text' => ''),
+                                'align' => 'high',
+                                'labels'=> array("overflow"=>"justify")
                             ],
                             'plotOptions'=>[
-                                'series'=>[
+                                'bar'=>[
                                     'dataLabels'=>[
                                         'enabled'=>true
                                     ]
+                                ],
+                                'series'=>[
+                                    'cursor'=>'pointer',
+                                    'events' => array("click"=>new \yii\web\JsExpression(
+                                        'function(e){
+                                             var search_data = this.name ;
+                                             var arr = search_data.split("-");
+                                             var newdt = new Date(Number(arr[0]),Number(arr[1]),Number(arr[2]));
+                                             var end_month = newdt.getMonth()+1 ;
+                                             var end_day = newdt.getDate() ;
+                                             var end_year = newdt.getFullYear() ;
+                                             var end_date = end_year+"-"+end_month+"-"+end_day ;
+                                            var target_url = "/site/index.html?ErrorLogSearch[start_date]="+this.name+"&ErrorLogSearch[end_date]="+end_date+"&ErrorLogSearch[ApplicationId]="+e.point.category;
+                                            window.open(target_url);
+                                         }'
+                                    ))
                                 ]
+                            ],
+                            'legend'=>[
+                                'layout'=>'vertical',
+                                'align'=>'right',
+                                'verticalAlign'=>'top',
+                                'x'=>-40,
+                                'y'=>100,
+                                'floating'=>true,
+                                'borderWidth'=>1,
+                                'backgroundColor'=>'#FFFFFF',
+                                'shadow'=>true,
                             ],
                             'tooltip'=>[
                                 'enabled'=>false,
@@ -68,56 +101,12 @@ $page = Yii::$app->request->get("page") ;
                             'legend' =>[
                                 'verticalAlign'=>"bottom" ,
                             ],
-                            'series' => [
-                                ['name' => '数量', 'data' => $cur_data, 'color' => '#DD0000'],
-                            ]
+                            'series' => $series
                         ]
                     ]);
                     ?>
                 </div>
 
-                <div>
-                    <?php
-                    echo Highcharts::widget([
-                        'options'=>[
-                            'chart' => [
-                                'defaultSeriesType'=> 'column',
-                                'plotShadow'=> false ,//设置阴影
-                                'height'=>450,
-                            ],
-                            'title' => [
-                                'text' => $format_before_time.'统计'
-                            ],
-                            'credits' => [
-                                'enabled'=>false//不显示highCharts版权信息
-                            ],
-                            'xAxis' => [
-                                'categories' => $before_categories,
-                            ],
-                            'yAxis' => [
-                                'min' => 0,
-                                'title' => array('text' => '')
-                            ],
-                            'plotOptions'=>[
-                                'series'=>[
-                                    'dataLabels'=>[
-                                        'enabled'=>true
-                                    ]
-                                ]
-                            ],
-                            'tooltip'=>[
-                                'enabled'=>false,
-                            ],
-                            'legend' =>[
-                                'verticalAlign'=>"bottom" ,
-                            ],
-                            'series' => [
-                                ['name' => '数量', 'data' => $before_data, 'color' => '#DD0000'],
-                            ]
-                        ]
-                    ]);
-                    ?>
-                </div>
             </div>
         </div>
     </div>

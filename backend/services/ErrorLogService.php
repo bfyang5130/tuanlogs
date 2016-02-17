@@ -153,7 +153,7 @@ class ErrorLogService {
         $day = $page*5-4 ;
         $count_time = strtotime("{$day} day", $cur_time);
         //返回5天内的数据
-        $items = self::errorLogItems($count_time,5,$appname_list) ;
+        $items = self::errorLogItems($count_time,5,$appname_list,'day') ;
 
         if(empty($page) || $page>0){
 
@@ -273,30 +273,24 @@ class ErrorLogService {
             }
         }
 
-        foreach($appname_list as $appname){
-            $before_count[$appname] = 0;
-            $cur_count[$appname] = 0;
+        //显示数据
+        $cur_month = date("m") ;
+        if($cur_month>=7){
+            $count_time =  strtotime(date("Y-12-01")) ;
+        }else{
+            $count_time =  strtotime(date("Y-06-01")) ;
         }
 
-        $cur_time = strtotime(date("Y-m-01")) ;
-        $month = $page*2-1 ;
-        $before_time = strtotime("{$month} month", $cur_time);
-        $format_before_time = date("Ym",$before_time) ;
+        $month = $page*6-5 ;
+        $count_time = strtotime("{$month} month", $count_time);
+
+        //返回半年内的数据
+        $items = self::errorLogItems($count_time,6,$appname_list,'month') ;
 
         if(empty($page) || $page>0){
-            //显示日统计数据
-            $before_datas = ErrorLogMonth::find()
-                ->where(["Month"=>$format_before_time])
-                ->all();
-
-            foreach($before_datas as $before){
-                if(in_array($before['ApplicationId'],$appname_list)){
-                    $before_count[$before['ApplicationId']] = $before['Number'] ;
-                }
-            }
-
             //当月统计错误日志的数量
             $cur_time_format = date("Y-m-01 0:0:0",time()) ;
+            $time_format = date("Y-m-01",time()) ;
             $cur_error_query = new Query() ;
             $cur_error_query->select("count(id) as total,ApplicationId")
                 ->from("ErrorLog")
@@ -308,43 +302,12 @@ class ErrorLogService {
             $cur_data = $cur_error_query->all() ;
             foreach($cur_data as $cur){
                 if(in_array($cur['ApplicationId'],$appname_list)){
-                    $cur_count[$cur['ApplicationId']] = intval($cur['total']) ;
+                    $items[$time_format][$cur['ApplicationId']] = intval($cur['total']) ;
                 }
             }
-
-            $format_before_time = date("Y-m",$before_time) ;
-            $format_cur_time = date("Y-m") ;
-        }else{
-            $before_datas = ErrorLogMonth::find()
-                ->where("Month=:str_time",[":str_time"=>$format_before_time])
-                ->orderBy("id asc")
-                ->all();
-
-            foreach($before_datas as $before){
-                if(in_array($before['ApplicationId'],$appname_list)){
-                    $before_count[$before['ApplicationId']] = $before['Number'] ;
-                }
-            }
-
-            $cur_time = strtotime("+1 month", $before_time);
-            $cur_data_time = date("Ym",$cur_time) ;
-            $cur_datas = ErrorLogMonth::find()
-                ->where("Month=:cur_time",[":cur_time"=>$cur_data_time])
-                ->orderBy("id asc")
-                ->all();
-
-            foreach($cur_datas as $cur){
-                if(in_array($cur['ApplicationId'],$appname_list)){
-                    $cur_count[$cur['ApplicationId']] = $cur['Number'] ;
-                }
-            }
-
-            $format_before_time = date("Y-m",$before_time) ;
-            $format_cur_time = date("Y-m",$cur_time) ;
-
         }
+        return array("items"=>$items,"appnames"=>$appname_list) ;
 
-        return ["before_count"=>$before_count,"cur_count"=>$cur_count,"format_before_time"=>$format_before_time,"format_cur_time"=>$format_cur_time] ;
     }
 
     private static function saveErrorLogMonth($str_time,$appname_list){
@@ -401,7 +364,7 @@ class ErrorLogService {
     }
 
 
-    private static function errorLogItems($search_time,$times,$appname_list){
+    private static function errorLogItems($search_time,$times,$appname_list,$add_type){
         $item_arr =array() ;
         for($i=1;$i<=$times;$i++){
 
@@ -411,9 +374,17 @@ class ErrorLogService {
                 $item_arr[$format_search_time][$appname] = 0;
             }
 
-            $datas = ErrorLogDay::find()
-                ->where(["Date"=>$search_time])
-                ->all();
+            if($add_type=='month'){
+                $cur_time_format = date("Ym",$search_time) ;
+                $datas = ErrorLogMonth::find()
+                    ->where("Month=:cur_time",[":cur_time"=>$cur_time_format])
+                    ->orderBy("id asc")
+                    ->all();
+            }else{
+                $datas = ErrorLogDay::find()
+                    ->where(["Date"=>$search_time])
+                    ->all();
+            }
 
             foreach($datas as $data){
                 if(in_array($data['ApplicationId'],$appname_list)){
@@ -421,7 +392,11 @@ class ErrorLogService {
                 }
             }
 
-            $search_time = strtotime("+1 day", $search_time);
+            if($add_type=='month'){
+                $search_time = strtotime("+1 month", $search_time);
+            }else{
+                $search_time = strtotime("+1 day", $search_time);
+            }
 
         }
         return $item_arr ;

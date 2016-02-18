@@ -7,6 +7,7 @@ use yii\widgets\Pjax;
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 
 $this->title = '日志列表';
 #获得日志统计记录
@@ -23,7 +24,7 @@ $dataProvider = $searchModel->search($params);
         'itemTemplate' => "<li><i>{link}</i></li>\n", // template for all links
         'links' => [
             [
-                'label' => '首页'
+                'label' => '跟踪日志列表'
             ],
         ],
     ]);
@@ -33,6 +34,12 @@ $dataProvider = $searchModel->search($params);
         <div class="panel panel-default">
             <?= $this->render('common_top.php'); ?>
             <div class="panel-body">
+                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin:10px 0px;">
+                    <div class="btn-group pull-right" role="group" aria-label="First group">
+                        <a href="<?= Url::toRoute(['site/trace'])?>" class="btn btn-default">列表</a>
+                        <a href="<?= Url::toRoute(['site/tracereport'])?>" class="btn btn-default">图形</a>
+                    </div>
+                </div>
                 <?php
                 Pjax::begin(['id' => 'countries']);
                 ?>

@@ -40,7 +40,6 @@ $search_date = Yii::$app->request->get("search_date") ;
                             <label for="exampleInputEmail2">时间:</label>
                             <?=
                             \yii\jui\DatePicker::widget([
-                                'model' => $searchModel,
                                 'options' => ['class' => 'form-control datepicker','readonly'=>true],
                                 'attribute' => 'start_date',
                                 'language' => 'zh-CN',

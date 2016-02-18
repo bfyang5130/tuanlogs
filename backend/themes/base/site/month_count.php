@@ -5,6 +5,7 @@ use yii\widgets\Breadcrumbs;
 use yii\helpers\Url;
 use nirvana\showloading\ShowLoadingAsset;
 use miloschuman\highcharts\Highcharts ;
+use yii\helpers\Html ;
 
 ShowLoadingAsset::register($this);
 
@@ -29,8 +30,7 @@ $page = Yii::$app->request->get("page") ;
             <div class="panel-body">
                 <div class="btn-toolbar pull-let" role="toolbar" aria-label="Toolbar with button groups">
                     <div class="btn-group" role="group" aria-label="First group">
-                        <a href="<?= Url::toRoute(['/site/countmonth',"page"=>$pre_page]) ?>" class="btn btn-default">上一页</a>
-                        <a href="<?= Url::toRoute(['/site/countmonth',"page"=>$next_page]) ?>" class="btn btn-default">下一页</a>
+                        <?php echo Html::dropDownList("years",$page,$years,['id'=>'year_select','class'=>'form-control'])?>
                     </div>
                     <div class="btn-group pull-right" role="group" aria-label="First group">
                         <a href="<?= Url::toRoute(['/site/errorgraph']) ?>" class="btn btn-default">返回</a>
@@ -46,7 +46,7 @@ $page = Yii::$app->request->get("page") ;
                                 'height'=>2800,
                             ],
                             'title' => [
-                                'text' => ' 统计'
+                                'text' => '错误日志月统计'
                             ],
                             'credits' => [
                                 'enabled'=>false//不显示highCharts版权信息
@@ -85,21 +85,18 @@ $page = Yii::$app->request->get("page") ;
                                 ]
                             ],
                             'legend'=>[
-                                'layout'=>'vertical',
-                                'align'=>'right',
+                                'layout'=>'horizontal',
+                                'align'=>'center',
                                 'verticalAlign'=>'top',
-                                'x'=>-40,
-                                'y'=>100,
                                 'floating'=>true,
+//                                'x'=>90,
+                                'y'=>20,
                                 'borderWidth'=>1,
                                 'backgroundColor'=>'#FFFFFF',
                                 'shadow'=>true,
                             ],
                             'tooltip'=>[
                                 'enabled'=>false,
-                            ],
-                            'legend' =>[
-                                'verticalAlign'=>"bottom" ,
                             ],
                             'series' => $series
                         ]
@@ -112,17 +109,11 @@ $page = Yii::$app->request->get("page") ;
     </div>
 </div>
 <script type="text/javascript">
-    //    $(document).ready(function() {
-    //        $("#text_body_c").showLoading();
-    //        $.ajax({
-    //            url: "/site/getdata.html?type=1",
-    //            dataType: 'html',
-    //            success: function() {
-    //                $(this).addClass("done");
-    //            },
-    //            error: function() {
-    //                $(this).addClass("done");
-    //            }
-    //        });
-    //    });
+        $(document).ready(function() {
+            $("#year_select").change(function(){
+                var page = $(this).val() ;
+                var url = "/site/countmonth.html?page="+page ;
+                location.href = url ;
+            });
+        });
 </script>

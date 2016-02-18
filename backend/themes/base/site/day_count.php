@@ -46,7 +46,7 @@ $page = Yii::$app->request->get("page") ;
                                 'height'=>2800,
                             ],
                             'title' => [
-                                'text' => ' 统计'
+                                'text' => '错误日志日统计'
                             ],
                             'credits' => [
                                 'enabled'=>false//不显示highCharts版权信息
@@ -85,21 +85,18 @@ $page = Yii::$app->request->get("page") ;
                                 ]
                             ],
                             'legend'=>[
-                                'layout'=>'vertical',
-                                'align'=>'right',
+                                'layout'=>'horizontal',
+                                'align'=>'center',
                                 'verticalAlign'=>'top',
-                                'x'=>-40,
-                                'y'=>100,
                                 'floating'=>true,
+//                                'x'=>90,
+                                'y'=>20,
                                 'borderWidth'=>1,
                                 'backgroundColor'=>'#FFFFFF',
                                 'shadow'=>true,
                             ],
                             'tooltip'=>[
                                 'enabled'=>false,
-                            ],
-                            'legend' =>[
-                                'verticalAlign'=>"bottom" ,
                             ],
                             'series' => $series
                         ]

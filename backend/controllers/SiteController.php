@@ -255,11 +255,14 @@ class SiteController extends Controller {
             $i = $i + 1 ;
         }
 
+        $years = ErrorLogService::getYearList() ;
+
         return $this->render('month_count',[
             "appnames"   =>$sort_appnames,
             "series"     =>$series,
             "pre_page"   =>$pre_page ,
             "next_page"  =>$next_page ,
+            "years"      =>$years
         ]);
     }
 

@@ -402,6 +402,39 @@ class ErrorLogService {
         return $item_arr ;
     }
 
+    public static function getYearList(){
+        //获取错误日志最先的时间
+        $errorlog = ErrorLog::find()
+            ->where("AddDate>0")
+            ->orderBy("AddDate asc")
+            ->limit(1)
+            ->one() ;
+        $add_date = $errorlog->AddDate;
+        $str_year = date("Y",strtotime($add_date)) ;
+        $cur_year = date("Y") ;
+        $cur_month = date("n") ;
+        $diff = $cur_year-$str_year +1 ;
+        $year = $cur_year ;
+        $item =array() ;
+        $key = 0 ;
+        for($i=0 ; $i<$diff;$i++){
+            if($i==0){
+                if($cur_month>6) {
+                    $item[$key] = $year . "下半年";
+                    $key -= 1;
+                }
+            }else{
+                $item[$key] = $year."下半年" ;
+                $key -= 1 ;
+            }
+            $item[$key] = $year."上半年" ;
+            $key -= 1 ;
+            $year = $year - 1 ;
+        }
+        return $item ;
+
+    }
+
 }
 
 ?>

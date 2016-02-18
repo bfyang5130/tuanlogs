@@ -63,7 +63,7 @@ class TraceLogService {
 
         #所有错误类别
         $category = TraceLog::find()->select('ApplicationId')->groupBy('ApplicationId')->asArray()->all();
-        $category = array_values(ArrayHelper::map($category,'ApplicationId','ApplicationId'));
+        $category = ArrayHelper::map($category,'ApplicationId','ApplicationId');
 
         $coefficient = 5 * \Yii::$app->request->get('page',1);
 
@@ -75,18 +75,25 @@ class TraceLogService {
                 ->select("ApplicationId,Number,`Date`")
                 ->where(["FROM_UNIXTIME(`Date`,'%Y-%m-%d')"=>$selectDay])
                 ->asArray()->all();
+            #今日数据动态取出
+            $start = date('Y:-m-d ',strtotime($selectDay))." 00:00:00";
+            $end = date('Y:-m-d ',strtotime($selectDay))." 23:59:59";
+
             if($selectDay == date("Y-m-d")){
                 $TraceLogList[$selectDay] = TraceLog::find()
                     ->select("count(*) as Number , ApplicationId ")
-                    ->where(['date(`AddDate`)'=>$selectDay])
+                    ->where(['between','AddDate',$start,$end])
+                    ->andWhere(['date(`AddDate`)'=>$selectDay])
                     ->groupBy("ApplicationId")
                     ->asArray()->all();
                 continue;
             }
+            #首次统计
             if(empty($TraceLogList[$selectDay])){
                 $TraceLogList[$selectDay] = TraceLog::find()
                     ->select("count(*) as Number , ApplicationId ")
-                    ->where(['date(`AddDate`)'=>$selectDay])
+                    ->where(['between','AddDate',$start,$end])
+                    ->andWhere(['date(`AddDate`)'=>$selectDay])
                     ->groupBy("ApplicationId")
                     ->asArray()->all();
                 if (empty($TraceLogList[$selectDay])) {
@@ -112,6 +119,33 @@ class TraceLogService {
         }
 
         $data = $TraceLogList;
+
+        #将错误类型按照 出现的次数降序排列
+        $sortCategory = [];
+        foreach($data as $k => $v)
+        {
+            foreach($v as $kk => $vv){
+                if(!empty($vv['ApplicationId'])){
+                    if(!array_key_exists($vv['ApplicationId'],$sortCategory)){
+                        $sortCategory[$vv['ApplicationId']] = intval($vv['Number']);
+                    }else{
+                        $sortCategory[$vv['ApplicationId']] += intval($vv['Number']);
+                    }
+                }
+            }
+        }
+
+        foreach($category as $k => $v){
+            $category[$k] = 0;
+        }
+        arsort($sortCategory);
+
+        $sortCategory = $sortCategory + $category;
+        $category = [];
+        foreach($sortCategory as $k => $v){
+            $category[] = $k;
+        }
+        #排序结束
 
         $trace_series = [];
         $i = 0;

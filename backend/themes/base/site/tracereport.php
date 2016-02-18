@@ -100,7 +100,7 @@ $page = empty(Yii::$app->request->get('page'))?'1':intval(Yii::$app->request->ge
                         'options'=>[
                             'chart' => [
                                 'type'=>'bar',
-                                'height'=>2000,
+                                'height'=>2800,
                             ],
                             'title' => [
                                 'text'=> $this->title
@@ -120,6 +120,7 @@ $page = empty(Yii::$app->request->get('page'))?'1':intval(Yii::$app->request->ge
                                     'text' => 'Population (millions)',
                                     'align' => 'high'
                                 ],
+                                'align' => 'high',
                                 'labels' => [
                                     'overflow' => 'justify'
                                 ]
@@ -135,15 +136,15 @@ $page = empty(Yii::$app->request->get('page'))?'1':intval(Yii::$app->request->ge
                                 ]
                             ],
                             'legend' => [
-                                'layout' => 'vertical',
-                                'align' => 'right',
-                                'verticalAlign' => 'top',
-                                'x' => '-40',
-                                'y' => '100',
-                                'floating' => true,
-                                'borderWidth' => 1,
-                                'shadow' => true,
-//                            'backgroundColor' => '((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || \'#FFFFFF\')'
+                                'layout'=>'horizontal',
+                                'align'=>'center',
+                                'verticalAlign'=>'top',
+                                'floating'=>true,
+//                                'x'=>90,
+                                'y'=>20,
+                                'borderWidth'=>1,
+                                'backgroundColor'=>'#FFFFFF',
+                                'shadow'=>true,
                             ],
                             'credits' => [
                                 'enabled' => false

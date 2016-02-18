@@ -150,7 +150,8 @@ class SiteController extends Controller {
             $next_page = 0 ;
         }
 
-        $day_data = ErrorLogService::countByDay($page) ;
+        $search_date = Yii::$app->request->get("search_date") ;
+        $day_data = ErrorLogService::countByDay($page,$search_date) ;
         $appnames = $day_data["appnames"] ;
         $items = $day_data["items"] ;
 

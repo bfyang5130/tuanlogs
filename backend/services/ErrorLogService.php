@@ -108,7 +108,7 @@ class ErrorLogService {
     /**
      * 按天统计错误数量
      */
-    public static function countByDay($page){
+    public static function countByDay($page,$search_date){
         //设置不超时 首次运行会统计数据,比较慢
         set_time_limit(0) ;
         //查找Error的appname
@@ -152,10 +152,15 @@ class ErrorLogService {
         $cur_time = strtotime(date("Y-m-d")) ;
         $day = $page*5-4 ;
         $count_time = strtotime("{$day} day", $cur_time);
+
+        if(!empty($search_date)){
+            $search_time = strtotime($search_date) ;
+            $count_time = strtotime("-2 day", $search_time);
+        }
         //返回5天内的数据
         $items = self::errorLogItems($count_time,5,$appname_list,'day') ;
 
-        if(empty($page) || $page>0){
+        if((empty($page) || $page>0) && empty($search_date)){
 
             //当天统计错误日志的数量
             $format_cur_time = date("Y-m-d") ;

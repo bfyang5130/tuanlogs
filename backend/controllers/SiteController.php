@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use backend\models\ErrorLogSearch;
 use backend\services\ErrorLogService;
+use backend\services\TraceLogService;
 use backend\services\ToolService;
 use Yii;
 use yii\data\Sort;
@@ -31,7 +32,8 @@ class SiteController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index', 'trace', 'sql', 'errorgraph', 'getdata','doing','countday','countmonth'],
+                        'actions' => ['logout', 'index', 'trace', 'sql', 'errorgraph',
+                            'getdata','doing','countday','countmonth','tracereport','tracedayreport'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -268,4 +270,18 @@ class SiteController extends Controller {
     }
 
 
+    public function actionTracereport()
+    {
+        $traceService = new TraceLogService();
+        $data = [];
+        foreach($traceService->TraceGroupBy() as $trace){
+            $data[] = [$trace['ApplicationId'],floatval($trace['total'])];
+        }
+        return $this->render('tracereport',['data'=>$data,'type'=>'']);
+    }
+
+    public function actionTracedayreport()
+    {
+        return $this->render('tracereport', TraceLogService::CountDay());
+    }
 }

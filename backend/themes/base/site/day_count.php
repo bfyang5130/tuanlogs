@@ -10,6 +10,7 @@ ShowLoadingAsset::register($this);
 
 $this->title = '错误日志-日统计';
 $page = Yii::$app->request->get("page") ;
+$search_date = Yii::$app->request->get("search_date") ;
 ?>
 <div class="site-index">
     <?php
@@ -27,14 +28,42 @@ $page = Yii::$app->request->get("page") ;
         <div class="panel panel-default">
             <?= $this->render('common_top.php'); ?>
             <div class="panel-body">
-                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                    <div class="btn-group pull-left" role="group" aria-label="First group">
-                        <a href="<?= Url::toRoute(['/site/countday',"page"=>$pre_page]) ?>" class="btn btn-default">上一页</a>
-                        <a href="<?= Url::toRoute(['/site/countday',"page"=>$next_page]) ?>" class="btn btn-default">下一页</a>
+                <div class="form-inline" role="toolbar">
+
+                    <div class="box-body text-center">
+                        <div class="btn-group pull-left" role="group" aria-label="First group">
+                            <a href="<?= Url::toRoute(['/site/countday',"page"=>$pre_page]) ?>" class="btn btn-default">上一页</a>
+                            <a href="<?= Url::toRoute(['/site/countday',"page"=>$next_page]) ?>" class="btn btn-default">下一页</a>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputEmail2">时间:</label>
+                            <?=
+                            \yii\jui\DatePicker::widget([
+                                'model' => $searchModel,
+                                'options' => ['class' => 'form-control datepicker','readonly'=>true],
+                                'attribute' => 'start_date',
+                                'language' => 'zh-CN',
+                                'dateFormat' => 'yyyy-MM-dd',
+                                'value' => empty($search_date)?date('Y-m-d'):$search_date,
+                                'clientOptions'=>[
+                                    'minDate' => '2015-01-01',
+                                    'maxDate' => date("Y-m-d"),
+                                    'onSelect'=> new \yii\web\JsExpression(
+                                        "function (dateText, inst) {
+                                            var url = '/site/countday.html?search_date='+ dateText;
+                                            location.href = url;
+                                        }"
+                                    ),
+                                ],
+
+                            ]);
+                            ?>
+                        </div>
+
+                        <a href="<?= Url::toRoute(['/site/errorgraph']) ?>" class="btn btn-default pull-right">返回</a>
                     </div>
-                    <div class="btn-group pull-right" role="group" aria-label="First group">
-                        <a href="<?= Url::toRoute(['/site/errorgraph']) ?>" class="btn btn-default">返回</a>
-                    </div>
+
                 </div>
                 <div>
                     <?php
@@ -109,17 +138,6 @@ $page = Yii::$app->request->get("page") ;
     </div>
 </div>
 <script type="text/javascript">
-    //    $(document).ready(function() {
-    //        $("#text_body_c").showLoading();
-    //        $.ajax({
-    //            url: "/site/getdata.html?type=1",
-    //            dataType: 'html',
-    //            success: function() {
-    //                $(this).addClass("done");
-    //            },
-    //            error: function() {
-    //                $(this).addClass("done");
-    //            }
-    //        });
-    //    });
+//        $(document).ready(function() {
+//        });
 </script>

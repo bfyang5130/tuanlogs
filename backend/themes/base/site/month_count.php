@@ -5,13 +5,12 @@ use yii\widgets\Breadcrumbs;
 use yii\helpers\Url;
 use nirvana\showloading\ShowLoadingAsset;
 use miloschuman\highcharts\Highcharts ;
+use yii\helpers\Html ;
 
 ShowLoadingAsset::register($this);
 
-$this->title = '图形显示';
-#获得日志统计记录
-
-$params = \Yii::$app->request->queryParams;
+$this->title = '错误日志-月统计';
+$page = Yii::$app->request->get("page") ;
 ?>
 <div class="site-index">
     <?php
@@ -29,15 +28,12 @@ $params = \Yii::$app->request->queryParams;
         <div class="panel panel-default">
             <?= $this->render('common_top.php'); ?>
             <div class="panel-body">
-                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                    <div class="btn-group pull-right" role="group" aria-label="First group">
-                        <a href="<?= Url::toRoute('/site/index') ?>" class="btn btn-default">列表</a>
-                        <a href="<?= Url::toRoute('/site/errorgraph') ?>" class="btn btn-default">图形</a>
+                <div class="btn-toolbar pull-let" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group" role="group" aria-label="First group">
+                        <?php echo Html::dropDownList("years",$page,$years,['id'=>'year_select','class'=>'form-control'])?>
                     </div>
-
-                    <div class="btn-group pull-left" role="group" aria-label="First group">
-                        <a href="<?= Url::toRoute('/site/countday') ?>" class="btn btn-default">日统计</a>
-                        <a href="<?= Url::toRoute('/site/countmonth') ?>" class="btn btn-default">月统计</a>
+                    <div class="btn-group pull-right" role="group" aria-label="First group">
+                        <a href="<?= Url::toRoute(['/site/errorgraph']) ?>" class="btn btn-default">返回</a>
                     </div>
                 </div>
                 <div>
@@ -47,10 +43,10 @@ $params = \Yii::$app->request->queryParams;
                             'chart' => [
                                 'type'=> 'bar',
                                 'plotShadow'=> false ,//设置阴影
-                                'height'=>1500,
+                                'height'=>2800,
                             ],
                             'title' => [
-                                'text' => ' 统计'
+                                'text' => '错误日志月统计'
                             ],
                             'credits' => [
                                 'enabled'=>false//不显示highCharts版权信息
@@ -71,14 +67,30 @@ $params = \Yii::$app->request->queryParams;
                                         'enabled'=>true
                                     ]
                                 ],
+                                'series'=>[
+                                    'cursor'=>'pointer',
+                                    'events' => array("click"=>new \yii\web\JsExpression(
+                                        'function(e){
+                                             var search_data = this.name ;
+                                             var arr = search_data.split("-");
+                                             var newdt = new Date(Number(arr[0]),Number(arr[1]),Number(arr[2]));
+                                             var end_month = newdt.getMonth()+1 ;
+                                             var end_day = newdt.getDate() ;
+                                             var end_year = newdt.getFullYear() ;
+                                             var end_date = end_year+"-"+end_month+"-"+end_day ;
+                                            var target_url = "/site/index.html?ErrorLogSearch[start_date]="+this.name+"&ErrorLogSearch[end_date]="+end_date+"&ErrorLogSearch[ApplicationId]="+e.point.category;
+                                            window.open(target_url);
+                                         }'
+                                    ))
+                                ]
                             ],
                             'legend'=>[
-                                'layout'=>'vertical',
-                                'align'=>'right',
+                                'layout'=>'horizontal',
+                                'align'=>'center',
                                 'verticalAlign'=>'top',
-                                'x'=>-40,
-                                'y'=>100,
                                 'floating'=>true,
+//                                'x'=>90,
+                                'y'=>20,
                                 'borderWidth'=>1,
                                 'backgroundColor'=>'#FFFFFF',
                                 'shadow'=>true,
@@ -86,30 +98,22 @@ $params = \Yii::$app->request->queryParams;
                             'tooltip'=>[
                                 'enabled'=>false,
                             ],
-                            'legend' =>[
-                                'verticalAlign'=>"bottom" ,
-                            ],
                             'series' => $series
                         ]
                     ]);
                     ?>
                 </div>
+
             </div>
         </div>
     </div>
 </div>
 <script type="text/javascript">
-    //    $(document).ready(function() {
-    //        $("#text_body_c").showLoading();
-    //        $.ajax({
-    //            url: "/site/getdata.html?type=1",
-    //            dataType: 'html',
-    //            success: function() {
-    //                $(this).addClass("done");
-    //            },
-    //            error: function() {
-    //                $(this).addClass("done");
-    //            }
-    //        });
-    //    });
+        $(document).ready(function() {
+            $("#year_select").change(function(){
+                var page = $(this).val() ;
+                var url = "/site/countmonth.html?page="+page ;
+                location.href = url ;
+            });
+        });
 </script>

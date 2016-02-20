@@ -2,8 +2,12 @@
 
 namespace backend\controllers;
 
+use backend\models\ErrorLogSearch;
 use backend\services\ErrorLogService;
+use backend\services\TraceLogService;
+use backend\services\ToolService;
 use Yii;
+use yii\data\Sort;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -28,7 +32,8 @@ class SiteController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index', 'trace', 'sql', 'errorgraph', 'getdata','doing'],
+                        'actions' => ['logout', 'index', 'trace', 'sql', 'errorgraph',
+                            'getdata','doing','countday','countmonth','tracereport','tracedayreport'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -70,15 +75,32 @@ class SiteController extends Controller {
      */
     public function actionErrorgraph() {
         $application_list = ErrorLogService::countErrorByApplicationId() ;
-        $pie_data = array() ;
-        foreach($application_list as $application){
-            $pie_data[] = [$application['ApplicationId'],floatval($application['total'])] ;
+        $appnames = array() ;
+        $data =array() ;
+        $sort_application_list = ToolService::array_sort($application_list,"total","desc");
+        foreach($sort_application_list as $application){
+            $appnames[] = $application['ApplicationId'] ;
+            $data[]   = floatval($application['total']) ;
         }
-        return $this->render('errorgraph',['pie_data'=>$pie_data]);
+        $series['name']="错误日志" ;
+        $series['data']=$data ;
+        return $this->render('errorgraph',['appnames'=>$appnames,'series'=>array($series)]);
     }
 
     public function actionIndex() {
-        return $this->render('index');
+        $params = Yii::$app->request->get();
+        $searchModel = new ErrorLogSearch();
+        $dataProvider = $searchModel->search($params);
+        $query = $dataProvider->query;
+        $sort = new Sort([
+            'attributes' => [
+                'AddDate',
+            ],
+            'defaultOrder'=>['AddDate'=>SORT_DESC]
+        ]);
+        $locals = ToolService::getPagedRows($query,['orderBy'=>$sort->orders,'pageSize'=>10]);
+        $locals['searchModel']=$searchModel;
+        return $this->render('index',$locals);
     }
 
     public function actionTrace() {
@@ -112,4 +134,154 @@ class SiteController extends Controller {
         return $this->goHome();
     }
 
+    /**
+     * 日统计ErrorLog
+     * @return string
+     */
+    public function actionCountday(){
+        $page = Yii::$app->request->get("page") ;
+        if(empty($page)){
+            $page = 0 ;
+        }
+        if(!empty($page) && $page>0){
+            $page = 0 ;
+        }
+        $pre_page = $page - 1 ;
+        $next_page = $page + 1 ;
+        if($next_page>0){
+            $next_page = 0 ;
+        }
+
+        $search_date = Yii::$app->request->get("search_date") ;
+        $day_data = ErrorLogService::countByDay($page,$search_date) ;
+        $appnames = $day_data["appnames"] ;
+        $items = $day_data["items"] ;
+
+        //统计各个分类总数
+        $sort_items = array() ;
+        foreach($appnames as $a_val){
+            foreach($items as $key=>$item){
+                foreach($item as $i_key=>$i_val){
+                    if($i_key==$a_val){
+                        $sort_items[$a_val] = empty($sort_items[$a_val])?0:$sort_items[$a_val] ;
+                        $sort_items[$a_val] = $sort_items[$a_val] + floatval($i_val) ;
+                    }
+                }
+            }
+        }
+
+        //降序排序
+        arsort($sort_items) ;
+
+        //取排序后的分类字段
+        $sort_appnames = array_keys($sort_items) ;
+
+        //按排完序的重新给值
+        foreach($items as $key=>$item){
+            foreach($sort_appnames as $t_appname){
+                $arr_item[$t_appname] = empty($item[$t_appname])?0:$item[$t_appname] ;
+            }
+            $items[$key] = $arr_item ;
+        }
+
+        $series =array() ;
+        $i = 0 ;
+        foreach($items as $key=>$item){
+            $series[$i]['name'] =$key ;
+            $series[$i]['data']= array_values($item) ;
+            $i = $i + 1 ;
+        }
+
+        return $this->render('day_count',[
+            "appnames"   =>$sort_appnames,
+            "series"     =>$series,
+            "pre_page"   =>$pre_page ,
+            "next_page"  =>$next_page ,
+        ]);
+    }
+
+    /**
+     * 月统计ErrorLog
+     * @return string
+     */
+    public function actionCountmonth(){
+        $page = Yii::$app->request->get("page") ;
+        if(empty($page)){
+            $page = 0 ;
+        }
+        if(!empty($page) && $page>0){
+            $page = 0 ;
+        }
+        $pre_page = $page - 1 ;
+        $next_page = $page + 1 ;
+        if($next_page>0){
+            $next_page = 0 ;
+        }
+
+        $month_data = ErrorLogService::countByMonth($page) ;
+        $appnames = $month_data["appnames"] ;
+        $items = $month_data["items"] ;
+
+        //统计各个分类总数
+        $sort_items = array() ;
+        foreach($appnames as $a_val){
+            foreach($items as $key=>$item){
+                foreach($item as $i_key=>$i_val){
+                    if($i_key==$a_val){
+                        $sort_items[$a_val] = empty($sort_items[$a_val])?0:$sort_items[$a_val] ;
+                        $sort_items[$a_val] = $sort_items[$a_val] + floatval($i_val) ;
+                    }
+                }
+            }
+        }
+
+        //降序排序
+        arsort($sort_items) ;
+
+        //取排序后的分类字段
+        $sort_appnames = array_keys($sort_items) ;
+
+        //按排完序的重新给值
+        foreach($items as $key=>$item){
+            foreach($sort_appnames as $t_appname){
+                $arr_item[$t_appname] = empty($item[$t_appname])?0:$item[$t_appname] ;
+            }
+            $items[$key] = $arr_item ;
+        }
+
+        $series =array() ;
+        $i = 0 ;
+
+        foreach($items as $key=>$item){
+            $series[$i]['name'] =$key ;
+            $series[$i]['data']= array_values($item) ;
+            $i = $i + 1 ;
+        }
+
+        $years = ErrorLogService::getYearList() ;
+
+        return $this->render('month_count',[
+            "appnames"   =>$sort_appnames,
+            "series"     =>$series,
+            "pre_page"   =>$pre_page ,
+            "next_page"  =>$next_page ,
+            "years"      =>$years
+        ]);
+    }
+
+
+    public function actionTracereport()
+    {
+        $traceService = new TraceLogService();
+        $data = [];
+        foreach($traceService->TraceGroupBy() as $trace){
+            $data[] = [$trace['ApplicationId'],floatval($trace['total'])];
+        }
+        return $this->render('tracereport',['data'=>$data,'type'=>'']);
+    }
+
+    public function actionTracedayreport()
+    {
+        return $this->render('tracereport', TraceLogService::CountDay());
+    }
 }

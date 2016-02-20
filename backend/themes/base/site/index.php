@@ -1,9 +1,6 @@
 <?php
 /* @var $this yii\web\View */
 
-use backend\models\ErrorLogSearch;
-use yii\grid\GridView;
-use yii\widgets\Pjax;
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
 use yii\helpers\Url;
@@ -11,12 +8,8 @@ use yii\widgets\LinkPager;
 use yii\widgets\ActiveForm;
 
 $this->title = '日志列表';
-#获得日志统计记录
-
-$params = \Yii::$app->request->queryParams;
-$searchModel = new ErrorLogSearch();
-$dataProvider = $searchModel->search($params);
 ?>
+
 <div class="site-index">
     <?php
     echo Breadcrumbs::widget([
@@ -80,16 +73,16 @@ $dataProvider = $searchModel->search($params);
                 <button type="submit" class="btn btn-default btn-primary btn-sm">查询</button>
                 <?php ActiveForm::end(); ?>
                 <?php
-                $begin = $dataProvider->getPagination()->getPage() * $dataProvider->getPagination()->pageSize + 1;
-                $end = $begin + $dataProvider->getPagination()->getPageSize() - 1;
+                $begin = $pager->page * $pager->pageSize + 1;
+                $end = $begin + $pager->pageSize - 1;
                 if ($begin > $end) {
                     $begin = $end;
                 }
                 ?>
                 <div class="panel-body">
-                    <div class="summary">第<b><?= $begin . '-' . $end ?></b>条，共<b><?= $dataProvider->getTotalCount() ?></b>条数据.</div>
+                    <div class="summary">第<b><?= $begin . '-' . $end ?></b>条，共<b><?= $pager->totalCount ?></b>条数据.</div>
                     <?php
-                    foreach ($dataProvider->getModels() as $oneError) {
+                    foreach ($datas as $oneError) {
                         ?>
                         <table class="table table-striped table-bordered">
                             <tr style="background-color: #ddd;">
@@ -107,7 +100,7 @@ $dataProvider = $searchModel->search($params);
                         </table>
                         <?php
                     }
-                    echo LinkPager::widget(['pagination' => $dataProvider->getPagination()]);
+                    echo LinkPager::widget(['pagination' => $pager]);
                     ?>
                 </div>
             </div>
@@ -116,28 +109,4 @@ $dataProvider = $searchModel->search($params);
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function() {
-<?php
-if (isset($params['ErrorLogSearch']['Parameter']) && !empty($params['ErrorLogSearch']['Parameter'])):
-    ?>
-            $("#errorlogsearch-parameter").val("<?= $params['ErrorLogSearch']['Parameter'] ?>");
-    <?php
-endif;
-if (isset($params['ErrorLogSearch']['Method']) && !empty($params['ErrorLogSearch']['Method'])):
-    ?>
-            $("#errorlogsearch-method").val("<?= $params['ErrorLogSearch']['Method'] ?>");
-    <?php
-endif;
-if (isset($params['ErrorLogSearch']['start_date']) && !empty($params['ErrorLogSearch']['start_date'])):
-    ?>
-            $("#errorlogsearch-start_date").val("<?= $params['ErrorLogSearch']['start_date'] ?>");
-    <?php
-endif;
-if (isset($params['ErrorLogSearch']['end_date']) && !empty($params['ErrorLogSearch']['end_date'])):
-    ?>
-            $("#errorlogsearch-end_date").val("<?= $params['ErrorLogSearch']['end_date'] ?>");
-    <?php
-endif;
-?>
-    });
 </script>

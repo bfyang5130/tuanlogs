@@ -29,7 +29,7 @@ class SqlLogSearch extends SqlTrace {
     public function rules() {
         return [
             ['id', 'integer'],
-            [['type','sqlusedtime','databasetype','start_date','end_date','sqltext'], 'safe'],
+            [['type','sqlusedtime','start_date','end_date','sqltext'], 'safe'],
         ];
     }
 
@@ -70,9 +70,6 @@ class SqlLogSearch extends SqlTrace {
         }
         if (isset($params['SqlLogSearch']['sqltext']) && !empty($params['SqlLogSearch']['sqltext'])) {
             $query->andWhere(['like', 'sqltext', $params['SqlLogSearch']['sqltext']]);
-        }
-        if (isset($params['SqlLogSearch']['databasetype']) && !empty($params['SqlLogSearch']['databasetype'])) {
-            $query->andWhere(" databasetype=:dbtype",[':dbtype' => $params['SqlLogSearch']['databasetype']]);
         }
         if (!isset($params['sort'])) {
             $query->orderBy('executedate desc ');

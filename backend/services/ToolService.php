@@ -75,6 +75,18 @@ class ToolService {
         return $new_array;
     }
 
+    //解析access日志
+    public static function parseAccessLog($body){
+        preg_match_all('/(.*?)-(.*?)-(.*?),(.*?)-{1,}.*?[\[](.*?)[\]]\s[\"](.*?)[\"]\s(\d{1,})\s(\d{1,})\s[\"](.*?)[\"]\s[\"](.*?)[\"]\s[\"](.*?)[\"].*?/',$body,$mat);
+        return $mat ;
+
+    }
+
+    public static function parseRequestInfo($body){
+        preg_match_all('/(.*?)\s(.*?)\s(.*)/',$body,$mat);
+        return $mat ;
+    }
+
 }
 
 ?>

@@ -68,7 +68,7 @@ class ErrorLogService {
         $application = $application_query->one() ;
         if(!empty($application)) {
             $lasupdatetime = $application['lastupdatetime'];
-            $format_time = date("Y-m-d H:i:s",$lasupdatetime) ;
+            $format_time = $lasupdatetime ;
         }
 
         //统计错误日志的数量

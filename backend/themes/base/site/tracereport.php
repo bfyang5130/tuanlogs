@@ -16,7 +16,7 @@ ShowLoadingAsset::register($this);
 $this->title = '跟踪日志报表';
 $params = \Yii::$app->request->queryParams;
 $page = empty(Yii::$app->request->get('page'))?'1':intval(Yii::$app->request->get('page'));
-
+$years = \Yii::$app->request->get('years','');
 ?>
 <div class="site-index">
     <?php
@@ -118,7 +118,7 @@ $page = empty(Yii::$app->request->get('page'))?'1':intval(Yii::$app->request->ge
                         'options'=>[
                             'chart' => [
                                 'type'=>'bar',
-                                'height'=>2800,
+                                'height'=>3200,
                             ],
                             'title' => [
                                 'text'=> $this->title
@@ -173,6 +173,77 @@ $page = empty(Yii::$app->request->get('page'))?'1':intval(Yii::$app->request->ge
                     ?>
                 <?php } ?>
                 <?php if($type == 'month'){ ?>
+                    <div class="btn-toolbar pull-let" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-group" role="group" aria-label="First group">
+                            <select id="year_select"
+                                    onchange="window.location.href = '<?=url::toRoute("site/tracemonreport") ?>?years='+options[selectedIndex].value"
+                                    class="form-control" name="years">
+                                <?php foreach($options as $key => $value){ ?>
+                                    <option  value="<?=$key?>"   <?php if($years == $key){ ?>selected <?php } ?> ><?=$value?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                        <div class="btn-group pull-right" role="group" aria-label="First group">
+                            <a href="/site/tracereport.html" class="btn btn-default">返回</a>
+                        </div>
+                    </div>
+                    <?= Highcharts::widget([
+                        'options'=>[
+                            'chart' => [
+                                'type'=>'bar',
+                                'height'=>2800,
+                            ],
+                            'title' => [
+                                'text'=> $this->title
+                            ],
+                            'subtitle' => [
+                                'text' => ''
+                            ],
+                            'xAxis' => [
+                                'categories' => $category,//填写类别
+                                'title' => [
+                                    'text' => ''
+                                ]
+                            ],
+                            'yAxis' => [
+                                'min' => 0,
+                                'title' => [
+                                    'text' => 'Population (millions)',
+                                    'align' => 'high'
+                                ],
+                                'align' => 'high',
+                                'labels' => [
+                                    'overflow' => 'justify'
+                                ]
+                            ],
+                            'tooltip' => [
+                                'valueSuffix' => ''//数量单位
+                            ],
+                            'plotOptions' => [
+                                'bar' => [
+                                    'dataLabels' => [
+                                        'enabled' => true
+                                    ]
+                                ]
+                            ],
+                            'legend' => [
+                                'layout'=>'horizontal',
+                                'align'=>'center',
+                                'verticalAlign'=>'top',
+                                'floating'=>true,
+//                                'x'=>90,
+                                'y'=>20,
+                                'borderWidth'=>1,
+                                'backgroundColor'=>'#FFFFFF',
+                                'shadow'=>true,
+                            ],
+                            'credits' => [
+                                'enabled' => false
+                            ],
+                            'series' => $trace_series
+                        ]
+                    ]);
+                    ?>
                 <?php } ?>
             </div>
         </div>

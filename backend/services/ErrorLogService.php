@@ -85,7 +85,7 @@ class ErrorLogService {
 
         $error_count_list = $error_query->all() ;
 
-        $curtime = time() ;
+        $curtime = date("Y-m-d H:i:s") ;
         foreach($error_count_list as $key=>$error_count){
             $applicationId = $error_count['ApplicationId'] ;
             $application = ApplicateName::findOne(["appname"=>$applicationId,"logtype"=>1]);

@@ -33,7 +33,7 @@ class SiteController extends Controller {
                     ],
                     [
                         'actions' => ['logout', 'index', 'trace', 'sql', 'errorgraph',
-                            'getdata','doing','countday','countmonth','tracereport','tracedayreport'],
+                            'getdata','doing','countday','countmonth','tracereport','tracedayreport','tracemonreport'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -115,6 +115,7 @@ class SiteController extends Controller {
     }
 
     public function actionLogin() {
+        $this->layout='login';
         if (!\Yii::$app->user->isGuest) {
             return $this->goHome();
         }
@@ -277,11 +278,20 @@ class SiteController extends Controller {
         foreach($traceService->TraceGroupBy() as $trace){
             $data[] = [$trace['ApplicationId'],floatval($trace['total'])];
         }
-        return $this->render('tracereport',['data'=>$data,'type'=>'']);
+        $data = TraceLogService::getTraceCategory();
+        $data['type'] = '';
+        return $this->render('tracereport',$data);
     }
 
     public function actionTracedayreport()
     {
         return $this->render('tracereport', TraceLogService::CountDay());
+    }
+
+    public function actionTracemonreport()
+    {
+        $dateline = Yii::$app->request->get('years',null);
+        $data = TraceLogService::CountMon($dateline);
+        return $this->render('tracereport',$data);
     }
 }

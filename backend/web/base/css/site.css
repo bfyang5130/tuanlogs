@@ -92,3 +92,11 @@ a.desc:after {
 table{
     word-break: break-all;
 }
+.site-login{
+    width: 600px;
+    border: 1px solid #dddddd;
+    padding: 25px;
+    text-align: center;
+    margin: 0 auto;
+    background-color: #efefef;
+}

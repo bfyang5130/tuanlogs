@@ -141,7 +141,7 @@ class ErrorLogService {
             self::saveErrorLogDay($str_add_date,$appname_list) ;
         }else{
             //从日统计表最后的date+1天统计数据
-            $last_time = $errorlogday->Date ;
+            $last_time = strtotime($errorlogday->Date) ;
             if($last_time<strtotime(date("Y-m-d"))){
                 $str_add_date = $last_time+86400 ;
                 self::saveErrorLogDay($str_add_date,$appname_list) ;
@@ -189,6 +189,7 @@ class ErrorLogService {
 
     private static function saveErrorLogDay($str_time,$appname_list){
         $cur_time = time() ;
+        $format_cur_time = date("Y-m-d H:i:s",time()) ;
 
         $end_time = strtotime('+1 day', $str_time);
 
@@ -214,7 +215,7 @@ class ErrorLogService {
             $log_arr = [] ;
             foreach($error_count_list as $key=>$value){
                 //保存数据在ErrorLog_day
-                $log_arr[] = [$value['ApplicationId'],$value['total'],strtotime($format_str_time),$cur_time] ;
+                $log_arr[] = [$value['ApplicationId'],$value['total'],$format_str_time,$format_cur_time] ;
             }
 
             if(!empty($log_arr)){
@@ -316,7 +317,7 @@ class ErrorLogService {
     }
 
     private static function saveErrorLogMonth($str_time,$appname_list){
-        $cur_time = time() ;
+        $format_cur_time = date("Y-m-d H:i:s",time()) ;
         $cur_time_year = date("Y") ;
         $cur_time_month = date("m") ;
 
@@ -349,7 +350,7 @@ class ErrorLogService {
             $month = strtotime($format_str_time);
             foreach($error_count_list as $key=>$value){
                 //保存数据在ErrorLog_month
-                $log_arr[] = [$value['ApplicationId'],$value['total'],date("Ym",$month),$cur_time] ;
+                $log_arr[] = [$value['ApplicationId'],$value['total'],date("Ym",$month),$format_cur_time] ;
             }
 
             if(!empty($log_arr)){
@@ -386,8 +387,9 @@ class ErrorLogService {
                     ->orderBy("id asc")
                     ->all();
             }else{
+                $format_time = date("Y-m-d H:i:s",$search_time) ;
                 $datas = ErrorLogDay::find()
-                    ->where(["Date"=>$search_time])
+                    ->where(["Date"=>$format_time])
                     ->all();
             }
 

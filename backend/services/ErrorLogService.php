@@ -56,7 +56,10 @@ class ErrorLogService {
         foreach($application_list as $value){
             $appname_list[] = $value['appname'] ;
         }
-
+        #获得没有统计在ApplicateName里的错误信息
+        #$newApplicateNameType=new Query();
+        #$newApplicateNameType->
+        #insert into ApplicateName(`appname`,`newname`,`logtotal`,`logtype`,`lastupdatetime`) select ApplicationId,ApplicationId,count(*),1,datetime() from ErrorLog where ApplicationID not in($appname_list) groud by ApplicationId;
         //获得统计日志最后更新时间
         $application_query = new Query() ;
         $application_query->select("lastupdatetime")
@@ -65,7 +68,7 @@ class ErrorLogService {
         $application = $application_query->one() ;
         if(!empty($application)) {
             $lasupdatetime = $application['lastupdatetime'];
-            $format_time = date("Y-m-d H:i:s",$lasupdatetime) ;
+            $format_time = $lasupdatetime ;
         }
 
         //统计错误日志的数量

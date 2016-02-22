@@ -11,12 +11,10 @@ $this->title = '登录系统';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>请填写下面的信息进行登录:</p>
-
+    <p>请填写下面的信息进行登录</p>
     <div class="row">
-        <div class="col-lg-5">
+        <div style="width:300px;margin:0 auto;text-align:left;">
             <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
                 <?= $form->field($model, 'username') ?>

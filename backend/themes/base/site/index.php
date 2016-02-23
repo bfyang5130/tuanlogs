@@ -7,8 +7,12 @@ use yii\helpers\Url;
 use yii\widgets\LinkPager;
 use yii\widgets\ActiveForm;
 use dosamigos\datetimepicker\DateTimePicker ;
+use backend\services\ToolService ;
 
 $this->title = '日志列表';
+$month_info = ToolService::getMonthFirstAndLastInfo() ;
+$searchModel->start_date = empty($searchModel->start_date)?date("Y-m-d H:i:s",$month_info['str_time']):$searchModel->start_date ;
+$searchModel->end_date = empty($searchModel->end_date)?date("Y-m-d 59:59:59",$month_info['end_time']):$searchModel->end_date ;
 ?>
 
 <div class="site-index">
@@ -41,9 +45,11 @@ $this->title = '日志列表';
                             'options' => ['class' => 'form-inline well'],
                 ]);
                 ?>
-                <?= $form->field($searchModel, 'Method', [ 'labelOptions' => ['label' => '函数'], 'inputOptions' => ['class' => 'form-control']]) ?>
+                <?= $form->field($searchModel, 'ApplicationId', [ 'labelOptions' => ['label' => '类型'], 'inputOptions' => ['class'=>'form-control','style' => 'width:140px']])->dropDownList($application_item)->error(false); ?>
 
-                <?= $form->field($searchModel, 'Parameter', [ 'labelOptions' => ['label' => '参数'], 'inputOptions' => ['class' => 'form-control']]) ?>
+                <?= $form->field($searchModel, 'Method', [ 'labelOptions' => ['label' => '函数'], 'inputOptions' => ['class'=>'form-control','style' => 'width:140px']])->error(false); ?>
+
+                <?= $form->field($searchModel, 'Parameter', [ 'labelOptions' => ['label' => '参数'], 'inputOptions' => ['class'=>'form-control','style' => 'width:140px']])->error(false); ?>
 
                 <div class="form-group">
                     <label for="exampleInputEmail2">时间：</label>
@@ -57,11 +63,8 @@ $this->title = '日志列表';
                             'autoclose' => true,
                             'format' => 'yyyy-mm-dd hh:ii:ss',
                             'todayBtn' => true,
-
                         ],
                     ]);?>
-                </div>
-                <div class="form-group">
                     <label for="exampleInputEmail2">至</label>
                     <?= DateTimePicker::widget([
                         'language' => 'zh-CN',

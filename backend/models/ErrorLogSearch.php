@@ -57,9 +57,11 @@ class ErrorLogSearch extends ErrorLog {
             return $dataProvider;
         }
 
-        $query->andFilterWhere([
-            'ApplicationId' => $this->ApplicationId,
-        ]);
+        if($this->ApplicationId!="all") {
+            $query->andFilterWhere([
+                    'ApplicationId' => $this->ApplicationId,
+            ]);
+        }
 
         $query->andFilterWhere(['>=', 'AddDate', $this->start_date]) ;
         $query->andFilterWhere(['<=', 'AddDate', $this->end_date]) ;

@@ -99,6 +99,22 @@ class ToolService {
         return $preg_rs ;
     }
 
+    /**
+     * 计算传入月份的第一天与最后一天
+     * @param null $timestr
+     */
+    public static function getMonthFirstAndLastInfo($timestr=null){
+        if(empty($timestr)){
+            $format_str_time = date('Y-m-01') ;
+            $str_time = strtotime($format_str_time); //获取从1号0点开始的时间戳。
+        }else{
+            $format_str_time = date("Y-m-01",$timestr) ;
+            $str_time = strtotime($format_str_time) ;
+        }
+        $end_time = strtotime('+1 month -1 day', $str_time); //获取这个月最后一天23点59分的时间戳
+        return ["str_time"=>$str_time,"end_time"=>$end_time] ;
+    }
+
 }
 
 ?>

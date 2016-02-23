@@ -445,6 +445,25 @@ class ErrorLogService {
 
     }
 
+    public static function getApplicationNameItem($logtype){
+        $appname_list = [] ;
+        $appname_list['all'] = "all" ;
+        $application_query = new Query() ;
+        $application_query->select("appname")
+                ->from("ApplicateName") ;
+
+        if(isset($logtype)){
+            //1-Error类型 0-trace
+            $application_query->andWhere(["logtype"=>$logtype]) ;
+        }
+
+        $application_list = $application_query->all() ;
+        foreach($application_list as $value){
+            $appname_list[$value['appname']] = $value['appname'] ;
+        }
+        return $appname_list ;
+    }
+
 }
 
 ?>

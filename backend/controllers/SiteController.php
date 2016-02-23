@@ -101,6 +101,9 @@ class SiteController extends Controller {
         ]);
         $locals = ToolService::getPagedRows($query,['orderBy'=>$sort->orders,'pageSize'=>10]);
         $locals['searchModel']=$searchModel;
+
+        $application_item = ErrorLogService::getApplicationNameItem(1) ;
+        $locals['application_item']=$application_item;
         return $this->render('index',$locals);
     }
 

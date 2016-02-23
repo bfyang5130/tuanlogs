@@ -1,19 +1,16 @@
 <?php
 /* @var $this yii\web\View */
 
-use backend\models\SqlLogSearch;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
-use backend\services\SqlTraceService ;
-
+use yii\widgets\LinkPager ;
+use yii\widgets\ActiveForm ;
+use dosamigos\datepicker\DatePicker ;
 $this->title = '日志列表';
 #获得日志统计记录
 
-$params = \Yii::$app->request->queryParams;
-$searchModel = new SqlLogSearch();
-$dataProvider = $searchModel->search($params);
 ?>
 <div class="site-index">
     <?php
@@ -26,73 +23,86 @@ $dataProvider = $searchModel->search($params);
         ],
     ]);
     ?>
-
     <div class="body-content">
         <div class="panel panel-default">
             <?= $this->render('common_top.php'); ?>
             <div class="panel-body">
-                <?php
-                Pjax::begin(['id' => 'countries']);
-                ?>
-                <?php
-                echo GridView::widget([
-                    'dataProvider' => $dataProvider,
-                    'filterModel' => $searchModel,
-                    'columns' => [
-                        [
-                            'class' => 'yii\grid\SerialColumn',
-                            'headerOptions' => ['style' => 'width:80px;'],
-                        ],
-                        [
-                            'label' => '语句',
-                            'filter' => Html::activeTextInput($searchModel, 'sqltext', ['class' => 'form-control']),
-                            'format' => 'raw',
-                            'value' => function($model) {
-                                return '<div class="well">' . Html::encode($model->sqltext) . '</div>';
-                            },
-                        ],
-                        [
-                            'attribute' => 'sqlusedtime',
-                            'label' => '耗时(ms)',
-                            'headerOptions' => ['style' => 'width:80px;'],
-                            'filter' => Html::activeTextInput($searchModel, 'sqlusedtime',['class' => 'form-control']),
-                            'value' =>
-                            function($model) {
-                                return Html::encode($model->sqlusedtime);
-                            },
-                        ],
-                        [
-                            'attribute' => 'start_date',
-                            'label' => '开始时间',
-                            'value' => 'executedate',
-                            'filter' => \yii\jui\DatePicker::widget([
-                                'model' => $searchModel,
-                                'options' => ['style' => 'width:80px;'],
-                                'attribute' => 'start_date',
-                                'language' => 'zh-CN',
-                                'dateFormat' => 'yyyy-MM-dd'
-                            ]),
-                            'format' => 'html',
-                        ],
-                        [
-                            'attribute' => 'end_date',
-                            'label' => '结束时间',
-                            'value' => 'executedate',
-                            'filter' => \yii\jui\DatePicker::widget([
-                                'model' => $searchModel,
-                                'options' => ['style' => 'width:80px;'],
-                                'attribute' => 'end_date',
-                                'language' => 'zh-CN',
-                                'dateFormat' => 'yyyy-MM-dd',
-                                'value' => date('Y-m-d'),
-                            ]),
-                            'format' => 'html',
-                        ],
-                    ],
-                ]);
+                <div class="tab-content">
+                    <div class="tab-pane active">
+                        <table class="table table-bordered table-striped table-condensed">
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">
+                                        <?php
+                                        $form = ActiveForm::begin([
+                                                'action' => ['/site/sql'],
+                                                'method' => 'get',
+                                                'options' => ['class' => 'form-inline'],
+                                        ]);
+                                        ?>
+                                        <div class="form-group">
+                                            <label for="sqllogsearch-sqltext">语句</label>
+                                            <?= Html::activeTextInput($searchModel,'sqltext', ['class' => 'form-control'])?>
 
-                Pjax::end();
-                ?>
+                                            <label for="sqllogsearch-sqltext">耗时</label>
+                                            <?= Html::activeTextInput($searchModel,'start_sqlusedtime', ['class' => 'form-control','style'=>'width:100px'])?>至
+                                            <?= Html::activeTextInput($searchModel,'end_sqlusedtime', ['class' => 'form-control','style'=>'width:100px'])?>
+
+                                            <label for="exampleInputEmail2">执行时间：</label>
+                                            <?= DatePicker::widget([
+                                                    'language' => 'zh-CN',
+                                                    'model' => $searchModel,
+                                                    'attribute' => 'start_date',
+                                                    'clientOptions' => [
+                                                            'autoclose' => true,
+                                                            'format' => 'yyyy-mm-dd',
+                                                            'todayBtn' => true,
+
+                                                    ],
+                                            ]);?>
+                                            <label for="exampleInputEmail2">至</label>
+                                            <?= DatePicker::widget([
+                                                    'language' => 'zh-CN',
+                                                    'model' => $searchModel,
+                                                    'attribute' => 'end_date',
+                                                    'clientOptions' => [
+                                                            'autoclose' => true,
+                                                            'format' => 'yyyy-mm-dd',
+                                                            'todayBtn' => true,
+                                                    ],
+                                            ]);?>
+                                        </div>
+                                        <button type="submit" class="btn btn-default btn-primary btn-sm">查询</button>
+                                        <?php ActiveForm::end(); ?>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-bordered table-striped table-condensed">
+                            <tbody>
+                            <tr>
+                                <th width="900px">语句</th>
+                                <th>耗时(ms)</th>
+                                <th>执行时间</th>
+                            </tr>
+                            <?php foreach ($datas as $sql):?>
+                                <tr>
+                                    <td>
+                                        <code><?= Html::encode($sql->sqltext) ?></code>
+                                    </td>
+                                    <td class="center"><?= Html::encode($sql->sqlusedtime) ?></td>
+                                    <td class="center"><?= Html::encode($sql->executedate) ?></td>
+                                </tr>
+                            <?php endforeach;?>
+                            <tr>
+                                <td colspan="11" class="text-center">
+                                    <?= LinkPager::widget(['pagination' => $pager]);?>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

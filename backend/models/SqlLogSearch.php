@@ -20,16 +20,15 @@ class SqlLogSearch extends SqlTrace {
 
     public $start_date;
     public $end_date;
-    public $id;
-    public $type;
+    public $start_sqlusedtime ;
+    public $end_sqlusedtime ;
 
     /**
      * @inheritdoc
      */
     public function rules() {
         return [
-            ['id', 'integer'],
-            [['type','sqlusedtime','start_date','end_date','sqltext'], 'safe'],
+            [['sqltext','start_date','end_date','start_sqlusedtime','end_sqlusedtime'], 'safe'],
         ];
     }
 
@@ -41,39 +40,33 @@ class SqlLogSearch extends SqlTrace {
         return Model::scenarios();
     }
 
-    //put your code here
     public function search($params) {
-        $query = SqlLogSearch::find();
+        $query = SqlTrace::find();
+
         $dataProvider = new ActiveDataProvider([
-            'query' => $query,
+                'query' => $query,
+                'sort' => [
+                        'defaultOrder' => [
+                                'executedate' => SORT_DESC,
+                        ],
+                ],
         ]);
-        $dataProvider->setSort([
-            'attributes' => [
-                'sqlusedtime',
-            ]
-        ]);
+
         $this->load($params);
+
         if (!$this->validate()) {
             return $dataProvider;
         }
-        if (isset($params['id'])) {
-            $query->andWhere(['Id' => $params['id']]);
-        }
-        if (isset($params['SqlLogSearch']['start_date']) && !empty($params['SqlLogSearch']['start_date'])) {
-            $query->andWhere(" executedate>=:start_date", [':start_date' => $params['SqlLogSearch']['start_date']]);
-        }
-        if (isset($params['SqlLogSearch']['sqlusedtime']) && !empty($params['SqlLogSearch']['sqlusedtime'])) {
-            $query->andWhere(" sqlusedtime>=:sqlusedtime", [':sqlusedtime' => $params['SqlLogSearch']['sqlusedtime']]);
-        }
-        if (isset($params['SqlLogSearch']['end_date']) && !empty($params['SqlLogSearch']['end_date'])) {
-            $query->andWhere(" executedate<=:end_date", [':end_date' => $params['SqlLogSearch']['end_date']]);
-        }
-        if (isset($params['SqlLogSearch']['sqltext']) && !empty($params['SqlLogSearch']['sqltext'])) {
-            $query->andWhere(['like', 'sqltext', $params['SqlLogSearch']['sqltext']]);
-        }
-        if (!isset($params['sort'])) {
-            $query->orderBy('executedate desc ');
-        }
+
+        $query->andFilterWhere(['like', 'sqltext', $this->sqltext]) ;
+
+        $query->andFilterWhere(['>=', 'sqlusedtime', $this->start_sqlusedtime]) ;
+        $query->andFilterWhere(['<=', 'sqlusedtime', $this->end_sqlusedtime]) ;
+
+        $query->andFilterWhere(['>=', 'executedate', $this->start_date]) ;
+        $query->andFilterWhere(['<=', 'executedate', $this->end_date]) ;
+
+
         return $dataProvider;
     }
 

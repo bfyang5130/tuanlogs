@@ -6,7 +6,9 @@ use yii\grid\GridView;
 use yii\widgets\Pjax;
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
-use backend\services\SqlTraceService ;
+use backend\services\SqlTraceService;
+use yii\widgets\ActiveForm;
+use dosamigos\datetimepicker\DateTimePicker;
 
 $this->title = '日志列表';
 #获得日志统计记录
@@ -30,10 +32,59 @@ $dataProvider = $searchModel->search($params);
     <div class="body-content">
         <div class="panel panel-default">
             <?= $this->render('common_top.php'); ?>
+            <?php
+            $form = ActiveForm::begin([
+                        'action' => ['/site/sql'],
+                        'method' => 'get',
+                        'options' => ['class' => 'form-inline','style'=>'margin:5px;padding:10px;'],
+            ]);
+            ?>
+            <div class="col-lg-12">
+                <?= $form->field($searchModel, 'sqltext', [ 'labelOptions' => ['label' => '语句:'], 'inputOptions' => ['class' => 'form-control','style'=>'width:450px;']]) ?>
+                <?= $form->field($searchModel, 'databasetype', [ 'labelOptions' => ['label' => '数据库：']])->dropDownList(SqlTraceService::getSqlTraceDbType()); ?>
+            </div>
+            <div class="col-lg-12">
+                <?= $form->field($searchModel, 'time_start', [ 'labelOptions' => ['label' => '耗时:'], 'inputOptions' => ['class' => 'form-control']]) ?>
+                <label for="exampleInputEmail2">至</label>
+                <?= $form->field($searchModel, 'time_end', [ 'labelOptions' => ['label' => ''], 'inputOptions' => ['class' => 'form-control']]) ?>
+                <div class="form-group">
+                    <label for="exampleInputEmail2">时间：</label>
+                    <?=
+                    DateTimePicker::widget([
+                        'language' => 'zh-CN',
+                        'model' => $searchModel,
+                        'attribute' => 'start_date',
+                        'pickButtonIcon' => 'glyphicon glyphicon-time',
+                        'template' => '{input}{button}',
+                        'clientOptions' => [
+                            'autoclose' => true,
+                            'format' => 'yyyy-mm-dd hh:ii:ss',
+                            'todayBtn' => true,
+                        ],
+                    ]);
+                    ?>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail2">至</label>
+                    <?=
+                    DateTimePicker::widget([
+                        'language' => 'zh-CN',
+                        'model' => $searchModel,
+                        'attribute' => 'end_date',
+                        'pickButtonIcon' => 'glyphicon glyphicon-time',
+                        'template' => '{input}{button}',
+                        'clientOptions' => [
+                            'autoclose' => true,
+                            'format' => 'yyyy-mm-dd hh:ii:ss',
+                            'todayBtn' => true,
+                        ],
+                    ]);
+                    ?>
+                </div>
+                <button type="submit" class="btn btn-default btn-primary btn-sm">查询</button>
+            </div>
+                <?php ActiveForm::end(); ?>
             <div class="panel-body">
-                <?php
-                Pjax::begin(['id' => 'countries']);
-                ?>
                 <?php
                 echo GridView::widget([
                     'dataProvider' => $dataProvider,
@@ -45,53 +96,29 @@ $dataProvider = $searchModel->search($params);
                         ],
                         [
                             'label' => '语句',
-                            'filter' => Html::activeTextInput($searchModel, 'sqltext', ['class' => 'form-control']),
                             'format' => 'raw',
                             'value' => function($model) {
                                 return '<div class="well">' . Html::encode($model->sqltext) . '</div>';
                             },
                         ],
                         [
-                            'attribute' => 'sqlusedtime',
                             'label' => '耗时(ms)',
                             'headerOptions' => ['style' => 'width:80px;'],
-                            'filter' => Html::activeTextInput($searchModel, 'sqlusedtime',['class' => 'form-control']),
                             'value' =>
                             function($model) {
                                 return Html::encode($model->sqlusedtime);
                             },
                         ],
                         [
-                            'attribute' => 'start_date',
                             'label' => '开始时间',
-                            'value' => 'executedate',
-                            'filter' => \yii\jui\DatePicker::widget([
-                                'model' => $searchModel,
-                                'options' => ['style' => 'width:80px;'],
-                                'attribute' => 'start_date',
-                                'language' => 'zh-CN',
-                                'dateFormat' => 'yyyy-MM-dd'
-                            ]),
-                            'format' => 'html',
+                            'value' => 'begindate'
                         ],
                         [
-                            'attribute' => 'end_date',
                             'label' => '结束时间',
-                            'value' => 'executedate',
-                            'filter' => \yii\jui\DatePicker::widget([
-                                'model' => $searchModel,
-                                'options' => ['style' => 'width:80px;'],
-                                'attribute' => 'end_date',
-                                'language' => 'zh-CN',
-                                'dateFormat' => 'yyyy-MM-dd',
-                                'value' => date('Y-m-d'),
-                            ]),
-                            'format' => 'html',
+                            'value' => 'enddate'
                         ],
                     ],
                 ]);
-
-                Pjax::end();
                 ?>
             </div>
         </div>

@@ -89,7 +89,7 @@ $this->title = '日志列表';
                                 <td width="80px;">类型:</td><td><?= Html::encode($oneError->ApplicationId) ?></td><td>ID:</td><td><?= $oneError->Id ?></td>
                             </tr>
                             <tr>
-                                <td>时间:</td><td><?= Html::encode($oneError->AddDate) ?></td> 
+                                <td>时间:</td><td colspan="3"><?= Html::encode($oneError->AddDate) ?></td> 
                             </tr>
                             <tr>
                                 <td>函数:</td><td colspan="3"><?= Html::encode($oneError->Method) ?></td>

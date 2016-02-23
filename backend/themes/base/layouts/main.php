@@ -55,14 +55,16 @@ AppAsset::register($this);
 
             <div class="container">
                 <div class="row">
-                    <div class="col-2">
+                    <?php /**
+                    <div class="col-lg-2 col-md-2 col-xs-2 col-sm-3">
                         <ul class="nav nav-pills nav-stacked">
                             <li role="presentation" class="active"><a href="#">Home</a></li>
                             <li role="presentation"><a href="#">Profile</a></li>
                             <li role="presentation"><a href="#">Messages</a></li>
                         </ul>
                     </div>
-                    <div class="col-10">
+                    <div class="col-lg-10 col-md-10 col-xs-10 col-sm-9">
+                     * */?>
                         <?=
                         Breadcrumbs::widget([
                             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
@@ -71,7 +73,7 @@ AppAsset::register($this);
                         <?= Alert::widget() ?>
                         <?= $content ?>
                     </div>
-                </div>
+                <?php /** </div> */?>
             </div>
         </div>
 

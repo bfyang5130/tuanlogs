@@ -26,58 +26,6 @@ $this->title = '日志列表';
     <div class="body-content">
         <div class="panel panel-default">
             <?= $this->render('common_top.php'); ?>
-            <?php
-            $form = ActiveForm::begin([
-                        'action' => ['/site/sql'],
-                        'method' => 'get',
-                        'options' => ['class' => 'form-inline','style'=>'margin:5px;padding:10px;'],
-            ]);
-            ?>
-            <div class="col-lg-12">
-                <?= $form->field($searchModel, 'sqltext', [ 'labelOptions' => ['label' => '语句:'], 'inputOptions' => ['class' => 'form-control','style'=>'width:450px;']]) ?>
-                <?= $form->field($searchModel, 'databasetype', [ 'labelOptions' => ['label' => '数据库：']])->dropDownList(SqlTraceService::getSqlTraceDbType()); ?>
-            </div>
-            <div class="col-lg-12">
-                <?= $form->field($searchModel, 'time_start', [ 'labelOptions' => ['label' => '耗时:'], 'inputOptions' => ['class' => 'form-control']]) ?>
-                <label for="exampleInputEmail2">至</label>
-                <?= $form->field($searchModel, 'time_end', [ 'labelOptions' => ['label' => ''], 'inputOptions' => ['class' => 'form-control']]) ?>
-                <div class="form-group">
-                    <label for="exampleInputEmail2">时间：</label>
-                    <?=
-                    DateTimePicker::widget([
-                        'language' => 'zh-CN',
-                        'model' => $searchModel,
-                        'attribute' => 'start_date',
-                        'pickButtonIcon' => 'glyphicon glyphicon-time',
-                        'template' => '{input}{button}',
-                        'clientOptions' => [
-                            'autoclose' => true,
-                            'format' => 'yyyy-mm-dd hh:ii:ss',
-                            'todayBtn' => true,
-                        ],
-                    ]);
-                    ?>
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputEmail2">至</label>
-                    <?=
-                    DateTimePicker::widget([
-                        'language' => 'zh-CN',
-                        'model' => $searchModel,
-                        'attribute' => 'end_date',
-                        'pickButtonIcon' => 'glyphicon glyphicon-time',
-                        'template' => '{input}{button}',
-                        'clientOptions' => [
-                            'autoclose' => true,
-                            'format' => 'yyyy-mm-dd hh:ii:ss',
-                            'todayBtn' => true,
-                        ],
-                    ]);
-                    ?>
-                </div>
-                <button type="submit" class="btn btn-default btn-primary btn-sm">查询</button>
-            </div>
-                <?php ActiveForm::end(); ?>
             <div class="panel-body">
                 <div class="tab-content">
                     <div class="tab-pane active">

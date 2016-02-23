@@ -43,29 +43,38 @@ $this->title = '日志列表';
                 ?>
                 <?= $form->field($searchModel, 'Method', [ 'labelOptions' => ['label' => '函数'], 'inputOptions' => ['class' => 'form-control']]) ?>
 
-                <?= $form->field($searchModel, 'Parameter', [ 'labelOptions' => ['label' => '参数'], 'inputOptions' => ['class' => 'form-control','style'=>'width:180px']]) ?>
+                <?= $form->field($searchModel, 'Parameter', [ 'labelOptions' => ['label' => '参数'], 'inputOptions' => ['class' => 'form-control']]) ?>
 
                 <div class="form-group">
                     <label for="exampleInputEmail2">时间：</label>
                     <?= DateTimePicker::widget([
+                        'language' => 'zh-CN',
                         'model' => $searchModel,
                         'attribute' => 'start_date',
-                        'size' => 'xs',
                         'pickButtonIcon' => 'glyphicon glyphicon-time',
                         'template' => '{input}{button}',
                         'clientOptions' => [
                             'autoclose' => true,
-                            'format' => 'yyyy-mm-dd hh:ii P',
+                            'format' => 'yyyy-mm-dd hh:ii:ss',
                             'todayBtn' => true,
 
                         ],
-                        'options'=>[
-                            'class' => 'form-control','style'=>'width:280px',
-                        ]
                     ]);?>
                 </div>
                 <div class="form-group">
                     <label for="exampleInputEmail2">至</label>
+                    <?= DateTimePicker::widget([
+                        'language' => 'zh-CN',
+                        'model' => $searchModel,
+                        'attribute' => 'end_date',
+                        'pickButtonIcon' => 'glyphicon glyphicon-time',
+                        'template' => '{input}{button}',
+                        'clientOptions' => [
+                            'autoclose' => true,
+                            'format' => 'yyyy-mm-dd hh:ii:ss',
+                            'todayBtn' => true,
+                        ],
+                    ]);?>
                 </div>
                 <button type="submit" class="btn btn-default btn-primary btn-sm">查询</button>
                 <?php ActiveForm::end(); ?>

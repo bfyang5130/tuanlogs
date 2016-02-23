@@ -1,22 +1,22 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: haohui
  * Date: 2016/2/16
  * Time: 15:19
  */
-
 use yii\widgets\Breadcrumbs;
 use yii\helpers\Url;
 use nirvana\showloading\ShowLoadingAsset;
-use miloschuman\highcharts\Highcharts ;
+use miloschuman\highcharts\Highcharts;
 
 ShowLoadingAsset::register($this);
 
 $this->title = '跟踪日志报表';
 $params = \Yii::$app->request->queryParams;
-$page = empty(Yii::$app->request->get('page'))?'1':intval(Yii::$app->request->get('page'));
-$years = \Yii::$app->request->get('years','');
+$page = empty(Yii::$app->request->get('page')) ? '1' : intval(Yii::$app->request->get('page'));
+$years = \Yii::$app->request->get('years', '');
 ?>
 <div class="site-index">
     <?php
@@ -34,7 +34,7 @@ $years = \Yii::$app->request->get('years','');
             <?= $this->render('common_top.php'); ?>
             <div class="panel-body">
                 <!--饼形图-->
-                <?php if(empty($type)){ ?>
+                <?php if (empty($type)) { ?>
                     <div class="panel-body">
                         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                             <div class="btn-group pull-right" role="group" aria-label="First group">
@@ -47,54 +47,54 @@ $years = \Yii::$app->request->get('years','');
                                 <a href="<?= Url::toRoute('/site/tracemonreport') ?>" class="btn btn-default">月统计</a>
                             </div>
                         </div>
-                        <div>
+                        <div class="qys_total_show">
                             <?php
                             echo Highcharts::widget([
-                                'options'=>[
+                                'options' => [
                                     'chart' => [
-                                        'type'=> 'bar',
-                                        'plotShadow'=> false ,//设置阴影
-                                        'height'=>2500,
+                                        'type' => 'bar',
+                                        'plotShadow' => false, //设置阴影
+                                        'height' => 2500,
                                     ],
                                     'title' => [
                                         'text' => ' 统计'
                                     ],
                                     'credits' => [
-                                        'enabled'=>false//不显示highCharts版权信息
+                                        'enabled' => false//不显示highCharts版权信息
                                     ],
                                     'xAxis' => [
                                         'categories' => $category,
-                                        'title' => array('text' => null) ,
+                                        'title' => array('text' => null),
                                     ],
                                     'yAxis' => [
                                         'min' => 0,
                                         'title' => array('text' => ''),
                                         'align' => 'high',
-                                        'labels'=> array("overflow"=>"justify")
+                                        'labels' => array("overflow" => "justify")
                                     ],
-                                    'plotOptions'=>[
-                                        'bar'=>[
-                                            'dataLabels'=>[
-                                                'enabled'=>true
+                                    'plotOptions' => [
+                                        'bar' => [
+                                            'dataLabels' => [
+                                                'enabled' => true
                                             ]
                                         ],
                                     ],
-                                    'legend'=>[
-                                        'layout'=>'vertical',
-                                        'align'=>'right',
-                                        'verticalAlign'=>'top',
-                                        'x'=>-40,
-                                        'y'=>100,
-                                        'floating'=>true,
-                                        'borderWidth'=>1,
-                                        'backgroundColor'=>'#FFFFFF',
-                                        'shadow'=>true,
+                                    'legend' => [
+                                        'layout' => 'vertical',
+                                        'align' => 'right',
+                                        'verticalAlign' => 'top',
+                                        'x' => -40,
+                                        'y' => 100,
+                                        'floating' => true,
+                                        'borderWidth' => 1,
+                                        'backgroundColor' => '#FFFFFF',
+                                        'shadow' => true,
                                     ],
-                                    'tooltip'=>[
-                                        'enabled'=>false,
+                                    'tooltip' => [
+                                        'enabled' => false,
                                     ],
-                                    'legend' =>[
-                                        'verticalAlign'=>"bottom" ,
+                                    'legend' => [
+                                        'verticalAlign' => "bottom",
                                     ],
                                     'series' => $series
                                 ]
@@ -105,146 +105,152 @@ $years = \Yii::$app->request->get('years','');
                 <?php } ?>
 
 
-                <?php if($type == 'day'){ ?>
+                <?php if ($type == 'day') { ?>
                     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                         <div class="btn-group" role="group" aria-label="First group">
-                            <?php if($page > 1) { ?>
-                                <a href="<?= Url::toRoute(['/site/tracedayreport', "page"=>$page - 1]) ?>" class="btn btn-default">上一页</a>
+                            <?php if ($page > 1) { ?>
+                                <a href="<?= Url::toRoute(['/site/tracedayreport', "page" => $page - 1]) ?>" class="btn btn-default">上一页</a>
                             <?php } ?>
-                            <a href="<?= Url::toRoute(['/site/tracedayreport',"page"=>$page+1]) ?>" class="btn btn-default">下一页</a>
+                            <a href="<?= Url::toRoute(['/site/tracedayreport', "page" => $page + 1]) ?>" class="btn btn-default">下一页</a>
                         </div>
                     </div>
-                    <?= Highcharts::widget([
-                        'options'=>[
-                            'chart' => [
-                                'type'=>'bar',
-                                'height'=>3200,
-                            ],
-                            'title' => [
-                                'text'=> $this->title
-                            ],
-                            'subtitle' => [
-                                'text' => $highcharts_title
-                            ],
-                            'xAxis' => [
-                                'categories' => $category,//填写类别
-                                'title' => [
-                                    'text' => ''
-                                ]
-                            ],
-                            'yAxis' => [
-                                'min' => 0,
-                                'title' => [
-                                    'text' => 'Population (millions)',
-                                    'align' => 'high'
+                    <div class="qys_total_show">
+                        <?=
+                        Highcharts::widget([
+                            'options' => [
+                                'chart' => [
+                                    'type' => 'bar',
+                                    'height' => 3200,
                                 ],
-                                'align' => 'high',
-                                'labels' => [
-                                    'overflow' => 'justify'
-                                ]
-                            ],
-                            'tooltip' => [
-                                'valueSuffix' => ''//数量单位
-                            ],
-                            'plotOptions' => [
-                                'bar' => [
-                                    'dataLabels' => [
-                                        'enabled' => true
+                                'title' => [
+                                    'text' => $this->title
+                                ],
+                                'subtitle' => [
+                                    'text' => $highcharts_title
+                                ],
+                                'xAxis' => [
+                                    'categories' => $category, //填写类别
+                                    'title' => [
+                                        'text' => ''
                                     ]
-                                ]
-                            ],
-                            'legend' => [
-                                'layout'=>'horizontal',
-                                'align'=>'center',
-                                'verticalAlign'=>'top',
-                                'floating'=>true,
+                                ],
+                                'yAxis' => [
+                                    'min' => 0,
+                                    'title' => [
+                                        'text' => 'Population (millions)',
+                                        'align' => 'high'
+                                    ],
+                                    'align' => 'high',
+                                    'labels' => [
+                                        'overflow' => 'justify'
+                                    ]
+                                ],
+                                'tooltip' => [
+                                    'valueSuffix' => ''//数量单位
+                                ],
+                                'plotOptions' => [
+                                    'bar' => [
+                                        'dataLabels' => [
+                                            'enabled' => true
+                                        ]
+                                    ]
+                                ],
+                                'legend' => [
+                                    'layout' => 'horizontal',
+                                    'align' => 'center',
+                                    'verticalAlign' => 'top',
+                                    'floating' => true,
 //                                'x'=>90,
-                                'y'=>20,
-                                'borderWidth'=>1,
-                                'backgroundColor'=>'#FFFFFF',
-                                'shadow'=>true,
-                            ],
-                            'credits' => [
-                                'enabled' => false
-                            ],
-                            'series' => $trace_series
-                        ]
-                    ]);
-                    ?>
+                                    'y' => 20,
+                                    'borderWidth' => 1,
+                                    'backgroundColor' => '#FFFFFF',
+                                    'shadow' => true,
+                                ],
+                                'credits' => [
+                                    'enabled' => false
+                                ],
+                                'series' => $trace_series
+                            ]
+                        ]);
+                        ?>
+                    </div>
                 <?php } ?>
-                <?php if($type == 'month'){ ?>
+<?php if ($type == 'month') { ?>
                     <div class="btn-toolbar pull-let" role="toolbar" aria-label="Toolbar with button groups">
                         <div class="btn-group" role="group" aria-label="First group">
                             <select id="year_select"
-                                    onchange="window.location.href = '<?=url::toRoute("site/tracemonreport") ?>?years='+options[selectedIndex].value"
+                                    onchange="window.location.href = '<?= url::toRoute("site/tracemonreport") ?>?years=' + options[selectedIndex].value"
                                     class="form-control" name="years">
-                                <?php foreach($options as $key => $value){ ?>
-                                    <option  value="<?=$key?>"   <?php if($years == $key){ ?>selected <?php } ?> ><?=$value?></option>
-                                <?php } ?>
+                                <?php foreach ($options as $key => $value) { ?>
+                                    <option  value="<?= $key ?>"   <?php if ($years == $key) { ?>selected <?php } ?> ><?= $value ?></option>
+    <?php } ?>
                             </select>
                         </div>
                         <div class="btn-group pull-right" role="group" aria-label="First group">
                             <a href="/site/tracereport.html" class="btn btn-default">返回</a>
                         </div>
                     </div>
-                    <?= Highcharts::widget([
-                        'options'=>[
-                            'chart' => [
-                                'type'=>'bar',
-                                'height'=>2800,
-                            ],
-                            'title' => [
-                                'text'=> $this->title
-                            ],
-                            'subtitle' => [
-                                'text' => ''
-                            ],
-                            'xAxis' => [
-                                'categories' => $category,//填写类别
-                                'title' => [
-                                    'text' => ''
-                                ]
-                            ],
-                            'yAxis' => [
-                                'min' => 0,
-                                'title' => [
-                                    'text' => 'Population (millions)',
-                                    'align' => 'high'
+                    <div class="qys_total_show">
+                        <?=
+                        Highcharts::widget([
+                            'options' => [
+                                'chart' => [
+                                    'type' => 'bar',
+                                    'height' => 2800,
                                 ],
-                                'align' => 'high',
-                                'labels' => [
-                                    'overflow' => 'justify'
-                                ]
-                            ],
-                            'tooltip' => [
-                                'valueSuffix' => ''//数量单位
-                            ],
-                            'plotOptions' => [
-                                'bar' => [
-                                    'dataLabels' => [
-                                        'enabled' => true
+                                'title' => [
+                                    'text' => $this->title
+                                ],
+                                'subtitle' => [
+                                    'text' => ''
+                                ],
+                                'xAxis' => [
+                                    'categories' => $category, //填写类别
+                                    'title' => [
+                                        'text' => ''
                                     ]
-                                ]
-                            ],
-                            'legend' => [
-                                'layout'=>'horizontal',
-                                'align'=>'center',
-                                'verticalAlign'=>'top',
-                                'floating'=>true,
+                                ],
+                                'yAxis' => [
+                                    'min' => 0,
+                                    'title' => [
+                                        'text' => 'Population (millions)',
+                                        'align' => 'high'
+                                    ],
+                                    'align' => 'high',
+                                    'labels' => [
+                                        'overflow' => 'justify'
+                                    ]
+                                ],
+                                'tooltip' => [
+                                    'valueSuffix' => ''//数量单位
+                                ],
+                                'plotOptions' => [
+                                    'bar' => [
+                                        'dataLabels' => [
+                                            'enabled' => true
+                                        ]
+                                    ]
+                                ],
+                                'legend' => [
+                                    'layout' => 'horizontal',
+                                    'align' => 'center',
+                                    'verticalAlign' => 'top',
+                                    'floating' => true,
 //                                'x'=>90,
-                                'y'=>20,
-                                'borderWidth'=>1,
-                                'backgroundColor'=>'#FFFFFF',
-                                'shadow'=>true,
-                            ],
-                            'credits' => [
-                                'enabled' => false
-                            ],
-                            'series' => $trace_series
-                        ]
-                    ]);
-                    ?>
-                <?php } ?>
+                                    'y' => 20,
+                                    'borderWidth' => 1,
+                                    'backgroundColor' => '#FFFFFF',
+                                    'shadow' => true,
+                                ],
+                                'credits' => [
+                                    'enabled' => false
+                                ],
+                                'series' => $trace_series
+                            ]
+                        ]);
+                        ?>
+                    </div>
+<?php } ?>
             </div>
         </div>
     </div>

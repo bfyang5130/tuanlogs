@@ -12,6 +12,7 @@ body {
 
 .wrap > .container {
     padding: 70px 15px 20px;
+    width: 100%;
 }
 
 .footer {
@@ -89,7 +90,7 @@ a.desc:after {
     padding: 10px 20px;
     margin: 0 0 15px 0;
 }
-table{
+.panel-body table{
     word-break: break-all;
 }
 .site-login{

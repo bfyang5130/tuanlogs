@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use backend\models\ErrorLogSearch;
+use backend\models\SqlLogSearch;
 use backend\services\ErrorLogService;
 use backend\services\TraceLogService;
 use backend\services\ToolService;
@@ -111,7 +112,19 @@ class SiteController extends Controller {
      * 数据库信息
      */
     public function actionSql() {
-        return $this->render('sql');
+        $params = Yii::$app->request->get();
+        $searchModel = new SqlLogSearch();
+        $dataProvider = $searchModel->search($params);
+        $query = $dataProvider->query;
+        $sort = new Sort([
+                'attributes' => [
+                        'executedate',
+                ],
+                'defaultOrder'=>['executedate'=>SORT_DESC]
+        ]);
+        $locals = ToolService::getPagedRows($query,['orderBy'=>$sort->orders,'pageSize'=>10]);
+        $locals['searchModel']=$searchModel;
+        return $this->render('sql',$locals);
     }
 
     public function actionLogin() {

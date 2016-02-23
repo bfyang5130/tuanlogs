@@ -34,8 +34,8 @@ $params = \Yii::$app->request->queryParams;
                         <a href="<?= Url::toRoute('/site/index') ?>" class="btn btn-default">列表</a>
                         <a href="<?= Url::toRoute('/site/errorgraph') ?>" class="btn btn-default">图形</a>
                     </div>
-
                     <div class="btn-group pull-left" role="group" aria-label="First group">
+                        <a href="<?= Url::toRoute('/site/errorgraph') ?>" class="btn btn-default">总统计</a>
                         <a href="<?= Url::toRoute('/site/countday') ?>" class="btn btn-default">日统计</a>
                         <a href="<?= Url::toRoute('/site/countmonth') ?>" class="btn btn-default">月统计</a>
                     </div>

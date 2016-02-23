@@ -4,13 +4,13 @@
 use yii\widgets\Breadcrumbs;
 use yii\helpers\Url;
 use nirvana\showloading\ShowLoadingAsset;
-use miloschuman\highcharts\Highcharts ;
+use miloschuman\highcharts\Highcharts;
 
 ShowLoadingAsset::register($this);
 
 $this->title = '错误日志-日统计';
-$page = Yii::$app->request->get("page") ;
-$search_date = Yii::$app->request->get("search_date") ;
+$page = Yii::$app->request->get("page");
+$search_date = Yii::$app->request->get("search_date");
 ?>
 <div class="site-index">
     <?php
@@ -32,73 +32,77 @@ $search_date = Yii::$app->request->get("search_date") ;
 
                     <div class="box-body text-center">
                         <div class="btn-group pull-left" role="group" aria-label="First group">
-                            <a href="<?= Url::toRoute(['/site/countday',"page"=>$pre_page]) ?>" class="btn btn-default">上一页</a>
-                            <a href="<?= Url::toRoute(['/site/countday',"page"=>$next_page]) ?>" class="btn btn-default">下一页</a>
+                            <a href="<?= Url::toRoute(['/site/countday', "page" => $pre_page]) ?>" class="btn btn-default">上一页</a>
+                            <a href="<?= Url::toRoute(['/site/countday', "page" => $next_page]) ?>" class="btn btn-default">下一页</a>
                         </div>
 
                         <div class="form-group">
                             <label for="exampleInputEmail2">时间:</label>
                             <?=
                             \yii\jui\DatePicker::widget([
-                                'options' => ['class' => 'form-control datepicker','readonly'=>true],
+                                'options' => ['class' => 'form-control datepicker', 'readonly' => true],
                                 'attribute' => 'start_date',
                                 'language' => 'zh-CN',
                                 'dateFormat' => 'yyyy-MM-dd',
-                                'value' => empty($search_date)?date('Y-m-d'):$search_date,
-                                'clientOptions'=>[
+                                'value' => empty($search_date) ? date('Y-m-d') : $search_date,
+                                'clientOptions' => [
                                     'minDate' => '2015-01-01',
                                     'maxDate' => date("Y-m-d"),
-                                    'onSelect'=> new \yii\web\JsExpression(
-                                        "function (dateText, inst) {
+                                    'onSelect' => new \yii\web\JsExpression(
+                                            "function (dateText, inst) {
                                             var url = '/site/countday.html?search_date='+ dateText;
                                             location.href = url;
                                         }"
                                     ),
                                 ],
-
                             ]);
                             ?>
                         </div>
+                        <div class="btn-group pull-right" role="group" aria-label="First group">
+                            <a href="<?= Url::toRoute('/site/errorgraph') ?>" class="btn btn-default">总统计</a>
+                            <a href="<?= Url::toRoute('/site/countday') ?>" class="btn btn-default">日统计</a>
+                            <a href="<?= Url::toRoute('/site/countmonth') ?>" class="btn btn-default">月统计</a>
+                            <a href="<?= Url::toRoute(['/site/index']) ?>" class="btn btn-default pull-right">返回列表</a>
+                        </div>
 
-                        <a href="<?= Url::toRoute(['/site/errorgraph']) ?>" class="btn btn-default pull-right">返回</a>
                     </div>
 
                 </div>
                 <div class="qys_total_show">
                     <?php
                     echo Highcharts::widget([
-                        'options'=>[
+                        'options' => [
                             'chart' => [
-                                'type'=> 'bar',
-                                'plotShadow'=> false ,//设置阴影
-                                'height'=>2800,
+                                'type' => 'bar',
+                                'plotShadow' => false, //设置阴影
+                                'height' => 2800,
                             ],
                             'title' => [
                                 'text' => '错误日志日统计'
                             ],
                             'credits' => [
-                                'enabled'=>false//不显示highCharts版权信息
+                                'enabled' => false//不显示highCharts版权信息
                             ],
                             'xAxis' => [
                                 'categories' => $appnames,
-                                'title' => array('text' => null) ,
+                                'title' => array('text' => null),
                             ],
                             'yAxis' => [
                                 'min' => 0,
                                 'title' => array('text' => ''),
                                 'align' => 'high',
-                                'labels'=> array("overflow"=>"justify")
+                                'labels' => array("overflow" => "justify")
                             ],
-                            'plotOptions'=>[
-                                'bar'=>[
-                                    'dataLabels'=>[
-                                        'enabled'=>true
+                            'plotOptions' => [
+                                'bar' => [
+                                    'dataLabels' => [
+                                        'enabled' => true
                                     ]
                                 ],
-                                'series'=>[
-                                    'cursor'=>'pointer',
-                                    'events' => array("click"=>new \yii\web\JsExpression(
-                                        'function(e){
+                                'series' => [
+                                    'cursor' => 'pointer',
+                                    'events' => array("click" => new \yii\web\JsExpression(
+                                                'function(e){
                                              var search_data = this.name ;
                                              var arr = search_data.split("-");
                                              var newdt = new Date(Number(arr[0]),Number(arr[1])-1,Number(arr[2])+1);
@@ -109,22 +113,22 @@ $search_date = Yii::$app->request->get("search_date") ;
                                             var target_url = "/site/index.html?ErrorLogSearch[start_date]="+this.name+"&ErrorLogSearch[end_date]="+end_date+"&ErrorLogSearch[ApplicationId]="+e.point.category;
                                             window.open(target_url);
                                          }'
-                                    ))
+                                        ))
                                 ]
                             ],
-                            'legend'=>[
-                                'layout'=>'horizontal',
-                                'align'=>'center',
-                                'verticalAlign'=>'top',
-                                'floating'=>true,
+                            'legend' => [
+                                'layout' => 'horizontal',
+                                'align' => 'center',
+                                'verticalAlign' => 'top',
+                                'floating' => true,
 //                                'x'=>90,
-                                'y'=>20,
-                                'borderWidth'=>1,
-                                'backgroundColor'=>'#FFFFFF',
-                                'shadow'=>true,
+                                'y' => 20,
+                                'borderWidth' => 1,
+                                'backgroundColor' => '#FFFFFF',
+                                'shadow' => true,
                             ],
-                            'tooltip'=>[
-                                'enabled'=>false,
+                            'tooltip' => [
+                                'enabled' => false,
                             ],
                             'series' => $series
                         ]

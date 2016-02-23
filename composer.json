@@ -23,7 +23,8 @@
         "2amigos/yii2-file-upload-widget": "~1.0",
         "kucha/ueditor": "*",
         "nirvana-msu/yii2-showloading": "1.0.*@dev",
-        "miloschuman/yii2-highcharts-widget": "^4.2"
+        "miloschuman/yii2-highcharts-widget": "^4.2",
+        "2amigos/yii2-date-time-picker-widget": "~1.0"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

@@ -6,6 +6,7 @@ use yii\widgets\Breadcrumbs;
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
 use yii\widgets\ActiveForm;
+use dosamigos\datetimepicker\DateTimePicker ;
 
 $this->title = '日志列表';
 ?>
@@ -42,33 +43,29 @@ $this->title = '日志列表';
                 ?>
                 <?= $form->field($searchModel, 'Method', [ 'labelOptions' => ['label' => '函数'], 'inputOptions' => ['class' => 'form-control']]) ?>
 
-                <?= $form->field($searchModel, 'Parameter', [ 'labelOptions' => ['label' => '参数'], 'inputOptions' => ['class' => 'form-control']]) ?>
+                <?= $form->field($searchModel, 'Parameter', [ 'labelOptions' => ['label' => '参数'], 'inputOptions' => ['class' => 'form-control','style'=>'width:180px']]) ?>
 
                 <div class="form-group">
                     <label for="exampleInputEmail2">时间：</label>
-                    <?=
-                    \yii\jui\DatePicker::widget([
+                    <?= DateTimePicker::widget([
                         'model' => $searchModel,
-                        'options' => ['class' => 'form-control'],
                         'attribute' => 'start_date',
-                        'language' => 'zh-CN',
-                        'dateFormat' => 'yyyy-MM-dd',
-                        'value' => date('Y-m-d'),
-                    ]);
-                    ?>
+                        'size' => 'xs',
+                        'pickButtonIcon' => 'glyphicon glyphicon-time',
+                        'template' => '{input}{button}',
+                        'clientOptions' => [
+                            'autoclose' => true,
+                            'format' => 'yyyy-mm-dd hh:ii P',
+                            'todayBtn' => true,
+
+                        ],
+                        'options'=>[
+                            'class' => 'form-control','style'=>'width:280px',
+                        ]
+                    ]);?>
                 </div>
                 <div class="form-group">
                     <label for="exampleInputEmail2">至</label>
-                    <?=
-                    \yii\jui\DatePicker::widget([
-                        'model' => $searchModel,
-                        'options' => ['class' => 'form-control'],
-                        'attribute' => 'end_date',
-                        'language' => 'zh-CN',
-                        'dateFormat' => 'yyyy-MM-dd',
-                        'value' => date('Y-m-d'),
-                    ]);
-                    ?>
                 </div>
                 <button type="submit" class="btn btn-default btn-primary btn-sm">查询</button>
                 <?php ActiveForm::end(); ?>
@@ -110,6 +107,5 @@ $this->title = '日志列表';
         </div>
     </div>
 </div>
-
 <script type="text/javascript">
 </script>

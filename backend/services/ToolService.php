@@ -75,8 +75,8 @@ class ToolService {
         return $new_array;
     }
 
-    //解析access日志
-    public static function parseAccessLog($body){
+    //解析nginx-access日志
+    public static function parseNginxAccessLog($body){
         preg_match_all('/(.*?)-(.*?)-(.*?),(.*?)-{1,}.*?[\[](.*?)[\]]\s[\"](.*?)[\"]\s(\d{1,})\s(\d{1,})\s[\"](.*?)[\"]\s[\"](.*?)[\"]\s[\"](.*?)[\"].*?/',$body,$mat);
         return $mat ;
 
@@ -85,6 +85,18 @@ class ToolService {
     public static function parseRequestInfo($body){
         preg_match_all('/(.*?)\s(.*?)\s(.*)/',$body,$mat);
         return $mat ;
+    }
+
+    //解析iis-access日志
+    public static function parseIisAccessLog($body){
+        preg_match_all('/(.*?)-(.*?)-(.*?),(.*?)-{1,}.*?[\[](.*?)[\]]\s[\"](.*?)[\"]\s(\d{1,})\s(\d{1,})\s[\"](.*?)[\"]\s[\"](.*?)[\"]\s[\"](.*?)[\"].*?/',$body,$mat);
+        return $mat ;
+    }
+
+    //解析Iis注释行
+    public static function parseIisNote($body){
+        $preg_rs = preg_match('/^#+/',$body) ;
+        return $preg_rs ;
     }
 
 }

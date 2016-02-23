@@ -11,11 +11,11 @@ use common\models\AccessLog;
  */
 class AccessLogService {
 
-    public static function saveToDb($content_arr){
+    public static function saveToDbForNginx($content_arr){
         $access_log_arr = [] ;
         $num = 0 ;
         foreach($content_arr as $c_val){
-            $mat = ToolService::parseAccessLog($c_val) ;
+            $mat = ToolService::parseNginxAccessLog($c_val) ;
 
             $user_ip1 = empty($mat[1][0])?"":$mat[1][0] ;
             $user_ip2 = empty($mat[2][0])?"":$mat[2][0] ;
@@ -47,19 +47,20 @@ class AccessLogService {
             ] ;
 
             //每500条批量入库
-            if($num>3){
-                self::batchSaveAccessLog($access_log_arr) ;
+            if($num>500){
+                self::batchSaveNginxAccessLog($access_log_arr) ;
                 $access_log_arr = [] ;
                 $num = 0 ;
             }
             $num = $num + 1 ;
 
         }
-        self::batchSaveAccessLog($access_log_arr) ;
+        self::batchSaveNginxAccessLog($access_log_arr) ;
         return true ;
     }
 
-    private static function batchSaveAccessLog($access_log_arr){
+    //入库
+    private static function batchSaveNginxAccessLog($access_log_arr){
         if(!empty($access_log_arr)){
             $command = \Yii::$app->db->createCommand() ;
             $command->batchInsert(
@@ -70,6 +71,19 @@ class AccessLogService {
                 ],
                 $access_log_arr) ;
             $command->execute();
+        }
+    }
+
+    public static function saveToDbForIis($content_arr){
+        $access_log_arr = [] ;
+        $num = 0 ;
+        foreach($content_arr as $c_val){
+            $note_parse_rs = ToolService::parseIisNote($c_val) ;
+            if($note_parse_rs==true){
+                //如有注释行,直接读下一行,进行一下次循环
+                continue ;
+            }
+            $mat = ToolService::parseIisAccessLog($c_val) ;
         }
     }
 }

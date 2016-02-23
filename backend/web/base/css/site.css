@@ -100,3 +100,10 @@ table{
     margin: 0 auto;
     background-color: #efefef;
 }
+.qys_total_show{
+    width: 90%;
+    border: 1px solid #ddd;
+    padding: 5px;
+    margin: 0 auto;
+    margin-top: 15px;
+}

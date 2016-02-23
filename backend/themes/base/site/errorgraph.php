@@ -40,7 +40,7 @@ $params = \Yii::$app->request->queryParams;
                         <a href="<?= Url::toRoute('/site/countmonth') ?>" class="btn btn-default">月统计</a>
                     </div>
                 </div>
-                <div>
+                <div class="qys_total_show">
                     <?php
                     echo Highcharts::widget([
                         'options'=>[

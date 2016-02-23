@@ -86,18 +86,21 @@ $this->title = '日志列表';
                         ?>
                         <table class="table table-striped table-bordered">
                             <tr style="background-color: #ddd;">
-                                <td width="80px;">ID:</td><td><?= $oneError->Id ?></td><td>类型:</td><td><?= Html::encode($oneError->ApplicationId) ?></td><td>时间:</td><td><?= Html::encode($oneError->AddDate) ?></td>
+                                <td width="80px;">类型:</td><td><?= Html::encode($oneError->ApplicationId) ?></td><td>ID:</td><td><?= $oneError->Id ?></td>
                             </tr>
                             <tr>
-                                <td>函数:</td><td colspan="5"><?= Html::encode($oneError->Method) ?></td>
+                                <td>时间:</td><td><?= Html::encode($oneError->AddDate) ?></td> 
                             </tr>
                             <tr>
-                                <td>参数：</td><td colspan="5"><?= Html::encode($oneError->Parameter) ?></td>
+                                <td>函数:</td><td colspan="3"><?= Html::encode($oneError->Method) ?></td>
                             </tr>
                             <tr>
-                                <td>内容详情</td><td colspan="5"><pre><code><?= Html::encode($oneError->Content) ?></code></pre></td>
+                                <td>参数：</td><td colspan="3"><?= Html::encode($oneError->Parameter) ?></td>
                             </tr>
-                        </table>
+                            <tr>
+                                <td colspan="4"><pre><code><?= Html::encode($oneError->Content) ?></code></pre></td>
+                                </tr>
+                            </table>
                         <?php
                     }
                     echo LinkPager::widget(['pagination' => $pager]);

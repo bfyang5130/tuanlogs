@@ -64,7 +64,7 @@ $search_date = Yii::$app->request->get("search_date") ;
                     </div>
 
                 </div>
-                <div>
+                <div class="qys_total_show">
                     <?php
                     echo Highcharts::widget([
                         'options'=>[

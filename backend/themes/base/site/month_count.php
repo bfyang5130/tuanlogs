@@ -36,7 +36,7 @@ $page = Yii::$app->request->get("page") ;
                         <a href="<?= Url::toRoute(['/site/errorgraph']) ?>" class="btn btn-default">返回</a>
                     </div>
                 </div>
-                <div>
+                <div class="qys_total_show">
                     <?php
                     echo Highcharts::widget([
                         'options'=>[

@@ -28,7 +28,7 @@ class SqlLogSearch extends SqlTrace {
      */
     public function rules() {
         return [
-            [['sqltext','start_date','end_date','start_sqlusedtime','end_sqlusedtime'], 'safe'],
+            [['sqltext','start_date','end_date','start_sqlusedtime','end_sqlusedtime','databasetype'], 'safe'],
         ];
     }
 
@@ -57,6 +57,8 @@ class SqlLogSearch extends SqlTrace {
         if (!$this->validate()) {
             return $dataProvider;
         }
+
+        $query->andFilterWhere(['databasetype'=>$this->databasetype]) ;
 
         $query->andFilterWhere(['like', 'sqltext', $this->sqltext]) ;
 

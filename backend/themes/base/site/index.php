@@ -38,83 +38,93 @@ $searchModel->end_date = empty($searchModel->end_date)?date("Y-m-d 59:59:59",$mo
                     </div>
                 </div>
 
-                <?php
-                $form = ActiveForm::begin([
-                            'action' => ['/site/index'],
-                            'method' => 'get',
-                            'options' => ['class' => 'form-inline well'],
-                ]);
-                ?>
-                <?= $form->field($searchModel, 'ApplicationId', [ 'labelOptions' => ['label' => '类型'], 'inputOptions' => ['class'=>'form-control','style' => 'width:140px']])->dropDownList($application_item)->error(false); ?>
+                <div class="tab-content">
+                    <div class="tab-pane active">
+                        <table class="table table-bordered table-striped table-condensed">
+                            <tbody>
+                            <tr>
+                                <td colspan="3">
+                                    <?php
+                                    $form = ActiveForm::begin([
+                                        'action' => ['/site/index'],
+                                        'method' => 'get',
+                                        'options' => ['class' => 'form-inline'],
+                                    ]);
+                                    ?>
+                                    <?= $form->field($searchModel, 'ApplicationId', [ 'labelOptions' => ['label' => '类型'], 'inputOptions' => ['class'=>'form-control','style' => 'width:140px']])->dropDownList($application_item)->error(false); ?>
 
-                <?= $form->field($searchModel, 'Method', [ 'labelOptions' => ['label' => '函数'], 'inputOptions' => ['class'=>'form-control','style' => 'width:140px']])->error(false); ?>
+                                    <?= $form->field($searchModel, 'Method', [ 'labelOptions' => ['label' => '函数'], 'inputOptions' => ['class'=>'form-control','style' => 'width:140px']])->error(false); ?>
 
-                <?= $form->field($searchModel, 'Parameter', [ 'labelOptions' => ['label' => '参数'], 'inputOptions' => ['class'=>'form-control','style' => 'width:140px']])->error(false); ?>
+                                    <?= $form->field($searchModel, 'Parameter', [ 'labelOptions' => ['label' => '参数'], 'inputOptions' => ['class'=>'form-control','style' => 'width:140px']])->error(false); ?>
 
-                <div class="form-group">
-                    <label for="exampleInputEmail2">时间：</label>
-                    <?= DateTimePicker::widget([
-                        'language' => 'zh-CN',
-                        'model' => $searchModel,
-                        'attribute' => 'start_date',
-                        'pickButtonIcon' => 'glyphicon glyphicon-time',
-                        'template' => '{input}{button}',
-                        'clientOptions' => [
-                            'autoclose' => true,
-                            'format' => 'yyyy-mm-dd hh:ii:ss',
-                            'todayBtn' => true,
-                        ],
-                    ]);?>
-                    <label for="exampleInputEmail2">至</label>
-                    <?= DateTimePicker::widget([
-                        'language' => 'zh-CN',
-                        'model' => $searchModel,
-                        'attribute' => 'end_date',
-                        'pickButtonIcon' => 'glyphicon glyphicon-time',
-                        'template' => '{input}{button}',
-                        'clientOptions' => [
-                            'autoclose' => true,
-                            'format' => 'yyyy-mm-dd hh:ii:ss',
-                            'todayBtn' => true,
-                        ],
-                    ]);?>
-                </div>
-                <button type="submit" class="btn btn-default btn-primary btn-sm">查询</button>
-                <?php ActiveForm::end(); ?>
-                <?php
-                $begin = $pager->page * $pager->pageSize + 1;
-                $end = $begin + $pager->pageSize - 1;
-                if ($begin > $end) {
-                    $begin = $end;
-                }
-                ?>
-                <div class="panel-body">
-                    <div class="summary">第<b><?= $begin . '-' . $end ?></b>条，共<b><?= $pager->totalCount ?></b>条数据.</div>
-                    <?php
-                    foreach ($datas as $oneError) {
-                        ?>
-                        <table class="table table-striped table-bordered">
-                            <tr style="background-color: #ddd;">
-                                <td width="80px;">类型:</td><td><?= Html::encode($oneError->ApplicationId) ?></td><td>ID:</td><td><?= $oneError->Id ?></td>
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail2">时间：</label>
+                                        <?= DateTimePicker::widget([
+                                            'language' => 'zh-CN',
+                                            'model' => $searchModel,
+                                            'attribute' => 'start_date',
+                                            'pickButtonIcon' => 'glyphicon glyphicon-time',
+                                            'template' => '{input}{button}',
+                                            'clientOptions' => [
+                                                'autoclose' => true,
+                                                'format' => 'yyyy-mm-dd hh:ii:ss',
+                                                'todayBtn' => true,
+                                            ],
+                                        ]);?>
+                                        <label for="exampleInputEmail2">至</label>
+                                        <?= DateTimePicker::widget([
+                                            'language' => 'zh-CN',
+                                            'model' => $searchModel,
+                                            'attribute' => 'end_date',
+                                            'pickButtonIcon' => 'glyphicon glyphicon-time',
+                                            'template' => '{input}{button}',
+                                            'clientOptions' => [
+                                                'autoclose' => true,
+                                                'format' => 'yyyy-mm-dd hh:ii:ss',
+                                                'todayBtn' => true,
+                                            ],
+                                        ]);?>
+                                    </div>
+                                    <button type="submit" class="btn btn-default btn-primary btn-sm">查询</button>
+                                    <?php ActiveForm::end(); ?>
+                                </td>
                             </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-bordered table-striped table-condensed">
+                            <tbody>
                             <tr>
-                                <td>时间:</td><td colspan="3"><?= Html::encode($oneError->AddDate) ?></td> 
+                                <th width="100px">类型</th>
+                                <th width="100px">时间</th>
+                                <th width="300px">函数</th>
+                                <th width="300px">参数</th>
+                                <th>内容</th>
                             </tr>
-                            <tr>
-                                <td>函数:</td><td colspan="3"><?= Html::encode($oneError->Method) ?></td>
-                            </tr>
-                            <tr>
-                                <td>参数：</td><td colspan="3"><?= Html::encode($oneError->Parameter) ?></td>
-                            </tr>
-                            <tr>
-                                <td colspan="4"><pre><code><?= Html::encode($oneError->Content) ?></code></pre></td>
+                            <?php foreach ($datas as $oneError):?>
+                                <tr>
+                                    <td>
+                                        <?= Html::encode($oneError->ApplicationId) ?>
+                                    </td>
+                                    <td class="center">
+                                        <?= Html::encode(date("Y-m-d",strtotime($oneError->AddDate))) ?>
+                                        <br>
+                                        <?= Html::encode(date("H:i:s",strtotime($oneError->AddDate))) ?>
+                                    </td>
+                                    <td class="center"><code><?= Html::encode($oneError->Method) ?></code></td>
+                                    <td class="center"><code><?= Html::encode($oneError->Parameter) ?></code></td>
+                                    <td class="center"><code><?= Html::encode($oneError->Content) ?></code></td>
                                 </tr>
-                            </table>
-                        <?php
-                    }
-                    echo LinkPager::widget(['pagination' => $pager]);
-                    ?>
+                            <?php endforeach;?>
+                            <tr>
+                                <td colspan="11" class="text-center">
+                                    <?= LinkPager::widget(['pagination' => $pager]);?>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>

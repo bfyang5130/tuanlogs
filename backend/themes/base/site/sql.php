@@ -9,7 +9,11 @@ use yii\widgets\LinkPager ;
 use yii\widgets\ActiveForm ;
 use dosamigos\datepicker\DatePicker ;
 use backend\services\SqlTraceService ;
+use backend\services\ToolService ;
 $this->title = '日志列表';
+$month_info = ToolService::getMonthFirstAndLastInfo() ;
+$searchModel->start_date = empty($searchModel->start_date)?date("Y-m-d",$month_info['str_time']):$searchModel->start_date ;
+$searchModel->end_date = empty($searchModel->end_date)?date("Y-m-d",$month_info['end_time']):$searchModel->end_date ;
 #获得日志统计记录
 
 ?>

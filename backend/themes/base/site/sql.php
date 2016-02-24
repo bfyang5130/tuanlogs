@@ -44,15 +44,7 @@ $this->title = '日志列表';
                                             <div class="col-md-12">
                                                 <div class="row">
                                                     <label for="sqllogsearch-sqltext">语句：</label>
-                                                    <?= Html::activeTextInput($searchModel,'sqltext', ['class' => 'form-control'])?>
-
-                                                    <label for="sqllogsearch-sqltext">耗时：</label>
-                                                    <?= Html::activeTextInput($searchModel,'start_sqlusedtime', ['class' => 'form-control','style'=>'width:100px'])?>至
-                                                    <?= Html::activeTextInput($searchModel,'end_sqlusedtime', ['class' => 'form-control','style'=>'width:100px'])?>
-
-                                                    <label for="sqllogsearch-sqltext">类型：</label>
-                                                    <?= Html::activeDropDownList($searchModel,'databasetype',SqlTraceService::getSqlTraceDbType() ,['class' => 'form-control'])?>
-
+                                                    <?= Html::activeTextInput($searchModel,'sqltext', ['class' => 'form-control','style'=>"width:1060px"])?>
                                                 </div>
                                             </div>
                                         </div>
@@ -60,6 +52,13 @@ $this->title = '日志列表';
                                         <div class="content form-inline" style="padding-top: 40px">
                                             <div class="row">
                                                 <div class="col-md-12">
+                                                    <label for="sqllogsearch-sqltext">耗时：</label>
+                                                    <?= Html::activeTextInput($searchModel,'start_sqlusedtime', ['class' => 'form-control','style'=>'width:100px'])?>至
+                                                    <?= Html::activeTextInput($searchModel,'end_sqlusedtime', ['class' => 'form-control','style'=>'width:100px'])?>
+
+                                                    <label for="sqllogsearch-sqltext">类型：</label>
+                                                    <?= Html::activeDropDownList($searchModel,'databasetype',SqlTraceService::getSqlTraceDbType() ,['class' => 'form-control'])?>
+
                                                     <label for="exampleInputEmail2">执行时间：</label>
                                                     <?= DatePicker::widget([
                                                             'language' => 'zh-CN',

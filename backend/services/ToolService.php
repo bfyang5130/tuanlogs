@@ -89,7 +89,7 @@ class ToolService {
 
     //解析iis-access日志
     public static function parseIisAccessLog($body){
-        preg_match_all('/(.*?)-(.*?)-(.*?),(.*?)-{1,}.*?[\[](.*?)[\]]\s[\"](.*?)[\"]\s(\d{1,})\s(\d{1,})\s[\"](.*?)[\"]\s[\"](.*?)[\"]\s[\"](.*?)[\"].*?/',$body,$mat);
+        preg_match_all('/(.*?)\s(.*?)\s(.*?)\s(.*?)\s(.*?)\s(.*?)\s(.*?)\s(.*?)\s(.*?)\s(.*?)\s(.*?)\s(.*?)\s(.*?)\s(.*?)\s/',$body,$mat);
         return $mat ;
     }
 

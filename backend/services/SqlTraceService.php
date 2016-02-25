@@ -57,7 +57,6 @@ class SqlTraceService {
         $secend = 86400;
         #如果是今天的数据，进行实时查询
         if (strtotime($search_date) === strtotime(date("Y-m-d"))) {
-            $search_date = date('Y-m-d', strtotime("$search_date -1 day"));
             $secend = time() - strtotime(date("Y-m-d"));
             #查询实时数据
             $application_list = \Yii::$app->db->createCommand('select databasetype,count(0) Number,date_format(executedate,"%Y-%m-%d %H:00:00") Date,now() Updatetime,sum(sqlusedtime) totoltime

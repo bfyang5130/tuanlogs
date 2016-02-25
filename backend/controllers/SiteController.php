@@ -110,7 +110,7 @@ class SiteController extends Controller {
             return $this->render('sqlgraph', [
                         'search_date' => $search_date,
                         "pre_page" => $pre_page,
-                        "next_page" => $next_page,
+                        "next_page" => $next_page
             ]);
         }
         $appnames = $day_data["appnames"];
@@ -136,7 +136,7 @@ class SiteController extends Controller {
                     "series4" => $series4,
                     "series5" => $series5,
                     "pre_page" => $pre_page,
-                    "next_page" => $next_page,
+                    "next_page" => $next_page
         ]);
     }
 

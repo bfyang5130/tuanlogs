@@ -2,9 +2,6 @@
 
 namespace backend\services;
 
-use common\models\ApplicateName;
-use common\models\ErrorLog;
-use yii\data\ActiveDataProvider;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 

@@ -93,25 +93,25 @@ class SqlTraceService {
             #如果已经存在数组里不存在这个类型,把当前的类型添加进去
             if (!in_array($oneDate['databasetype'], $dabasetype)) {
                 array_push($dabasetype, $oneDate['databasetype']);
-                $dabasetTotalValue[$oneDate['databasetype']] = floatval($oneDate['Number']);
-                $secondVistValue[$oneDate['databasetype']] = floatval($oneDate['Number'] / $secend);
+                $dabasetTotalValue[$oneDate['databasetype']] = round(floatval($oneDate['Number']),5);
+                $secondVistValue[$oneDate['databasetype']] = round(floatval($oneDate['Number'] / $secend),5);
                 #截取小时
                 $h = date("H", strtotime($oneDate['Date']));
                 $h = intval($h);
-                $line24Visit[$oneDate['databasetype']][$h] = floatval($oneDate['Number']);
-                $line24Visitsec[$oneDate['databasetype']][$h] = floatval($oneDate['Number'] / 3600);
-                $line24Time[$oneDate['databasetype']][$h] = floatval($oneDate['totoltime']);
-                $line24Timesec[$oneDate['databasetype']][$h] = floatval($oneDate['totoltime'] / 3600);
+                $line24Visit[$oneDate['databasetype']][$h] = round(floatval($oneDate['Number']),5);
+                $line24Visitsec[$oneDate['databasetype']][$h] = round(floatval($oneDate['Number'] / 3600),5);
+                $line24Time[$oneDate['databasetype']][$h] = round(floatval($oneDate['totoltime']),5);
+                $line24Timesec[$oneDate['databasetype']][$h] = round(floatval($oneDate['totoltime'] / 3600),5);
             } else {
-                $dabasetTotalValue[$oneDate['databasetype']]+=floatval($oneDate['Number']);
-                $secondVistValue[$oneDate['databasetype']]+=floatval($oneDate['Number'] / $secend);
+                $dabasetTotalValue[$oneDate['databasetype']]+=round(floatval($oneDate['Number']),5);
+                $secondVistValue[$oneDate['databasetype']]+=round(floatval($oneDate['Number'] / $secend),5);
                 #截取小时
                 $h = date("H", strtotime($oneDate['Date']));
                 $h = intval($h);
-                $line24Visit[$oneDate['databasetype']][$h] = floatval($oneDate['Number']);
-                $line24Visitsec[$oneDate['databasetype']][$h] = floatval($oneDate['Number'] / 3600);
-                $line24Time[$oneDate['databasetype']][$h] = floatval($oneDate['totoltime']);
-                $line24Timesec[$oneDate['databasetype']][$h] = floatval($oneDate['totoltime'] / 3600);
+                $line24Visit[$oneDate['databasetype']][$h] = round(floatval($oneDate['Number']),5);
+                $line24Visitsec[$oneDate['databasetype']][$h] = round(floatval($oneDate['Number'] / 3600),5);
+                $line24Time[$oneDate['databasetype']][$h] = round(floatval($oneDate['totoltime']),5);
+                $line24Timesec[$oneDate['databasetype']][$h] = round(floatval($oneDate['totoltime'] / 3600),5);
             }
         }
         #处理24小时的数据

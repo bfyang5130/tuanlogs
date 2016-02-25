@@ -88,7 +88,7 @@ $search_date = Yii::$app->request->get("search_date");
                                         <td colspan="3">
                                             <div class="content form-inline">
                                                 <div class="row">
-                                                    <div class="col-md-12">
+                                                    <div class="col-md-6">
                                                         <?php
                                                         echo Highcharts::widget([
                                                             'options' => [
@@ -142,20 +142,7 @@ $search_date = Yii::$app->request->get("search_date");
                                                         ]);
                                                         ?>
                                                     </div>
-                                                </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane">
-                            <table class="table table-bordered table-striped table-condensed">
-                                <tbody>
-                                    <tr>
-                                        <td colspan="3">
-                                            <div class="content form-inline">
-                                                <div class="row">
-                                                    <div class="col-md-12">
+                                                    <div class="col-md-6">
                                                         <?php
                                                         echo Highcharts::widget([
                                                             'options' => [
@@ -222,7 +209,7 @@ $search_date = Yii::$app->request->get("search_date");
                                         <td colspan="3">
                                             <div class="content form-inline">
                                                 <div class="row">
-                                                    <div class="col-md-12">
+                                                    <div class="col-md-6">
                                                         <?php
                                                         echo Highcharts::widget([
                                                             'options' => [
@@ -276,20 +263,7 @@ $search_date = Yii::$app->request->get("search_date");
                                                         ]);
                                                         ?>
                                                     </div>
-                                                </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane">
-                            <table class="table table-bordered table-striped table-condensed">
-                                <tbody>
-                                    <tr>
-                                        <td colspan="3">
-                                            <div class="content form-inline">
-                                                <div class="row">
-                                                    <div class="col-md-12">
+                                                    <div class="col-md-6">
                                                         <?php
                                                         echo Highcharts::widget([
                                                             'options' => [
@@ -356,7 +330,7 @@ $search_date = Yii::$app->request->get("search_date");
                                         <td colspan="3">
                                             <div class="content form-inline">
                                                 <div class="row">
-                                                    <div class="col-md-12">
+                                                    <div class="col-md-6">
                                                         <?php
                                                         echo Highcharts::widget([
                                                             'options' => [
@@ -410,20 +384,7 @@ $search_date = Yii::$app->request->get("search_date");
                                                         ]);
                                                         ?>
                                                     </div>
-                                                </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane">
-                            <table class="table table-bordered table-striped table-condensed">
-                                <tbody>
-                                    <tr>
-                                        <td colspan="3">
-                                            <div class="content form-inline">
-                                                <div class="row">
-                                                    <div class="col-md-12">
+                                                    <div class="col-md-6">
                                                         <?php
                                                         echo Highcharts::widget([
                                                             'options' => [

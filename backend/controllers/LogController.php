@@ -58,7 +58,8 @@ class LogController extends Controller {
             //处理完后删除文件,防范重复入库
 //        @unlink($file_url);
         }
-        echo "处理成功" ;
+        Yii::$app->getSession()->setFlash('message', '处理成功');
+        return $this->redirect(['site/tip']) ;
     }
 
     /**
@@ -75,7 +76,8 @@ class LogController extends Controller {
             //处理完后删除文件,防范重复入库
 //        @unlink($file_url);
         }
-        echo "处理成功" ;
+        Yii::$app->getSession()->setFlash('message', '处理成功');
+        return $this->redirect(['site/tip']) ;
     }
 
 

@@ -2,6 +2,7 @@
 
 namespace backend\services;
 use common\models\AccessLog;
+use common\models\IisAccessLog;
 
 
 /**
@@ -84,6 +85,60 @@ class AccessLogService {
                 continue ;
             }
             $mat = ToolService::parseIisAccessLog($c_val) ;
+            $request_date = empty($mat[1][0])?"":$mat[1][0] ;
+            $request_time = empty($mat[2][0])?"":$mat[2][0] ;
+            $request_datetime = $request_date." ".$request_time ;
+
+            $server_ip = empty($mat[3][0])?"":$mat[3][0] ;
+            $request_type = empty($mat[4][0])?"":$mat[4][0] ;
+
+            $cs_url_stem = empty($mat[5][0])?"":$mat[5][0] ;
+            $cs_url_query = empty($mat[6][0])?"":$mat[6][0] ;
+
+            $server_port = empty($mat[7][0])?"":$mat[7][0] ;
+            $cs_username = empty($mat[8][0])?"":$mat[8][0] ;
+            $client_ip =  empty($mat[9][0])?"":$mat[9][0] ;
+
+            $user_agent = empty($mat[10][0])?"":$mat[10][0] ;
+            $ua = new UserAgentService($user_agent) ;
+            $system = $ua->platform() ;
+            $browser = $ua->browser() ;
+
+            $status = empty($mat[11][0])?"":$mat[11][0] ;
+            $sub_status = empty($mat[12][0])?"":$mat[12][0] ;
+            $w32_status = empty($mat[13][0])?"":$mat[13][0] ;
+
+            $time_taken =empty($mat[14][0])?"":$mat[14][0] ;
+
+            $access_log_arr[] = [
+                $request_datetime,$server_ip,$request_type,$cs_url_stem,$cs_url_query,$server_port,$cs_username,
+                $client_ip,$user_agent,$system,$browser,$status,$sub_status,$w32_status,$time_taken
+            ] ;
+
+            //每500条批量入库
+            if($num>500){
+                self::batchSaveIisAccessLog($access_log_arr) ;
+                $access_log_arr = [] ;
+                $num = 0 ;
+            }
+            $num = $num + 1 ;
+        }
+        self::batchSaveIisAccessLog($access_log_arr) ;
+        return true ;
+    }
+
+    //入库
+    private static function batchSaveIisAccessLog($access_log_arr){
+        if(!empty($access_log_arr)){
+            $command = \Yii::$app->db->createCommand() ;
+            $command->batchInsert(
+                IisAccessLog::tableName(),
+                [
+                    'RequestTime','ServerIp','RequestType','CsUriStem','CsUriQuery','ServerPort','CsUsername','ClientIp' ,
+                    'UserAgent','System','Browser','Status','SubStatus','ScWin32Status','TimeTaken',
+                ],
+                $access_log_arr) ;
+            $command->execute();
         }
     }
 }

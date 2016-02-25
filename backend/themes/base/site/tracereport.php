@@ -11,6 +11,7 @@ use yii\helpers\Url;
 use nirvana\showloading\ShowLoadingAsset;
 use miloschuman\highcharts\Highcharts;
 
+
 ShowLoadingAsset::register($this);
 
 $this->title = '跟踪日志报表';
@@ -37,14 +38,15 @@ $years = \Yii::$app->request->get('years', '');
                 <?php if (empty($type)) { ?>
                     <div class="panel-body">
                         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                            <div class="btn-group pull-left" role="group" aria-label="First group">
+                                <a href="<?= Url::toRoute(['/site/tracereport']) ?>" class="btn btn-default">总统计</a>
+                                <a href="<?= Url::toRoute(['/site/tracedayreport']) ?>" class="btn btn-default">日统计</a>
+                                <a href="<?= Url::toRoute(['/site/tracemonreport']) ?>" class="btn btn-default">月统计</a>
+                            </div>
+
                             <div class="btn-group pull-right" role="group" aria-label="First group">
                                 <a href="<?= Url::toRoute('/site/index') ?>" class="btn btn-default">列表</a>
                                 <a href="<?= Url::toRoute('/site/errorgraph') ?>" class="btn btn-default">图形</a>
-                            </div>
-
-                            <div class="btn-group pull-left" role="group" aria-label="First group">
-                                <a href="<?= Url::toRoute(['/site/tracedayreport']) ?>" class="btn btn-default">日统计</a>
-                                <a href="<?= Url::toRoute('/site/tracemonreport') ?>" class="btn btn-default">月统计</a>
                             </div>
                         </div>
                         <div class="qys_total_show">
@@ -106,12 +108,42 @@ $years = \Yii::$app->request->get('years', '');
 
 
                 <?php if ($type == 'day') { ?>
-                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                        <div class="btn-group" role="group" aria-label="First group">
+                    <div class="form-inline text-center" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-group pull-left" role="group" aria-label="First group">
+                            <a href="<?= Url::toRoute(['/site/tracereport']) ?>" class="btn btn-default">总统计</a>
+                            <a href="<?= Url::toRoute(['/site/tracedayreport']) ?>" class="btn btn-default">日统计</a>
+                            <a href="<?= Url::toRoute(['/site/tracemonreport']) ?>" class="btn btn-default">月统计</a>
+                        </div>
+                        <div class="form-group ">
+                            <label for="exampleInputEmail2">时间:</label>
+                            <?=
+                            \yii\jui\DatePicker::widget([
+                                'options' => ['class' => 'form-control datepicker', 'readonly' => true],
+                                'attribute' => 'start_date',
+                                'language' => 'zh-CN',
+                                'dateFormat' => 'yyyy-MM-dd',
+                                'value' => empty($search_date) ? date('Y-m-d') : $search_date,
+                                'clientOptions' => [
+                                    'minDate' => '2015-01-01',
+                                    'maxDate' => date("Y-m-d"),
+                                    'onSelect' => new \yii\web\JsExpression(
+                                        "function (dateText, inst) {
+                                            var url = '/site/tracedayreport.html?search_date='+ dateText;
+                                            location.href = url;
+                                        }"
+                                    ),
+                                ],
+                            ]);
+                            ?>
+                        </div>
+
+                        <div class="btn-group pull-right" role="group " aria-label="First group">
                             <?php if ($page > 1) { ?>
-                                <a href="<?= Url::toRoute(['/site/tracedayreport', "page" => $page - 1]) ?>" class="btn btn-default">上一页</a>
+                                <a href="<?= Url::toRoute(['/site/tracedayreport', "page" => $page - 1]) ?>"
+                                   class="btn btn-default">上一页</a>
                             <?php } ?>
-                            <a href="<?= Url::toRoute(['/site/tracedayreport', "page" => $page + 1]) ?>" class="btn btn-default">下一页</a>
+                            <a href="<?= Url::toRoute(['/site/tracedayreport', "page" => $page + 1]) ?>"
+                               class="btn btn-default">下一页</a>
                         </div>
                     </div>
                     <div class="qys_total_show">
@@ -175,19 +207,25 @@ $years = \Yii::$app->request->get('years', '');
                         ?>
                     </div>
                 <?php } ?>
-<?php if ($type == 'month') { ?>
-                    <div class="btn-toolbar pull-let" role="toolbar" aria-label="Toolbar with button groups">
-                        <div class="btn-group" role="group" aria-label="First group">
+                <?php if ($type == 'month') { ?>
+                    <div class="btn-toolbar pull-letf" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-group pull-left" role="group" aria-label="First group">
+                            <a href="<?= Url::toRoute(['/site/tracereport']) ?>" class="btn btn-default">总统计</a>
+                            <a href="<?= Url::toRoute(['/site/tracedayreport']) ?>" class="btn btn-default">日统计</a>
+                            <a href="<?= Url::toRoute(['/site/tracemonreport']) ?>" class="btn btn-default">月统计</a>
+                        </div>
+                        <div class="btn-group pull-right" role="group" aria-label="First group">
                             <select id="year_select"
                                     onchange="window.location.href = '<?= url::toRoute("site/tracemonreport") ?>?years=' + options[selectedIndex].value"
                                     class="form-control" name="years">
                                 <?php foreach ($options as $key => $value) { ?>
-                                    <option  value="<?= $key ?>"   <?php if ($years == $key) { ?>selected <?php } ?> ><?= $value ?></option>
-    <?php } ?>
+                                    <option value="<?= $key ?>"
+                                            <?php if ($years == $key) { ?>selected <?php } ?> ><?= $value ?></option>
+                                <?php } ?>
                             </select>
                         </div>
                         <div class="btn-group pull-right" role="group" aria-label="First group">
-                            <a href="/site/tracereport.html" class="btn btn-default">返回</a>
+                            <!--                            <a href="/site/tracereport.html" class="btn btn-default">返回</a>-->
                         </div>
                     </div>
                     <div class="qys_total_show">
@@ -250,7 +288,7 @@ $years = \Yii::$app->request->get('years', '');
                         ]);
                         ?>
                     </div>
-<?php } ?>
+                <?php } ?>
             </div>
         </div>
     </div>

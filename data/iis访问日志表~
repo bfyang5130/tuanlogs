@@ -1,0 +1,19 @@
+CREATE TABLE `IisAccessLog` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `RequestTime` datetime DEFAULT NULL COMMENT '请求时间',
+  `ServerIp` varchar(50) DEFAULT '' COMMENT '服务器IP',
+  `RequestType` varchar(200) DEFAULT '' COMMENT '请求方式',
+  `CsUriStem` varchar(255) DEFAULT '' COMMENT '访问的资源',
+  `CsUriQuery` varchar(1024) DEFAULT '' COMMENT '具体的访问参数',
+  `ServerPort` int(5) DEFAULT '0' COMMENT '客户端连接到的端口号',
+  `CsUsername` varchar(255) DEFAULT '' COMMENT '访问服务器的已验证用户的名称这不包括连字符 -表示的匿名用户',
+  `ClientIp` varchar(50) DEFAULT '' COMMENT '客户端IP',
+  `UserAgent` varchar(1024) DEFAULT '' COMMENT '客户端类型',
+  `System` varchar(100) DEFAULT '' COMMENT '客户端类型',
+  `Browser` varchar(100) DEFAULT '' COMMENT '浏览器',
+  `Status` int(11) DEFAULT '0' COMMENT '状态',
+  `SubStatus` int(11) DEFAULT '0' COMMENT '协议子状态',
+  `ScWin32Status` int(11) DEFAULT '0' COMMENT 'Win32状态',
+  `TimeTaken` int(11) DEFAULT '0' COMMENT '操作花费的时间长短',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;

@@ -1,0 +1,21 @@
+CREATE TABLE `AccessLog` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `UserIP1` varchar(20) DEFAULT '' COMMENT '用户IP1',
+  `UserIP2` varchar(20) DEFAULT '' COMMENT '用户IP2',
+  `UserIP3` varchar(20) DEFAULT '' COMMENT '用户IP3',
+  `UserIP4` varchar(20) DEFAULT '' COMMENT '用户IP4',
+  `RequestTime` datetime DEFAULT NULL COMMENT '请求时间',
+  `RequestType` varchar(200) DEFAULT '' COMMENT '请求方式',
+  `Protocol` varchar(200) DEFAULT '' COMMENT '协议',
+  `AccessAddress` text COMMENT '请求地址',
+  `Status` int(11) DEFAULT NULL COMMENT '状态',
+  `ContentSize` int(11) DEFAULT NULL COMMENT '内容大小',
+  `HttpReferer` text COMMENT '入口地址',
+  `ClientType` varchar(1024) DEFAULT '' COMMENT '客户端类型',
+  `System` varchar(100) DEFAULT '' COMMENT '操作系统',
+  `Browser` varchar(100) DEFAULT '' COMMENT '浏览器',
+  `TakeTime` double DEFAULT NULL COMMENT '耗时',
+  PRIMARY KEY (`Id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='访问日志表';
+
+

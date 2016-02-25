@@ -341,4 +341,9 @@ class SiteController extends Controller {
         return $this->render('tracereport', $data);
     }
 
+    //提示页面
+    public function actionTip(){
+        $message = empty(Yii::$app->getSession()->getFlash('message'))?"":Yii::$app->getSession()->getFlash('message');
+        return $this->render('tip',["message"=>$message]);
+    }
 }

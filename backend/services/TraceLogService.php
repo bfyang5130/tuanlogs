@@ -59,26 +59,70 @@ class TraceLogService {
      */
     public static function CountDay()
     {
-        //按照天数算的总记录
+
+        $search_date  = \Yii::$app->request->get('search_date',date('Y-m-d',time()));
 
         #所有错误类别
         $category = [];
         foreach(self::getTraceCategory(false) as $k =>$v){
             $category[$v] = floatval(0);
         }
+
         $page = \Yii::$app->request->get('page',1);
 
-        $start = date('Y-m-d' ,time() - 86400 * 5 * ($page - 1) + 86400) ;
-        $end = date('Y-m-d',strtotime($start) - 86400 * 5 );
-
-        if($page > 1){
-            $TraceLogList = $trace_day_log  = TraceLogDay::find()
-                ->select("ApplicationId , `Date` as dateline ,Number  ")
-                ->where(['between','Date',date('Ymd',strtotime($end)),date('Ymd',strtotime($start-86400))])
-                ->asArray()->all();
+        if(time() - strtotime($search_date)   >  86400 * 2  ){
+            $start = date('Y-m-d' ,strtotime($search_date) + 3*86400) ;
+            $end = date('Y-m-d',strtotime($start) - 86400 * 4 );
+        }else{
+            $start = date('Y-m-d' ,time() - 86400 * 5 * ($page - 1) + 86400) ;
+            $end = date('Y-m-d',strtotime($start) - 86400 * 5 );
         }
 
-        if(empty($TraceLogList)){
+        $isUpdate = false;//是否更新统计表
+
+        if($page > 1 || !empty($search_date)) {
+            $TraceLogList = $trace_day_log = TraceLogDay::find()
+                ->select("ApplicationId , `Date` as dateline ,Number  ")
+                ->where(['between', 'Date', date('Ymd', strtotime($end)), date('Ymd', strtotime($start) - 86400)])
+                ->asArray()->all();
+            if ($page > 1 && empty($TraceLogList) ) {
+                $isUpdate = true;
+            }
+
+            if(empty($TraceLogList) &&  !empty($search_date)){
+                $isUpdate = true;
+            }
+            if (!empty($search_date) && !empty($TraceLogList)) {
+                #查询某天没有数据
+                $selectDay = date('Ymd', strtotime($end));
+                $noDataDay = [];
+                for ($i = 0; $selectDay < date('Ymd', strtotime($start) - 86400); $i += 86400) {
+                    $selectDay = date('Ymd', strtotime($end) + $i - 86400);
+                    $noDataDay[$selectDay] = 0;
+                }
+                foreach ($trace_day_log as $k => $v) {
+                    if (array_key_exists($v['dateline'], $noDataDay)) {
+                        $noDataDay[$v['dateline']] = 1;
+                    }
+                }
+
+                if (in_array(0, $noDataDay)) {
+                    $in = [];
+                    foreach ($noDataDay as $k => $v) {
+                        if ($v == 0) {
+                            $in[] = substr($k, 0, 4) . '-' . substr($k, 4, 2) . '-' . substr($k, 6, 2);
+                        }
+                    }
+                    $start = date('Y-m-d', strtotime($start) + 86400);
+                    $end = date('Y-m-d', strtotime($start) - 86400 * 6);
+                    $TraceLogList = $trace_day_log = '';
+                    $isUpdate = true;
+                }
+
+            }
+        }
+
+        if(empty($TraceLogList) || isset($selectAll) ){
             $TraceLogList = TraceLog::find()
                 ->select("count(*) as Number , ApplicationId ,date(`AddDate`) as `dateline`  ")
                 ->where(['between','AddDate',$end,$start])
@@ -97,8 +141,8 @@ class TraceLogService {
             $dataCategory[trim($k)] = floatval(0);
             $series_categroy[] = $k;
         }
-
         $category = $dataCategory;
+
         $result = [];
         for($i=1;$i < 6;$i++){
             if(!empty($trace_day_log)){
@@ -113,11 +157,21 @@ class TraceLogService {
         }
 
         #数据存入日统计表
-        if(empty($trace_day_log) && $page > 1){
+        if(empty($trace_day_log) && $isUpdate ){
             $i = 0;
+            $x = 0;
             foreach($result as $k => $v){
                 $date = date('Ymd',strtotime($k));
-                foreach($v as $kk => $vv){
+                if(in_array($k,$in)){
+                    foreach ($v as $kk => $vv) {
+                        $searchInsertData[$x][] = $kk;
+                        $searchInsertData[$x][] = $vv;
+                        $searchInsertData[$x][] = $date;
+                        $searchInsertData[$x][] = date('Y-m-d h:i:s');
+                        $x++;
+                    }
+                }
+                foreach ($v as $kk => $vv) {
                     $insertData[$i][] = $kk;
                     $insertData[$i][] = $vv;
                     $insertData[$i][] = $date;
@@ -125,6 +179,10 @@ class TraceLogService {
                     $i++;
                 }
             }
+            if(!empty($searchInsertData)){
+                $insertData = $searchInsertData;
+            }
+
             \Yii::$app->db->createCommand()
                 ->batchInsert('TraceLog_day', ['ApplicationId','Number' , 'Date','Updatetime'],$insertData)
                 ->execute();
@@ -146,7 +204,9 @@ class TraceLogService {
             'type' => 'day',
             'category' => $series_categroy,
             'trace_series' => $data,
-            'highcharts_title' => ''
+            'highcharts_title' => '',
+            'search_date' => $search_date
+
         ];
     }
 
@@ -209,12 +269,12 @@ class TraceLogService {
         $data = [];
         foreach($result as $k => $v){
             $formatDateline = substr($v['dateline'],0,7);
-            if(!array_key_exists($formatDateline.'-01',$data)){
-                $data[$formatDateline.'-01'] = $category;
+            if(!array_key_exists($formatDateline,$data)){
+                $data[$formatDateline] = $category;
             }
-            if(isset($data[$formatDateline.'-01'][$v['ApplicationId']])){
+            if(isset($data[$formatDateline][$v['ApplicationId']])){
                 $v['ApplicationId'] = trim($v['ApplicationId']);
-                $data[$formatDateline.'-01'][$v['ApplicationId']] += floatval($v['Number']);
+                $data[$formatDateline][$v['ApplicationId']] += floatval($v['Number']);
             }
         }
 
@@ -257,7 +317,7 @@ class TraceLogService {
             'type' => 'month',
             'category' => $category,
             'trace_series' => $trace_series,
-            'options' => self::$options
+            'options' => self::$options,
         ];
     }
 
@@ -273,6 +333,7 @@ class TraceLogService {
             ->groupBy('ApplicationId')
             ->orderBy("count(*) DESC")
             ->asArray()->all();
+        $sql = "SELECT `ApplicationId`, count(*) as Number FROM `TraceLog` GROUP BY `ApplicationId` ORDER BY count(*) DESC";
         $total['name'] = '跟踪日志列表';
         foreach($ApplicationIds as $k => $v){
             $category[] = trim($v['ApplicationId']);

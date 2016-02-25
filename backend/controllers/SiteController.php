@@ -98,26 +98,43 @@ class SiteController extends Controller {
         if (empty($page)) {
             $page = 0;
         }
-        if (!empty($page) && $page > 0) {
-            $page = 0;
-        }
         $pre_page = $page - 1;
         $next_page = $page + 1;
-        if ($next_page > 0) {
-            $next_page = 0;
-        }
 
         $search_date = Yii::$app->request->get("search_date");
+        if(empty($search_date)){
+            $search_date = date("Y-m-d");
+        }
         $day_data = SqlTraceService::getSqlDayGraph($page, $search_date);
+        if (empty($day_data)) {
+            return $this->render('sqlgraph', [
+                        'search_date' => $search_date,
+                        "pre_page" => $pre_page,
+                        "next_page" => $next_page,
+            ]);
+        }
         $appnames = $day_data["appnames"];
-        $items = $day_data["items"];
-        $series['name'] = $day_data["search_date"]."访问统计";
-        $series['data'] = $items;
+        $series['name'] = $day_data["search_date"] . "访问统计";
+        $series['data'] = $day_data['data']["totalVisit"];
         $series['dataLabels']['enabled'] = true;
-        
+        $series1['name'] = $day_data["search_date"] . "每秒访问频率";
+        $series1['data'] = $day_data['data']["totalsecondVisit"];
+        $series1['dataLabels']['enabled'] = true;
+        $appnameshourshow = $day_data['data']["hourshow"];
+        $series2 = $day_data['data']["reline24Visit"];
+        $series3 = $day_data['data']["reline24VisitSc"];
+        $series4 = $day_data['data']["reline24Time"];
+        $series5 = $day_data['data']["reline24Timesec"];
         return $this->render('sqlgraph', [
+                    'search_date' => $search_date,
                     "appnames" => $appnames,
+                    "appnameshourshow" => $appnameshourshow,
                     "series" => array($series),
+                    "series1" => array($series1),
+                    "series2" => $series2,
+                    "series3" => $series3,
+                    "series4" => $series4,
+                    "series5" => $series5,
                     "pre_page" => $pre_page,
                     "next_page" => $next_page,
         ]);
@@ -342,8 +359,9 @@ class SiteController extends Controller {
     }
 
     //提示页面
-    public function actionTip(){
-        $message = empty(Yii::$app->getSession()->getFlash('message'))?"":Yii::$app->getSession()->getFlash('message');
-        return $this->render('tip',["message"=>$message]);
+    public function actionTip() {
+        $message = empty(Yii::$app->getSession()->getFlash('message')) ? "" : Yii::$app->getSession()->getFlash('message');
+        return $this->render('tip', ["message" => $message]);
     }
+
 }

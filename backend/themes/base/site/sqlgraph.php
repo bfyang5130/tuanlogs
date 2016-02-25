@@ -45,8 +45,8 @@ $search_date = Yii::$app->request->get("search_date");
                                                     <div class="col-md-12">
 
                                                         <div class="btn-group pull-left" role="group" aria-label="First group">
-                                                            <a href="<?= Url::toRoute(['/site/sqlgraph', "page" => $pre_page]) ?>" class="btn btn-default">上一页</a>
-                                                            <a href="<?= Url::toRoute(['/site/sqlgraph', "page" => $next_page]) ?>" class="btn btn-default">下一页</a>
+                                                            <a href="<?= Url::toRoute(['/site/sqlgraph', "page" => $pre_page,'search_date'=>$search_date]) ?>" class="btn btn-default">上一页</a>
+                                                            <a href="<?= Url::toRoute(['/site/sqlgraph', "page" => $next_page,'search_date'=>$search_date]) ?>" class="btn btn-default">下一页</a>
                                                         </div>
 
                                                         <div class="form-group pull-right">
@@ -80,62 +80,427 @@ $search_date = Yii::$app->request->get("search_date");
                             </table>
                         </div>
                     </div>
-                    <div class="tab-pane">
-                        <div class="qys_total_show">
-                            <?php
-                            echo Highcharts::widget([
-                                'options' => [
-                                    'chart' => [
-                                        'type' => 'column',
-                                        'plotShadow' => false, //设置阴影
-                                        'height' => 350,
-                                    ],
-                                    'title' => [
-                                        'text' => '总访问量'
-                                    ],
-                                    'credits' => [
-                                        'enabled' => false//不显示highCharts版权信息
-                                    ],
-                                    'xAxis' => [
-                                        'categories' => $appnames,
-                                        'title' => array('text' => null),
-                                    ],
-                                    'yAxis' => [
-                                        'min' => 0,
-                                        'title' => array('text' => ''),
-                                        'align' => 'high',
-                                        'labels' => array("overflow" => "justify")
-                                    ],
-                                    'plotOptions' => [
-                                        'bar' => [
-                                            'dataLabels' => [
-                                                'enabled' => true
-                                            ]
-                                        ],
-                                    ],
-                                    'legend' => [
-                                        'layout' => 'vertical',
-                                        'align' => 'right',
-                                        'verticalAlign' => 'top',
-                                        'x' => -40,
-                                        'y' => 100,
-                                        'floating' => true,
-                                        'borderWidth' => 1,
-                                        'backgroundColor' => '#FFFFFF',
-                                        'shadow' => true,
-                                    ],
-                                    'tooltip' => [
-                                        'enabled' => false,
-                                    ],
-                                    'legend' => [
-                                        'verticalAlign' => "bottom",
-                                    ],
-                                    'series' => $series
-                                ]
-                            ]);
-                            ?>
+                    <?php if (!empty($appnames)): ?>
+                        <div class="tab-pane">
+                            <table class="table table-bordered table-striped table-condensed">
+                                <tbody>
+                                    <tr>
+                                        <td colspan="3">
+                                            <div class="content form-inline">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <?php
+                                                        echo Highcharts::widget([
+                                                            'options' => [
+                                                                'chart' => [
+                                                                    'type' => 'column',
+                                                                    'plotShadow' => false, //设置阴影
+                                                                    'height' => 350,
+                                                                ],
+                                                                'title' => [
+                                                                    'text' => '总访问量（次/天）'
+                                                                ],
+                                                                'credits' => [
+                                                                    'enabled' => false//不显示highCharts版权信息
+                                                                ],
+                                                                'xAxis' => [
+                                                                    'categories' => $appnames,
+                                                                    'title' => array('text' => null),
+                                                                ],
+                                                                'yAxis' => [
+                                                                    'min' => 0,
+                                                                    'title' => array('text' => ''),
+                                                                    'align' => 'high',
+                                                                    'labels' => array("overflow" => "justify")
+                                                                ],
+                                                                'plotOptions' => [
+                                                                    'bar' => [
+                                                                        'dataLabels' => [
+                                                                            'enabled' => true
+                                                                        ]
+                                                                    ],
+                                                                ],
+                                                                'legend' => [
+                                                                    'layout' => 'vertical',
+                                                                    'align' => 'right',
+                                                                    'verticalAlign' => 'top',
+                                                                    'x' => -40,
+                                                                    'y' => 100,
+                                                                    'floating' => true,
+                                                                    'borderWidth' => 1,
+                                                                    'backgroundColor' => '#FFFFFF',
+                                                                    'shadow' => true,
+                                                                ],
+                                                                'tooltip' => [
+                                                                    'enabled' => false,
+                                                                ],
+                                                                'legend' => [
+                                                                    'verticalAlign' => "bottom",
+                                                                ],
+                                                                'series' => $series
+                                                            ]
+                                                        ]);
+                                                        ?>
+                                                    </div>
+                                                </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                    </div>
+                        <div class="tab-pane">
+                            <table class="table table-bordered table-striped table-condensed">
+                                <tbody>
+                                    <tr>
+                                        <td colspan="3">
+                                            <div class="content form-inline">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <?php
+                                                        echo Highcharts::widget([
+                                                            'options' => [
+                                                                'chart' => [
+                                                                    'type' => 'column',
+                                                                    'plotShadow' => false, //设置阴影
+                                                                    'height' => 350,
+                                                                ],
+                                                                'title' => [
+                                                                    'text' => '全天访问频率（次/秒）'
+                                                                ],
+                                                                'credits' => [
+                                                                    'enabled' => false//不显示highCharts版权信息
+                                                                ],
+                                                                'xAxis' => [
+                                                                    'categories' => $appnames,
+                                                                    'title' => array('text' => null),
+                                                                ],
+                                                                'yAxis' => [
+                                                                    'min' => 0,
+                                                                    'title' => array('text' => ''),
+                                                                    'align' => 'high',
+                                                                    'labels' => array("overflow" => "justify")
+                                                                ],
+                                                                'plotOptions' => [
+                                                                    'bar' => [
+                                                                        'dataLabels' => [
+                                                                            'enabled' => true
+                                                                        ]
+                                                                    ],
+                                                                ],
+                                                                'legend' => [
+                                                                    'layout' => 'vertical',
+                                                                    'align' => 'right',
+                                                                    'verticalAlign' => 'top',
+                                                                    'x' => -40,
+                                                                    'y' => 100,
+                                                                    'floating' => true,
+                                                                    'borderWidth' => 1,
+                                                                    'backgroundColor' => '#FFFFFF',
+                                                                    'shadow' => true,
+                                                                ],
+                                                                'tooltip' => [
+                                                                    'enabled' => false,
+                                                                ],
+                                                                'legend' => [
+                                                                    'verticalAlign' => "bottom",
+                                                                ],
+                                                                'series' => $series1
+                                                            ]
+                                                        ]);
+                                                        ?>
+                                                    </div>
+                                                </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane">
+                            <table class="table table-bordered table-striped table-condensed">
+                                <tbody>
+                                    <tr>
+                                        <td colspan="3">
+                                            <div class="content form-inline">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <?php
+                                                        echo Highcharts::widget([
+                                                            'options' => [
+                                                                'chart' => [
+                                                                    'type' => 'spline',
+                                                                    'plotShadow' => false, //设置阴影
+                                                                    'height' => 350,
+                                                                ],
+                                                                'title' => [
+                                                                    'text' => '访问量（次/时）'
+                                                                ],
+                                                                'credits' => [
+                                                                    'enabled' => false//不显示highCharts版权信息
+                                                                ],
+                                                                'xAxis' => [
+                                                                    'categories' => $appnameshourshow,
+                                                                    'title' => array('text' => null),
+                                                                ],
+                                                                'yAxis' => [
+                                                                    'min' => 0,
+                                                                    'title' => array('text' => ''),
+                                                                    'align' => 'high',
+                                                                    'labels' => array("overflow" => "justify")
+                                                                ],
+                                                                'plotOptions' => [
+                                                                    'spline' => [
+                                                                        'dataLabels' => [
+                                                                            'enabled' => true
+                                                                        ]
+                                                                    ],
+                                                                ],
+                                                                'legend' => [
+                                                                    'layout' => 'vertical',
+                                                                    'align' => 'right',
+                                                                    'verticalAlign' => 'top',
+                                                                    'x' => -40,
+                                                                    'y' => 100,
+                                                                    'floating' => true,
+                                                                    'borderWidth' => 1,
+                                                                    'backgroundColor' => '#FFFFFF',
+                                                                    'shadow' => true,
+                                                                ],
+                                                                'tooltip' => [
+                                                                    'enabled' => false,
+                                                                ],
+                                                                'legend' => [
+                                                                    'verticalAlign' => "bottom",
+                                                                ],
+                                                                'series' => $series2
+                                                            ]
+                                                        ]);
+                                                        ?>
+                                                    </div>
+                                                </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane">
+                            <table class="table table-bordered table-striped table-condensed">
+                                <tbody>
+                                    <tr>
+                                        <td colspan="3">
+                                            <div class="content form-inline">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <?php
+                                                        echo Highcharts::widget([
+                                                            'options' => [
+                                                                'chart' => [
+                                                                    'type' => 'spline',
+                                                                    'plotShadow' => false, //设置阴影
+                                                                    'height' => 350,
+                                                                ],
+                                                                'title' => [
+                                                                    'text' => '访问频率[次/秒]'
+                                                                ],
+                                                                'credits' => [
+                                                                    'enabled' => false//不显示highCharts版权信息
+                                                                ],
+                                                                'xAxis' => [
+                                                                    'categories' => $appnameshourshow,
+                                                                    'title' => array('text' => null),
+                                                                ],
+                                                                'yAxis' => [
+                                                                    'min' => 0,
+                                                                    'title' => array('text' => ''),
+                                                                    'align' => 'high',
+                                                                    'labels' => array("overflow" => "justify")
+                                                                ],
+                                                                'plotOptions' => [
+                                                                    'spline' => [
+                                                                        'dataLabels' => [
+                                                                            'enabled' => true
+                                                                        ]
+                                                                    ],
+                                                                ],
+                                                                'legend' => [
+                                                                    'layout' => 'vertical',
+                                                                    'align' => 'right',
+                                                                    'verticalAlign' => 'top',
+                                                                    'x' => -40,
+                                                                    'y' => 100,
+                                                                    'floating' => true,
+                                                                    'borderWidth' => 1,
+                                                                    'backgroundColor' => '#FFFFFF',
+                                                                    'shadow' => true,
+                                                                ],
+                                                                'tooltip' => [
+                                                                    'enabled' => false,
+                                                                ],
+                                                                'legend' => [
+                                                                    'verticalAlign' => "bottom",
+                                                                ],
+                                                                'series' => $series3
+                                                            ]
+                                                        ]);
+                                                        ?>
+                                                    </div>
+                                                </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane">
+                            <table class="table table-bordered table-striped table-condensed">
+                                <tbody>
+                                    <tr>
+                                        <td colspan="3">
+                                            <div class="content form-inline">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <?php
+                                                        echo Highcharts::widget([
+                                                            'options' => [
+                                                                'chart' => [
+                                                                    'type' => 'spline',
+                                                                    'plotShadow' => false, //设置阴影
+                                                                    'height' => 350,
+                                                                ],
+                                                                'title' => [
+                                                                    'text' => '每小时总耗时(毫秒)'
+                                                                ],
+                                                                'credits' => [
+                                                                    'enabled' => false//不显示highCharts版权信息
+                                                                ],
+                                                                'xAxis' => [
+                                                                    'categories' => $appnameshourshow,
+                                                                    'title' => array('text' => null),
+                                                                ],
+                                                                'yAxis' => [
+                                                                    'min' => 0,
+                                                                    'title' => array('text' => ''),
+                                                                    'align' => 'high',
+                                                                    'labels' => array("overflow" => "justify")
+                                                                ],
+                                                                'plotOptions' => [
+                                                                    'spline' => [
+                                                                        'dataLabels' => [
+                                                                            'enabled' => true
+                                                                        ]
+                                                                    ],
+                                                                ],
+                                                                'legend' => [
+                                                                    'layout' => 'vertical',
+                                                                    'align' => 'right',
+                                                                    'verticalAlign' => 'top',
+                                                                    'x' => -40,
+                                                                    'y' => 100,
+                                                                    'floating' => true,
+                                                                    'borderWidth' => 1,
+                                                                    'backgroundColor' => '#FFFFFF',
+                                                                    'shadow' => true,
+                                                                ],
+                                                                'tooltip' => [
+                                                                    'enabled' => false,
+                                                                ],
+                                                                'legend' => [
+                                                                    'verticalAlign' => "bottom",
+                                                                ],
+                                                                'series' => $series4
+                                                            ]
+                                                        ]);
+                                                        ?>
+                                                    </div>
+                                                </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane">
+                            <table class="table table-bordered table-striped table-condensed">
+                                <tbody>
+                                    <tr>
+                                        <td colspan="3">
+                                            <div class="content form-inline">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <?php
+                                                        echo Highcharts::widget([
+                                                            'options' => [
+                                                                'chart' => [
+                                                                    'type' => 'spline',
+                                                                    'plotShadow' => false, //设置阴影
+                                                                    'height' => 350,
+                                                                ],
+                                                                'title' => [
+                                                                    'text' => '平均每秒耗时[毫秒]'
+                                                                ],
+                                                                'credits' => [
+                                                                    'enabled' => false//不显示highCharts版权信息
+                                                                ],
+                                                                'xAxis' => [
+                                                                    'categories' => $appnameshourshow,
+                                                                    'title' => array('text' => null),
+                                                                ],
+                                                                'yAxis' => [
+                                                                    'min' => 0,
+                                                                    'title' => array('text' => ''),
+                                                                    'align' => 'high',
+                                                                    'labels' => array("overflow" => "justify")
+                                                                ],
+                                                                'plotOptions' => [
+                                                                    'spline' => [
+                                                                        'dataLabels' => [
+                                                                            'enabled' => true
+                                                                        ]
+                                                                    ],
+                                                                ],
+                                                                'legend' => [
+                                                                    'layout' => 'vertical',
+                                                                    'align' => 'right',
+                                                                    'verticalAlign' => 'top',
+                                                                    'x' => -40,
+                                                                    'y' => 100,
+                                                                    'floating' => true,
+                                                                    'borderWidth' => 1,
+                                                                    'backgroundColor' => '#FFFFFF',
+                                                                    'shadow' => true,
+                                                                ],
+                                                                'tooltip' => [
+                                                                    'enabled' => false,
+                                                                ],
+                                                                'legend' => [
+                                                                    'verticalAlign' => "bottom",
+                                                                ],
+                                                                'series' => $series5
+                                                            ]
+                                                        ]);
+                                                        ?>
+                                                    </div>
+                                                </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php else: ?>
+                        <div class="tab-pane">
+                            <table class="table table-bordered table-striped table-condensed">
+                                <tbody>
+                                    <tr>
+                                        <td colspan="3">
+                                            <div class="content form-inline">
+                                                <div class="row">
+                                                    <div class="col-md-12 text-center">
+                                                        当前没有数据
+                                                    </div>
+                                                </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    <? endif; ?>
                 </div>
             </div>
         </div>

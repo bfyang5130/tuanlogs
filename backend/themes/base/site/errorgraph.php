@@ -4,7 +4,7 @@
 use yii\widgets\Breadcrumbs;
 use yii\helpers\Url;
 use nirvana\showloading\ShowLoadingAsset;
-use miloschuman\highcharts\Highcharts ;
+use miloschuman\highcharts\Highcharts;
 
 ShowLoadingAsset::register($this);
 
@@ -40,59 +40,72 @@ $params = \Yii::$app->request->queryParams;
                         <a href="<?= Url::toRoute('/site/countmonth') ?>" class="btn btn-default">月统计</a>
                     </div>
                 </div>
-                <div class="qys_total_show">
-                    <?php
-                    echo Highcharts::widget([
-                        'options'=>[
-                            'chart' => [
-                                'type'=> 'bar',
-                                'plotShadow'=> false ,//设置阴影
-                                'height'=>1500,
-                            ],
-                            'title' => [
-                                'text' => ' 统计'
-                            ],
-                            'credits' => [
-                                'enabled'=>false//不显示highCharts版权信息
-                            ],
-                            'xAxis' => [
-                                'categories' => $appnames,
-                                'title' => array('text' => null) ,
-                            ],
-                            'yAxis' => [
-                                'min' => 0,
-                                'title' => array('text' => ''),
-                                'align' => 'high',
-                                'labels'=> array("overflow"=>"justify")
-                            ],
-                            'plotOptions'=>[
-                                'bar'=>[
-                                    'dataLabels'=>[
-                                        'enabled'=>true
-                                    ]
-                                ],
-                            ],
-                            'legend'=>[
-                                'layout'=>'vertical',
-                                'align'=>'right',
-                                'verticalAlign'=>'top',
-                                'x'=>-40,
-                                'y'=>100,
-                                'floating'=>true,
-                                'borderWidth'=>1,
-                                'backgroundColor'=>'#FFFFFF',
-                                'shadow'=>true,
-                            ],
-                            'tooltip'=>[
-                                'enabled'=>false,
-                            ],
-                            'legend' =>[
-                                'verticalAlign'=>"bottom" ,
-                            ],
-                            'series' => $series
-                        ]
-                    ]);
-                    ?>
+                <div class="tab-pane" style="margin-top:20px;">
+                    <table class="table table-bordered table-striped table-condensed">
+                        <tbody>
+                            <tr>
+                                <td colspan="3">
+                                    <div class="content form-inline">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <?php
+                                                echo Highcharts::widget([
+                                                    'options' => [
+                                                        'chart' => [
+                                                            'type' => 'bar',
+                                                            'plotShadow' => false, //设置阴影
+                                                            'height' => 600
+                                                        ],
+                                                        'title' => [
+                                                            'text' => ' 统计'
+                                                        ],
+                                                        'credits' => [
+                                                            'enabled' => false//不显示highCharts版权信息
+                                                        ],
+                                                        'xAxis' => [
+                                                            'categories' => $appnames,
+                                                            'title' => array('text' => null),
+                                                        ],
+                                                        'yAxis' => [
+                                                            'min' => 0,
+                                                            'title' => array('text' => ''),
+                                                            'align' => 'high',
+                                                            'labels' => array("overflow" => "justify")
+                                                        ],
+                                                        'plotOptions' => [
+                                                            'bar' => [
+                                                                'dataLabels' => [
+                                                                    'enabled' => true
+                                                                ]
+                                                            ],
+                                                        ],
+                                                        'legend' => [
+                                                            'layout' => 'vertical',
+                                                            'align' => 'right',
+                                                            'verticalAlign' => 'top',
+                                                            'x' => -40,
+                                                            'y' => 100,
+                                                            'floating' => true,
+                                                            'borderWidth' => 1,
+                                                            'backgroundColor' => '#FFFFFF',
+                                                            'shadow' => true,
+                                                        ],
+                                                        'tooltip' => [
+                                                            'enabled' => false,
+                                                        ],
+                                                        'legend' => [
+                                                            'verticalAlign' => "bottom",
+                                                        ],
+                                                        'series' => $series
+                                                    ]
+                                                ]);
+                                                ?>
+                                            </div>
+                                        </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

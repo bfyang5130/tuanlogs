@@ -68,41 +68,48 @@ $search_date = Yii::$app->request->get("search_date");
                     </div>
 
                 </div>
-                <div class="qys_total_show">
-                    <?php
-                    echo Highcharts::widget([
-                        'options' => [
-                            'chart' => [
-                                'type' => 'bar',
-                                'plotShadow' => false, //设置阴影
-                                'height' => 2800,
-                            ],
-                            'title' => [
-                                'text' => '错误日志日统计'
-                            ],
-                            'credits' => [
-                                'enabled' => false//不显示highCharts版权信息
-                            ],
-                            'xAxis' => [
-                                'categories' => $appnames,
-                                'title' => array('text' => null),
-                            ],
-                            'yAxis' => [
-                                'min' => 0,
-                                'title' => array('text' => ''),
-                                'align' => 'high',
-                                'labels' => array("overflow" => "justify")
-                            ],
-                            'plotOptions' => [
-                                'bar' => [
-                                    'dataLabels' => [
-                                        'enabled' => true
-                                    ]
-                                ],
-                                'series' => [
-                                    'cursor' => 'pointer',
-                                    'events' => array("click" => new \yii\web\JsExpression(
-                                                'function(e){
+                <div class="tab-pane" style="margin-top:20px;">
+                    <table class="table table-bordered table-striped table-condensed">
+                        <tbody>
+                            <tr>
+                                <td colspan="3">
+                                    <div class="content form-inline">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <?php
+                                                echo Highcharts::widget([
+                                                    'options' => [
+                                                        'chart' => [
+                                                            'type' => 'bar',
+                                                            'plotShadow' => false, //设置阴影
+                                                            'height' => 1200,
+                                                        ],
+                                                        'title' => [
+                                                            'text' => '错误日志日统计'
+                                                        ],
+                                                        'credits' => [
+                                                            'enabled' => false//不显示highCharts版权信息
+                                                        ],
+                                                        'xAxis' => [
+                                                            'categories' => $appnames,
+                                                            'title' => array('text' => null),
+                                                        ],
+                                                        'yAxis' => [
+                                                            'min' => 0,
+                                                            'title' => array('text' => ''),
+                                                            'align' => 'high',
+                                                            'labels' => array("overflow" => "justify")
+                                                        ],
+                                                        'plotOptions' => [
+                                                            'bar' => [
+                                                                'dataLabels' => [
+                                                                    'enabled' => true
+                                                                ]
+                                                            ],
+                                                            'series' => [
+                                                                'cursor' => 'pointer',
+                                                                'events' => array("click" => new \yii\web\JsExpression(
+                                                                            'function(e){
                                              var search_data = this.name ;
                                              var arr = search_data.split("-");
                                              var newdt = new Date(Number(arr[0]),Number(arr[1])-1,Number(arr[2])+1);
@@ -113,27 +120,33 @@ $search_date = Yii::$app->request->get("search_date");
                                             var target_url = "/site/index.html?ErrorLogSearch[start_date]="+this.name+"&ErrorLogSearch[end_date]="+end_date+"&ErrorLogSearch[ApplicationId]="+e.point.category;
                                             window.open(target_url);
                                          }'
-                                        ))
-                                ]
-                            ],
-                            'legend' => [
-                                'layout' => 'horizontal',
-                                'align' => 'center',
-                                'verticalAlign' => 'top',
-                                'floating' => true,
+                                                                    ))
+                                                            ]
+                                                        ],
+                                                        'legend' => [
+                                                            'layout' => 'horizontal',
+                                                            'align' => 'center',
+                                                            'verticalAlign' => 'top',
+                                                            'floating' => true,
 //                                'x'=>90,
-                                'y' => 20,
-                                'borderWidth' => 1,
-                                'backgroundColor' => '#FFFFFF',
-                                'shadow' => true,
-                            ],
-                            'tooltip' => [
-                                'enabled' => false,
-                            ],
-                            'series' => $series
-                        ]
-                    ]);
-                    ?>
+                                                            'y' => 20,
+                                                            'borderWidth' => 1,
+                                                            'backgroundColor' => '#FFFFFF',
+                                                            'shadow' => true,
+                                                        ],
+                                                        'tooltip' => [
+                                                            'enabled' => false,
+                                                        ],
+                                                        'series' => $series
+                                                    ]
+                                                ]);
+                                                ?>
+                                            </div>
+                                        </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
             </div>
@@ -141,6 +154,6 @@ $search_date = Yii::$app->request->get("search_date");
     </div>
 </div>
 <script type="text/javascript">
-//        $(document).ready(function() {
-//        });
+    //        $(document).ready(function() {
+    //        });
 </script>

@@ -162,7 +162,7 @@ class TraceLogService {
             $x = 0;
             foreach($result as $k => $v){
                 $date = date('Ymd',strtotime($k));
-                if(in_array($k,$in)){
+                if(  !empty($in) && in_array($k,$in)){
                     foreach ($v as $kk => $vv) {
                         $searchInsertData[$x][] = $kk;
                         $searchInsertData[$x][] = $vv;

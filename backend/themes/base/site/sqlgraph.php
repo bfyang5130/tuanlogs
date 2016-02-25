@@ -506,8 +506,3 @@ $search_date = Yii::$app->request->get("search_date");
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
-    $(document).ready(function() {
-    });
-</script>

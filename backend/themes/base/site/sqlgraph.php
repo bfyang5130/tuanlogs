@@ -500,7 +500,7 @@ $search_date = Yii::$app->request->get("search_date");
                                 </tbody>
                             </table>
                         </div>
-                    <? endif; ?>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

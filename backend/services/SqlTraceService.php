@@ -48,8 +48,8 @@ class SqlTraceService {
                 $search_date = date("Y-m-d");
             }
         }
-        $baseDate=$search_date;
-        if($page!=0){
+        $baseDate = $search_date;
+        if ($page != 0) {
             $search_date = date('Y-m-d', strtotime("$search_date $page day"));
         }
         //$search_date = date("2016-1-4");
@@ -93,25 +93,25 @@ class SqlTraceService {
             #如果已经存在数组里不存在这个类型,把当前的类型添加进去
             if (!in_array($oneDate['databasetype'], $dabasetype)) {
                 array_push($dabasetype, $oneDate['databasetype']);
-                $dabasetTotalValue[$oneDate['databasetype']] = round(floatval($oneDate['Number']),5);
-                $secondVistValue[$oneDate['databasetype']] = round(floatval($oneDate['Number'] / $secend),5);
+                $dabasetTotalValue[$oneDate['databasetype']] = round(floatval($oneDate['Number']), 5);
+                $secondVistValue[$oneDate['databasetype']] = round(floatval($oneDate['Number'] / $secend), 5);
                 #截取小时
                 $h = date("H", strtotime($oneDate['Date']));
                 $h = intval($h);
-                $line24Visit[$oneDate['databasetype']][$h] = round(floatval($oneDate['Number']),5);
-                $line24Visitsec[$oneDate['databasetype']][$h] = round(floatval($oneDate['Number'] / 3600),5);
-                $line24Time[$oneDate['databasetype']][$h] = round(floatval($oneDate['totoltime']),5);
-                $line24Timesec[$oneDate['databasetype']][$h] = round(floatval($oneDate['totoltime'] / 3600),5);
+                $line24Visit[$oneDate['databasetype']][$h] = round(floatval($oneDate['Number']), 5);
+                $line24Visitsec[$oneDate['databasetype']][$h] = round(floatval($oneDate['Number'] / 3600), 5);
+                $line24Time[$oneDate['databasetype']][$h] = round(floatval($oneDate['totoltime']), 5);
+                $line24Timesec[$oneDate['databasetype']][$h] = round(floatval($oneDate['totoltime'] / 3600), 5);
             } else {
-                $dabasetTotalValue[$oneDate['databasetype']]+=round(floatval($oneDate['Number']),5);
-                $secondVistValue[$oneDate['databasetype']]+=round(floatval($oneDate['Number'] / $secend),5);
+                $dabasetTotalValue[$oneDate['databasetype']]+=round(floatval($oneDate['Number']), 5);
+                $secondVistValue[$oneDate['databasetype']]+=round(floatval($oneDate['Number'] / $secend), 5);
                 #截取小时
                 $h = date("H", strtotime($oneDate['Date']));
                 $h = intval($h);
-                $line24Visit[$oneDate['databasetype']][$h] = round(floatval($oneDate['Number']),5);
-                $line24Visitsec[$oneDate['databasetype']][$h] = round(floatval($oneDate['Number'] / 3600),5);
-                $line24Time[$oneDate['databasetype']][$h] = round(floatval($oneDate['totoltime']),5);
-                $line24Timesec[$oneDate['databasetype']][$h] = round(floatval($oneDate['totoltime'] / 3600),5);
+                $line24Visit[$oneDate['databasetype']][$h] = round(floatval($oneDate['Number']), 5);
+                $line24Visitsec[$oneDate['databasetype']][$h] = round(floatval($oneDate['Number'] / 3600), 5);
+                $line24Time[$oneDate['databasetype']][$h] = round(floatval($oneDate['totoltime']), 5);
+                $line24Timesec[$oneDate['databasetype']][$h] = round(floatval($oneDate['totoltime'] / 3600), 5);
             }
         }
         #处理24小时的数据
@@ -185,79 +185,6 @@ class SqlTraceService {
             ],
             "appnames" => $dabasetype
         ];
-        exit;
-        //查找Error的appname
-        $application_query = new Query();
-        $application_query->select("appname")
-                ->from("ApplicateName")
-                ->where("logtype=1"); //1-Error类型 0-trace
-        $application_list = $application_query->all();
-        $appname_list = array();
-        foreach ($application_list as $value) {
-            $appname_list[] = $value['appname'];
-        }
-
-        $errorlogday = ErrorLogDay::find()
-                ->orderBy('Date desc')
-                ->limit(1)
-                ->one();
-
-        //统计数据,写入日统计表
-        if (empty($errorlogday)) {
-            //从第一天开始生成统计记录
-            //取ErrorLog的第一条数据,获取开始时间
-            $errorlog = ErrorLog::find()
-                    ->where("AddDate>0")
-                    ->orderBy("AddDate asc")
-                    ->limit(1)
-                    ->one();
-            $add_date = $errorlog->AddDate;
-            $str_add_date = strtotime(date("Y-m-d", strtotime($add_date)));
-            self::saveErrorLogDay($str_add_date, $appname_list);
-        } else {
-            //从日统计表最后的date+1天统计数据
-            $last_time = strtotime($errorlogday->Date);
-            if ($last_time < strtotime(date("Y-m-d"))) {
-                $str_add_date = $last_time + 86400;
-                self::saveErrorLogDay($str_add_date, $appname_list);
-            }
-        }
-
-        //显示数据
-        $cur_time = strtotime(date("Y-m-d"));
-        $day = $page * 5 - 4;
-        $count_time = strtotime("{$day} day", $cur_time);
-
-        if (!empty($search_date)) {
-            $search_time = strtotime($search_date);
-            $count_time = strtotime("-2 day", $search_time);
-        }
-        //返回5天内的数据
-        $items = self::errorLogItems($count_time, 5, $appname_list, 'day');
-
-        if ((empty($page) || $page > 0) && empty($search_date)) {
-
-            //当天统计错误日志的数量
-            $format_cur_time = date("Y-m-d");
-
-            $cur_time_format = date("Y-m-d 0:0:0", time());
-            $cur_error_query = new Query();
-            $cur_error_query->select("count(id) as total,ApplicationId")
-                    ->from("ErrorLog")
-                    ->where(["in", "ApplicationId", $appname_list]);
-
-            $cur_error_query->andWhere("AddDate>=:adddate", array(":adddate" => $cur_time_format));
-
-            $cur_error_query->groupBy("ApplicationId");
-            $cur_data = $cur_error_query->all();
-            foreach ($cur_data as $cur) {
-                if (in_array($cur['ApplicationId'], $appname_list)) {
-                    $items[$format_cur_time][$cur['ApplicationId']] = intval($cur['total']);
-                }
-            }
-        }
-
-        return array("items" => $items, "appnames" => $appname_list);
     }
 
 }

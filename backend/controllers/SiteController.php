@@ -33,7 +33,7 @@ class SiteController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index', 'trace', 'sql', 'errorgraph',
+                        'actions' => ['logout', 'index', 'trace', 'sql', 'errorgraph','tip',
                             'getdata','doing','countday','countmonth','tracereport','tracedayreport','tracemonreport'],
                         'allow' => true,
                         'roles' => ['@'],
@@ -309,5 +309,11 @@ class SiteController extends Controller {
         $dateline = Yii::$app->request->get('years',null);
         $data = TraceLogService::CountMon($dateline);
         return $this->render('tracereport',$data);
+    }
+
+    //提示页面
+    public function actionTip(){
+        $message = empty(Yii::$app->getSession()->getFlash('message'))?"":Yii::$app->getSession()->getFlash('message');
+        return $this->render('tip',["message"=>$message]);
     }
 }

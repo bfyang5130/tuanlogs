@@ -12,6 +12,7 @@ use backend\services\ToolService;
 use backend\services\SqlTraceService;
 use backend\models\SqlLogSearch;
 use yii\data\Sort;
+use backend\models\forms\DataBaseTypeForm;
 
 /**
  * Site controller
@@ -19,18 +20,10 @@ use yii\data\Sort;
 class SqlController extends Controller {
 
     /**
-     * 增加统计数据表
+     * 增加统计信息
      * @return type
      */
-    public function actionAddtable() {
-        return $this->render("doing");
-    }
-
-    /**
-     * 增加统计数据库
-     * @return type
-     */
-    public function actionAdddatabase() {
+    public function actionAddstatistics() {
         return $this->render("doing");
     }
 
@@ -38,6 +31,7 @@ class SqlController extends Controller {
      * 数据库相关的统计
      */
     public function actionSqlgraph() {
+
         $page = Yii::$app->request->get("page");
         if (empty($page)) {
             $page = 0;
@@ -50,8 +44,10 @@ class SqlController extends Controller {
             $search_date = date("Y-m-d");
         }
         $day_data = SqlTraceService::getSqlDayGraph($page, $search_date);
+        $databaseForm = new DataBaseTypeForm();
         if (empty($day_data)) {
             return $this->render('sqlgraph', [
+                        'databaseForm' => $databaseForm,
                         'search_date' => $search_date,
                         "pre_page" => $pre_page,
                         "next_page" => $next_page
@@ -69,7 +65,9 @@ class SqlController extends Controller {
         $series3 = $day_data['data']["reline24VisitSc"];
         $series4 = $day_data['data']["reline24Time"];
         $series5 = $day_data['data']["reline24Timesec"];
+
         return $this->render('sqlgraph', [
+                    'databaseForm' => $databaseForm,
                     'search_date' => $search_date,
                     "appnames" => $appnames,
                     "appnameshourshow" => $appnameshourshow,
@@ -117,7 +115,7 @@ class SqlController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['index', 'sqlgraph','adddatabase','addtable'],
+                        'actions' => ['index', 'sqlgraph', 'addstatistics'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],

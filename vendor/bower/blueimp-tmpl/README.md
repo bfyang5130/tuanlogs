@@ -4,9 +4,9 @@
 [JavaScript Templates Demo](https://blueimp.github.io/JavaScript-Templates/)
 
 ## Description
-< 1KB lightweight, fast & powerful JavaScript templating engine with zero
-dependencies. Compatible with server-side environments like node.js, module
-loaders like RequireJS and all web browsers.
+1KB lightweight, fast & powerful JavaScript templating engine with zero
+dependencies. Compatible with server-side environments like Node.js, module
+loaders like RequireJS, Browserify or webpack and all web browsers.
 
 ## Usage
 
@@ -97,9 +97,9 @@ Add a file **server.js** with the following content:
 require("http").createServer(function (req, res) {
     var fs = require("fs"),
         // The tmpl module exports the tmpl() function:
-        tmpl = require("./tmpl").tmpl,
+        tmpl = require("./tmpl"),
         // Use the following version if you installed the package with npm:
-        // tmpl = require("blueimp-tmpl").tmpl,
+        // tmpl = require("blueimp-tmpl"),
         // Sample data:
         data = {
             "title": "JavaScript Templates",
@@ -395,7 +395,7 @@ There are two different ways to run the tests:
 * run `npm test` in the Terminal in the root path of the repository package.
 
 The first one tests the browser integration,
-the second one the[node.js](http://nodejs.org/) integration.
+the second one the [node.js](http://nodejs.org/) integration.
 
 ## License
 The JavaScript Templates script is released under the

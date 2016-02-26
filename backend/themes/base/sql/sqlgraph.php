@@ -4,6 +4,9 @@
 use yii\helpers\Url;
 use yii\widgets\Breadcrumbs;
 use miloschuman\highcharts\Highcharts;
+use yii\widgets\ActiveForm;
+use yii\helpers\Html;
+use mootensai\components\JsBlock;
 
 $this->title = '日志列表';
 
@@ -27,55 +30,101 @@ $search_date = Yii::$app->request->get("search_date");
         <div class="panel panel-default">
             <?= $this->render('common_top.php'); ?>
             <div class="panel-body">
-                <div class="form-inline" role="toolbar">
-                    <div class="tab-content">
-                        <div class="tab-pane active">
-                            <table class="table table-bordered table-striped table-condensed">
-                                <tbody>
-                                    <tr>
-                                        <td colspan="3">
-                                            <div class="content form-inline">
-                                                <div class="row">
-                                                    <div class="col-md-12">
+                <div class="tab-content">
+                    <div class="tab-pane">
+                        <table class="table table-bordered table-striped table-condensed">
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">
+                                        <div class="content form-inline">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <?php
+                                                    $form = ActiveForm::begin([
+                                                                'id' => 'database-form',
+                                                                'action' => ['sql/addstatistics'],
+                                                                'options' => ['class' => 'form-inline']
+                                                    ]);
+                                                    ?>
+                                                    <?= $form->field($databaseForm, 'database_cn', [ 'template' => "{label}\n{input}\n{hint}\n<div style='height:30px;'>{error}</div>", 'labelOptions' => ['label' => '数据库中文名:']]) ?>
+                                                    <?= $form->field($databaseForm, 'database_en', [ 'template' => "{label}\n{input}\n{hint}\n<div style='height:30px;'>{error}</div>", 'labelOptions' => ['label' => '数据库英文名:']]) ?>
+                                                    <div class="form-group">
+                                                        <?= Html::submitButton('提交', ['class' => 'btn btn-sm btn-warning', 'name' => 'dabase-button']) ?>
+                                                        <div style="width:20px;height:40px;"></div>
+                                                    </div>
+                                                    <?php ActiveForm::end(); ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <?php JsBlock::begin() ?>
+                <script type="text/javascript">
+                    $(function() {
+                        jQuery('form#apitool').on('beforeSubmit', function(e) {
+                            var form = $(this);
+                            $.ajax({url: form.attr('action'), type: 'post', data: $form.serialize(), success: function(data) {
+                                }});
+                        }).on('submit', function(e) {
+                            e.preventDefault();
+                        });
 
-                                                        <div class="btn-group pull-left" role="group" aria-label="First group">
-                                                            <a href="<?= Url::toRoute(['/site/sqlgraph', "page" => $pre_page, 'search_date' => $search_date]) ?>" class="btn btn-default">上一页</a>
-                                                            <a href="<?= Url::toRoute(['/site/sqlgraph', "page" => $next_page, 'search_date' => $search_date]) ?>" class="btn btn-default">下一页</a>
-                                                        </div>
+                    });
+                </script>
+                <?php JsBlock::end() ?>
+                <div class="tab-content">
+                    <div class="tab-pane active">
+                        <table class="table table-bordered table-striped table-condensed">
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">
+                                        <div class="content form-inline">
+                                            <div class="row">
+                                                <div class="col-md-12">
 
-                                                        <div class="form-group pull-right">
-                                                            <label for="exampleInputEmail2">时间:</label>
-                                                            <?=
-                                                            \yii\jui\DatePicker::widget([
-                                                                'options' => ['class' => 'form-control datepicker', 'readonly' => true],
-                                                                'attribute' => 'start_date',
-                                                                'language' => 'zh-CN',
-                                                                'dateFormat' => 'yyyy-MM-dd',
-                                                                'value' => empty($search_date) ? date('Y-m-d') : $search_date,
-                                                                'clientOptions' => [
-                                                                    'minDate' => '2015-01-01',
-                                                                    'maxDate' => date("Y-m-d"),
-                                                                    'onSelect' => new \yii\web\JsExpression(
-                                                                            "function (dateText, inst) {
+                                                    <div class="btn-group pull-left" role="group" aria-label="First group">
+                                                        <a href="<?= Url::toRoute(['/sql/sqlgraph', "page" => $pre_page, 'search_date' => $search_date]) ?>" class="btn btn-default">上一页</a>
+                                                        <a href="<?= Url::toRoute(['/sql/sqlgraph', "page" => $next_page, 'search_date' => $search_date]) ?>" class="btn btn-default">下一页</a>
+                                                    </div>
+
+                                                    <div class="form-group pull-right">
+                                                        <label for="exampleInputEmail2">时间:</label>
+                                                        <?=
+                                                        \yii\jui\DatePicker::widget([
+                                                            'options' => ['class' => 'form-control datepicker', 'readonly' => true],
+                                                            'attribute' => 'start_date',
+                                                            'language' => 'zh-CN',
+                                                            'dateFormat' => 'yyyy-MM-dd',
+                                                            'value' => empty($search_date) ? date('Y-m-d') : $search_date,
+                                                            'clientOptions' => [
+                                                                'minDate' => '2015-01-01',
+                                                                'maxDate' => date("Y-m-d"),
+                                                                'onSelect' => new \yii\web\JsExpression(
+                                                                        "function (dateText, inst) {
                                             var url = '/sql/sqlgraph.html?search_date='+ dateText;
                                             location.href = url;
                                         }"
-                                                                    ),
-                                                                ],
-                                                            ]);
-                                                            ?>
-                                                        </div>
+                                                                ),
+                                                            ],
+                                                        ]);
+                                                        ?>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <?php if (!empty($appnames)): ?>
-                        <div class="tab-pane">
+                </div>
+                <?php if (!empty($appnames)): ?>
+                    <div class="tab-content">
+                        <div class="tab-pane active">
                             <table class="table table-bordered table-striped table-condensed">
                                 <tbody>
                                     <tr>
@@ -196,7 +245,9 @@ $search_date = Yii::$app->request->get("search_date");
                                 </tbody>
                             </table>
                         </div>
-                        <div class="tab-pane">
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane active">
                             <table class="table table-bordered table-striped table-condensed">
                                 <tbody>
                                     <tr>
@@ -317,7 +368,9 @@ $search_date = Yii::$app->request->get("search_date");
                                 </tbody>
                             </table>
                         </div>
-                        <div class="tab-pane">
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane active">
                             <table class="table table-bordered table-striped table-condensed">
                                 <tbody>
                                     <tr>
@@ -438,8 +491,10 @@ $search_date = Yii::$app->request->get("search_date");
                                 </tbody>
                             </table>
                         </div>
-                    <?php else: ?>
-                        <div class="tab-pane">
+                    </div>
+                <?php else: ?>
+                    <div class="tab-content">
+                        <div class="tab-pane active">
                             <table class="table table-bordered table-striped table-condensed">
                                 <tbody>
                                     <tr>
@@ -455,8 +510,8 @@ $search_date = Yii::$app->request->get("search_date");
                                 </tbody>
                             </table>
                         </div>
-                    <?php endif; ?>
-                </div>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>

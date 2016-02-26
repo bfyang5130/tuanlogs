@@ -39,12 +39,6 @@ if ($begin > $end) {
         <div class="panel panel-default">
         <?= $this->render('common_top.php'); ?>
             <div class="panel-body">
-                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin:10px 0px;">
-                    <div class="btn-group pull-right" role="group" aria-label="First group">
-                        <a href="<?= Url::toRoute('/site/sql') ?>" class="btn btn-default<?= ($id=='sql') ? ' btn-primary' : '' ?>">列表</a>
-                        <a href="<?= Url::toRoute('/site/sqlgraph') ?>" class="btn btn-default<?= ($id=='sqlgraph') !== FALSE ? ' btn-primary' : '' ?>">图形</a>
-                    </div>
-                </div>
                 <div class="tab-content">
                     <div class="tab-pane active">
                         <table class="table table-bordered table-striped table-condensed">
@@ -53,7 +47,7 @@ if ($begin > $end) {
                                     <td colspan="3">
                                         <?php
                                         $form = ActiveForm::begin([
-                                                    'action' => ['/site/sql'],
+                                                    'action' => ['/sql/index'],
                                                     'method' => 'get',
                                         ]);
                                         ?>

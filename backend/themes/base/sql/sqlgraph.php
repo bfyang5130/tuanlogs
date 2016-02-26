@@ -27,12 +27,6 @@ $search_date = Yii::$app->request->get("search_date");
         <div class="panel panel-default">
             <?= $this->render('common_top.php'); ?>
             <div class="panel-body">
-                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin:10px 0px;">
-                    <div class="btn-group pull-right" role="group" aria-label="First group">
-                        <a href="<?= Url::toRoute('/site/sql') ?>" class="btn btn-default<?= ($id=='sql') ? ' btn-primary' : '' ?>">列表</a>
-                        <a href="<?= Url::toRoute('/site/sqlgraph') ?>" class="btn btn-default<?= ($id=='sqlgraph') !== FALSE ? ' btn-primary' : '' ?>">图形</a>
-                    </div>
-                </div>
                 <div class="form-inline" role="toolbar">
                     <div class="tab-content">
                         <div class="tab-pane active">
@@ -45,8 +39,8 @@ $search_date = Yii::$app->request->get("search_date");
                                                     <div class="col-md-12">
 
                                                         <div class="btn-group pull-left" role="group" aria-label="First group">
-                                                            <a href="<?= Url::toRoute(['/site/sqlgraph', "page" => $pre_page,'search_date'=>$search_date]) ?>" class="btn btn-default">上一页</a>
-                                                            <a href="<?= Url::toRoute(['/site/sqlgraph', "page" => $next_page,'search_date'=>$search_date]) ?>" class="btn btn-default">下一页</a>
+                                                            <a href="<?= Url::toRoute(['/site/sqlgraph', "page" => $pre_page, 'search_date' => $search_date]) ?>" class="btn btn-default">上一页</a>
+                                                            <a href="<?= Url::toRoute(['/site/sqlgraph', "page" => $next_page, 'search_date' => $search_date]) ?>" class="btn btn-default">下一页</a>
                                                         </div>
 
                                                         <div class="form-group pull-right">
@@ -63,7 +57,7 @@ $search_date = Yii::$app->request->get("search_date");
                                                                     'maxDate' => date("Y-m-d"),
                                                                     'onSelect' => new \yii\web\JsExpression(
                                                                             "function (dateText, inst) {
-                                            var url = '/site/sqlgraph.html?search_date='+ dateText;
+                                            var url = '/sql/sqlgraph.html?search_date='+ dateText;
                                             location.href = url;
                                         }"
                                                                     ),

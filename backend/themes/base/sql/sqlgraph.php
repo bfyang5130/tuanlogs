@@ -31,7 +31,7 @@ $search_date = Yii::$app->request->get("search_date");
             <?= $this->render('common_top.php'); ?>
             <div class="panel-body">
                 <div class="tab-content">
-                    <div class="tab-pane">
+                    <div class="tab-pane active">
                         <table class="table table-bordered table-striped table-condensed">
                             <tbody>
                                 <tr>
@@ -65,12 +65,19 @@ $search_date = Yii::$app->request->get("search_date");
                 <?php JsBlock::begin() ?>
                 <script type="text/javascript">
                     $(function() {
-                        jQuery('form#apitool').on('beforeSubmit', function(e) {
-                            var form = $(this);
-                            $.ajax({url: form.attr('action'), type: 'post', data: $form.serialize(), success: function(data) {
+                        jQuery('form#database-form').on('beforeSubmit', function(e) {
+                            var $form = $(this);
+                            $.ajax({url: $form.attr('action'), type: 'post', data: $form.serialize(),dataType:'json', success: function(data) {
+                                    alert(data);
+                                    return false;
+                                    if (data.status == 1) {
+                                        alert("添加成功");
+                                    } else if (data.status === 0) {
+                                        $("#databasetypeform-"+data.key).css("border-color","red");
+                                        $("#databasetypeform-"+data.key).next().children().html(data.remark).show().css("color","red");
+                                    }
                                 }});
-                        }).on('submit', function(e) {
-                            e.preventDefault();
+                            return false;
                         });
 
                     });

@@ -15,6 +15,14 @@ class DataBaseTypeForm extends Model {
     public $database_cn;
     public $database_en;
 
+    public function save() {
+        $databaseType = new DatabaseType();
+        $databaseType->database_en = $this->database_en;
+        $databaseType->database_cn = $this->database_cn;
+        $databaseType->adtabase_addtime = date("Y-m-d H:i:s");
+        return $databaseType->save();
+    }
+
     /**
      * 处理数据库是否正确
      */
@@ -22,11 +30,11 @@ class DataBaseTypeForm extends Model {
         #判断是否已经存在该库
         $countone = DatabaseType::find()->where("database_en=:baseen", [':baseen' => $this->database_en])->count();
         if ($countone > 0) {
-            $this->addError('database_en', '当前库已经增加！');
+            $this->addError('database_en', '当前库已经存在！');
         }
         $countone = SqlTrace::find()->where("databasetype=:baseen", [':baseen' => $this->database_en])->count();
         if ($countone == 0) {
-            $this->addError('database_en', '不存在该库的日志记录！');
+            $this->addError('database_en', '找不到英文标识的日志记录！');
         }
     }
 

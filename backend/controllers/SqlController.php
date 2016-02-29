@@ -13,6 +13,9 @@ use backend\services\SqlTraceService;
 use backend\models\SqlLogSearch;
 use yii\data\Sort;
 use backend\models\forms\DataBaseTypeForm;
+use yii\web\Response;
+use yii\widgets\ActiveForm;
+use yii\helpers\Json;
 
 /**
  * Site controller
@@ -24,6 +27,28 @@ class SqlController extends Controller {
      * @return type
      */
     public function actionAddstatistics() {
+        $model = new DataBaseTypeForm();
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            if (ActiveForm::validate($model) && $model->validate() && $model->save()) {
+                $returnarray = array(
+                    'status' => 1
+                );
+            } else {
+                $errors = $model->errors;
+                foreach ($errors as $key => $value) {
+                    $keys=$key;
+                    $remark=$value[0];
+                }
+                $returnarray = array(
+                    'status' => 0,
+                    'key' => $keys,
+                    'remark' => $remark,
+                );
+            }
+            echo Json::encode($returnarray);
+        }
+        exit;
         return $this->render("doing");
     }
 
@@ -125,6 +150,7 @@ class SqlController extends Controller {
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'logout' => ['post'],
+                //'addstatistics'=>['post'],
                 ],
             ],
         ];

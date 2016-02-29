@@ -41,10 +41,10 @@ class SqlLogSearch extends SqlTrace {
     }
 
     public function search($params) {
-        $query = SqlTrace::find();
+        $query = new \yii\db\Query;
 
         $dataProvider = new ActiveDataProvider([
-                'query' => $query,
+                'query' => $query->from("SqlTrace force index (databasetype)"),
                 'sort' => [
                         'defaultOrder' => [
                                 'executedate' => SORT_DESC,

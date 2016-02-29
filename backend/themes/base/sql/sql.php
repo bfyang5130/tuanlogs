@@ -37,7 +37,7 @@ if ($begin > $end) {
     ?>
     <div class="body-content">
         <div class="panel panel-default">
-        <?= $this->render('common_top.php'); ?>
+            <?= $this->render('common_top.php'); ?>
             <div class="panel-body">
                 <div class="tab-content">
                     <div class="tab-pane active">
@@ -55,7 +55,7 @@ if ($begin > $end) {
                                             <div class="col-md-12">
                                                 <div class="row">
                                                     <label for="sqllogsearch-sqltext">语句：</label>
-<?= Html::activeTextInput($searchModel, 'sqltext', ['class' => 'form-control', 'style' => "width:1060px"]) ?>
+                                                    <?= Html::activeTextInput($searchModel, 'sqltext', ['class' => 'form-control', 'style' => "width:1060px"]) ?>
                                                 </div>
                                             </div>
                                         </div>
@@ -65,10 +65,10 @@ if ($begin > $end) {
                                                 <div class="col-md-12">
                                                     <label for="sqllogsearch-sqltext">耗时：</label>
                                                     <?= Html::activeTextInput($searchModel, 'start_sqlusedtime', ['class' => 'form-control', 'style' => 'width:100px']) ?>至
-<?= Html::activeTextInput($searchModel, 'end_sqlusedtime', ['class' => 'form-control', 'style' => 'width:100px']) ?>
+                                                    <?= Html::activeTextInput($searchModel, 'end_sqlusedtime', ['class' => 'form-control', 'style' => 'width:100px']) ?>
 
                                                     <label for="sqllogsearch-sqltext">类型：</label>
-<?= Html::activeDropDownList($searchModel, 'databasetype', SqlTraceService::getSqlTraceDbType(), ['class' => 'form-control']) ?>
+                                                    <?= Html::activeDropDownList($searchModel, 'databasetype', SqlTraceService::getSqlTraceDbType(), ['class' => 'form-control']) ?>
 
                                                     <label for="exampleInputEmail2">执行时间：</label>
                                                     <?=
@@ -104,7 +104,7 @@ if ($begin > $end) {
                                                 </div>
                                             </div>
                                         </div>
-<?php ActiveForm::end(); ?>
+                                        <?php ActiveForm::end(); ?>
                                     </td>
                                 </tr>
                             </tbody>
@@ -118,19 +118,19 @@ if ($begin > $end) {
                                     <th>执行时间</th>
                                     <th>类型</th>
                                 </tr>
-<?php foreach ($datas as $sql): ?>
+                                <?php foreach ($datas as $sql): ?>
                                     <tr>
                                         <td>
-                                            <code><?= Html::encode($sql->sqltext) ?></code>
+                                            <code><?= Html::encode($sql['sqltext']) ?></code>
                                         </td>
-                                        <td class="center"><?= Html::encode($sql->sqlusedtime) ?></td>
-                                        <td class="center"><?= Html::encode($sql->executedate) ?></td>
-                                        <td class="center"><?= Html::encode($sql->databasetype) ?></td>
+                                        <td class="center"><?= Html::encode($sql['sqlusedtime']) ?></td>
+                                        <td class="center"><?= Html::encode($sql['executedate']) ?></td>
+                                        <td class="center"><?= Html::encode($sql['databasetype']) ?></td>
                                     </tr>
-<?php endforeach; ?>
+                                <?php endforeach; ?>
                                 <tr>
                                     <td colspan="11" class="text-center">
-<?= LinkPager::widget(['pagination' => $pager]); ?>
+                                        <?= LinkPager::widget(['pagination' => $pager]); ?>
                                     </td>
                                 </tr>
                             </tbody>

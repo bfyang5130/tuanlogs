@@ -20,15 +20,15 @@ class SqlLogSearch extends SqlTrace {
 
     public $start_date;
     public $end_date;
-    public $start_sqlusedtime ;
-    public $end_sqlusedtime ;
+    public $start_sqlusedtime;
+    public $end_sqlusedtime;
 
     /**
      * @inheritdoc
      */
     public function rules() {
         return [
-            [['sqltext','start_date','end_date','start_sqlusedtime','end_sqlusedtime','databasetype'], 'safe'],
+            [['sqltext', 'start_date', 'end_date', 'start_sqlusedtime', 'end_sqlusedtime', 'databasetype'], 'safe'],
         ];
     }
 
@@ -42,15 +42,26 @@ class SqlLogSearch extends SqlTrace {
 
     public function search($params) {
         $query = new \yii\db\Query;
-
-        $dataProvider = new ActiveDataProvider([
-                'query' => $query->from("SqlTrace force index (databasetype)"),
+        if (empty($params)||empty($params['databasetype'])) {
+            $dataProvider = new ActiveDataProvider([
+                'query' => $query->from("SqlTrace"),
                 'sort' => [
-                        'defaultOrder' => [
-                                'executedate' => SORT_DESC,
-                        ],
+                    'defaultOrder' => [
+                        'executedate' => SORT_DESC,
+                    ],
                 ],
-        ]);
+            ]);
+        } else {
+            $dataProvider = new ActiveDataProvider([
+                'query' => $query->from("SqlTrace ignore index (PRIMARY)"),
+                'sort' => [
+                    'defaultOrder' => [
+                        'executedate' => SORT_DESC,
+                    ],
+                ],
+            ]);
+        }
+
 
         $this->load($params);
 
@@ -58,15 +69,15 @@ class SqlLogSearch extends SqlTrace {
             return $dataProvider;
         }
 
-        $query->andFilterWhere(['databasetype'=>$this->databasetype]) ;
+        $query->andFilterWhere(['databasetype' => $this->databasetype]);
 
-        $query->andFilterWhere(['like', 'sqltext', $this->sqltext]) ;
+        $query->andFilterWhere(['like', 'sqltext', $this->sqltext]);
 
-        $query->andFilterWhere(['>=', 'sqlusedtime', $this->start_sqlusedtime]) ;
-        $query->andFilterWhere(['<=', 'sqlusedtime', $this->end_sqlusedtime]) ;
+        $query->andFilterWhere(['>=', 'sqlusedtime', $this->start_sqlusedtime]);
+        $query->andFilterWhere(['<=', 'sqlusedtime', $this->end_sqlusedtime]);
 
-        $query->andFilterWhere(['>=', 'executedate', $this->start_date]) ;
-        $query->andFilterWhere(['<=', 'executedate', $this->end_date]) ;
+        $query->andFilterWhere(['>=', 'executedate', $this->start_date]);
+        $query->andFilterWhere(['<=', 'executedate', $this->end_date]);
 
 
         return $dataProvider;

@@ -39,59 +39,6 @@ $search_date = Yii::$app->request->get("search_date");
                                         <div class="content form-inline">
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <?php
-                                                    $form = ActiveForm::begin([
-                                                                'id' => 'database-form',
-                                                                'action' => ['sql/addstatistics'],
-                                                                'options' => ['class' => 'form-inline']
-                                                    ]);
-                                                    ?>
-                                                    <?= $form->field($databaseForm, 'database_cn', [ 'template' => "{label}\n{input}\n{hint}\n<div style='height:30px;'>{error}</div>", 'labelOptions' => ['label' => '数据库中文名:']]) ?>
-                                                    <?= $form->field($databaseForm, 'database_en', [ 'template' => "{label}\n{input}\n{hint}\n<div style='height:30px;'>{error}</div>", 'labelOptions' => ['label' => '数据库英文名:']]) ?>
-                                                    <div class="form-group">
-                                                        <?= Html::submitButton('提交', ['class' => 'btn btn-sm btn-warning', 'name' => 'dabase-button']) ?>
-                                                        <div style="width:20px;height:40px;"></div>
-                                                    </div>
-                                                    <?php ActiveForm::end(); ?>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <?php JsBlock::begin() ?>
-                <script type="text/javascript">
-                    $(function() {
-                        jQuery('form#database-form').on('beforeSubmit', function(e) {
-                            var $form = $(this);
-                            $.ajax({url: $form.attr('action'), type: 'post', data: $form.serialize(),dataType:'json', success: function(data) {
-                                    alert(data);
-                                    return false;
-                                    if (data.status == 1) {
-                                        alert("添加成功");
-                                    } else if (data.status === 0) {
-                                        $("#databasetypeform-"+data.key).css("border-color","red");
-                                        $("#databasetypeform-"+data.key).next().children().html(data.remark).show().css("color","red");
-                                    }
-                                }});
-                            return false;
-                        });
-
-                    });
-                </script>
-                <?php JsBlock::end() ?>
-                <div class="tab-content">
-                    <div class="tab-pane active">
-                        <table class="table table-bordered table-striped table-condensed">
-                            <tbody>
-                                <tr>
-                                    <td colspan="3">
-                                        <div class="content form-inline">
-                                            <div class="row">
-                                                <div class="col-md-12">
 
                                                     <div class="btn-group pull-left" role="group" aria-label="First group">
                                                         <a href="<?= Url::toRoute(['/sql/sqlgraph', "page" => $pre_page, 'search_date' => $search_date]) ?>" class="btn btn-default">上一页</a>
@@ -99,6 +46,10 @@ $search_date = Yii::$app->request->get("search_date");
                                                     </div>
 
                                                     <div class="form-group pull-right">
+                                                        <label for="exampleInputEmail2">更多统计:</label>
+                                                        <?=
+                                                        Html::dropDownList('更多统计:', 'databaseid', backend\models\forms\TableFitForm::findDatabase(), ['class' => 'form-control','onChange'=>'window.location.href="/sql/database.html?type="+this.value;']);
+                                                        ?>
                                                         <label for="exampleInputEmail2">时间:</label>
                                                         <?=
                                                         \yii\jui\DatePicker::widget([

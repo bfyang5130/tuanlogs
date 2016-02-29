@@ -9,12 +9,7 @@ $id = \Yii::$app->controller->action->id;
         <div class="btn-group pull-right" role="group" aria-label="First group">
             <a href="<?= Url::toRoute('/sql/index') ?>" class="btn btn-default<?= ($id == 'index') ? ' btn-primary' : '' ?>">列表</a>
             <a href="<?= Url::toRoute('/sql/sqlgraph') ?>" class="btn btn-default<?= ($id == 'sqlgraph') ? ' btn-primary' : '' ?>">图形统计</a>
-            <?php
-            if ($id == 'sqlgraph'):
-                ?>
-                <button class="btn btn-default">增加库</button>
-                <button class="btn btn-default">增加表</button>
-            <?php endif; ?>
+            <a href="<?= Url::toRoute('/sql/addstatistics') ?>" class="btn btn-default<?= ($id == 'addstatistics') ? ' btn-primary' : '' ?>">添加统计</a>
         </div>
     </div>
 </div>

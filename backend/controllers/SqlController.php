@@ -2,20 +2,17 @@
 
 namespace backend\controllers;
 
-use backend\services\ErrorLogService;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
-use common\models\LoginForm;
 use yii\filters\VerbFilter;
 use backend\services\ToolService;
 use backend\services\SqlTraceService;
 use backend\models\SqlLogSearch;
 use yii\data\Sort;
 use backend\models\forms\DataBaseTypeForm;
-use yii\web\Response;
-use yii\widgets\ActiveForm;
-use yii\helpers\Json;
+use backend\models\forms\TableFitForm;
+use common\models\DatabaseType;
 
 /**
  * Site controller
@@ -23,40 +20,62 @@ use yii\helpers\Json;
 class SqlController extends Controller {
 
     /**
+     * 查询某个数据库的统计
+     * @return type
+     */
+    public function actionDatabase() {
+        $gets = \Yii::$app->request->get();
+        #获得选择的数据库
+        if (isset($gets['type'])) {
+            $selectDatabase = \common\models\DatabaseType::findOne($gets['type']);
+            if ($selectDatabase) {
+                return $this->render('database');
+            }
+        }
+        return $this->redirect('/sql/sqlgraph.html');
+    }
+
+    /**
      * 增加统计信息
      * @return type
      */
     public function actionAddstatistics() {
-        $model = new DataBaseTypeForm();
-        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            if (ActiveForm::validate($model) && $model->validate() && $model->save()) {
-                $returnarray = array(
-                    'status' => 1
-                );
+        $databaseForm = new DataBaseTypeForm();
+        $newTableFitForm = new TableFitForm();
+        $fitForm = Yii::$app->request->post();
+        $databaseFit = 0;
+        $tableFit = 0;
+        if (isset($fitForm['DataBaseTypeForm'])) {
+            $databaseForm->load(Yii::$app->request->post());
+
+            if ($databaseForm->save()) {
+                $databaseFit = 1;
             } else {
-                $errors = $model->errors;
-                foreach ($errors as $key => $value) {
-                    $keys=$key;
-                    $remark=$value[0];
-                }
-                $returnarray = array(
-                    'status' => 0,
-                    'key' => $keys,
-                    'remark' => $remark,
-                );
+                $databaseFit = 2;
             }
-            echo Json::encode($returnarray);
         }
-        exit;
-        return $this->render("doing");
+        if (isset($fitForm['TableFitForm'])) {
+            $newTableFitForm->load(Yii::$app->request->post());
+
+            if ($newTableFitForm->save()) {
+                $tableFit = 1;
+            } else {
+                $tableFit = 2;
+            }
+        }
+        return $this->render('addstatistics', [
+                    'databaseForm' => $databaseForm,
+                    'tableFitForm' => $newTableFitForm,
+                    'databaseFit' => $databaseFit,
+                    'tableFit' => $tableFit
+                        ]
+        );
     }
 
     /**
      * 数据库相关的统计
      */
     public function actionSqlgraph() {
-
         $page = Yii::$app->request->get("page");
         if (empty($page)) {
             $page = 0;
@@ -69,10 +88,8 @@ class SqlController extends Controller {
             $search_date = date("Y-m-d");
         }
         $day_data = SqlTraceService::getSqlDayGraph($page, $search_date);
-        $databaseForm = new DataBaseTypeForm();
         if (empty($day_data)) {
             return $this->render('sqlgraph', [
-                        'databaseForm' => $databaseForm,
                         'search_date' => $search_date,
                         "pre_page" => $pre_page,
                         "next_page" => $next_page
@@ -92,7 +109,6 @@ class SqlController extends Controller {
         $series5 = $day_data['data']["reline24Timesec"];
 
         return $this->render('sqlgraph', [
-                    'databaseForm' => $databaseForm,
                     'search_date' => $search_date,
                     "appnames" => $appnames,
                     "appnameshourshow" => $appnameshourshow,
@@ -140,7 +156,7 @@ class SqlController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['index', 'sqlgraph', 'addstatistics'],
+                        'actions' => ['index', 'sqlgraph', 'addstatistics', 'database'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],

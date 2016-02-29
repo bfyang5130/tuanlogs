@@ -149,13 +149,20 @@ Tips
   ```
   where `my-chart-id` is set via the top-level `id` configuration option. Just make sure you
   register your script after the widget declaration so that it has a chance to initialize.
-
+* The top-level `'callback'` option allows you to initialize the chart after an AJAX request or other preprocessing.
+  See included [Highstock Widget Examples](https://github.com/miloschuman/yii2-highcharts/tree/master/doc/examples/highstock.md) for usage.
 
 Change Log
 ----------
 
+### [v4.2.3](https://github.com/miloschuman/yii2-highcharts/releases/tag/v4.2.3) (2016-02-11) ###
+* Upgraded Highcharts core library to the latest release (4.2.3). See the Highcharts [changelog](http://highcharts.com/documentation/changelog) for more information about what's new in this version.
+
+### [v4.2.2](https://github.com/miloschuman/yii2-highcharts/releases/tag/v4.2.2) (2016-02-04) ###
+* Upgraded Highcharts core library to the latest release (4.2.2).
+
 ### [v4.2.1](https://github.com/miloschuman/yii2-highcharts/releases/tag/v4.2.1) (2016-01-13) ###
-* Upgraded Highcharts core library to the latest release (4.2.1). See the Highcharts [changelog](http://highcharts.com/documentation/changelog) for more information about what's new in this version.
+* Upgraded Highcharts core library to the latest release (4.2.1).
 
 ### [v4.1.10](https://github.com/miloschuman/yii2-highcharts/releases/tag/v4.1.10) (2015-12-14) ###
 * Upgraded Highcharts core library to the latest release (4.1.10).

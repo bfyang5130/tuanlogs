@@ -152,8 +152,6 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Credits
 
-- [Antonio Ramirez](https://github.com/tonydspaniard)
-- [Alexander Kochetov](https://github.com/creocoder)
 - [All Contributors](https://github.com/2amigos/yii2-selectize-widget/graphs/contributors)
 
 ## License
@@ -162,6 +160,6 @@ The BSD License (BSD). Please see [License File](LICENSE.md) for more informatio
 
 <blockquote>
     <a href="http://www.2amigos.us"><img src="http://www.gravatar.com/avatar/55363394d72945ff7ed312556ec041e0.png"></a><br>
-    <i>web development has never been so fun</i><br>
-    <a href="http://www.2amigos.us">www.2amigos.us</a>
+    <i>web, mobile development & design</i><br>
+    <i><a href="http://www.2amigos.us">www.2amigos.us</a></i>
 </blockquote>

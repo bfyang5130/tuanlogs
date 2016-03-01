@@ -35,7 +35,7 @@ class SiteController extends Controller {
                     ],
                     [
                         'actions' => ['logout', 'index', 'trace', 'sql', 'sqlgraph', 'errorgraph',
-                            'getdata', 'doing', 'countday', 'countmonth', 'tracereport', 'tracedayreport', 'tracemonreport'],
+                            'getdata', 'doing', 'countday', 'countmonth', 'tracereport', 'tracedayreport', 'tracemonreport','tip'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],

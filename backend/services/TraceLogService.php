@@ -72,19 +72,21 @@ class TraceLogService {
 
         if(time() - strtotime($search_date)   >  86400 * 2  ){
             $start = date('Y-m-d' ,strtotime($search_date) + 3*86400) ;
-            $end = date('Y-m-d',strtotime($start) - 86400 * 4 );
+            $end = date('Y-m-d',strtotime($start) - 86400 * 5 );
         }else{
             $start = date('Y-m-d' ,time() - 86400 * 5 * ($page - 1) + 86400) ;
             $end = date('Y-m-d',strtotime($start) - 86400 * 5 );
+            $search_date = '';
         }
 
         $isUpdate = false;//是否更新统计表
 
         if($page > 1 || !empty($search_date)) {
             $TraceLogList = $trace_day_log = TraceLogDay::find()
-                ->select("ApplicationId , `Date` as dateline ,Number  ")
-                ->where(['between', 'Date', date('Ymd', strtotime($end)), date('Ymd', strtotime($start) - 86400)])
+                ->select("ApplicationId , date(`Date`) as dateline ,Number  ")
+                ->where(['between','Date',$end,date('Y-m-d',strtotime($start) - 86400)])
                 ->asArray()->all();
+
             if ($page > 1 && empty($TraceLogList) ) {
                 $isUpdate = true;
             }
@@ -92,14 +94,16 @@ class TraceLogService {
             if(empty($TraceLogList) &&  !empty($search_date)){
                 $isUpdate = true;
             }
-            if (!empty($search_date) && !empty($TraceLogList)) {
+            //!empty($search_date) &&
+            if (!empty($TraceLogList)) {
                 #查询某天没有数据
-                $selectDay = date('Ymd', strtotime($end));
+                $selectDay = $end;
                 $noDataDay = [];
-                for ($i = 0; $selectDay < date('Ymd', strtotime($start) - 86400); $i += 86400) {
-                    $selectDay = date('Ymd', strtotime($end) + $i - 86400);
-                    $noDataDay[$selectDay] = 0;
+
+                for($i = 0;$i < 5;$i++){
+                    $noDataDay[date('Y-m-d', strtotime($selectDay)  + 86400 * $i)] = 0;
                 }
+
                 foreach ($trace_day_log as $k => $v) {
                     if (array_key_exists($v['dateline'], $noDataDay)) {
                         $noDataDay[$v['dateline']] = 1;
@@ -110,11 +114,10 @@ class TraceLogService {
                     $in = [];
                     foreach ($noDataDay as $k => $v) {
                         if ($v == 0) {
-                            $in[] = substr($k, 0, 4) . '-' . substr($k, 4, 2) . '-' . substr($k, 6, 2);
+                            $in[] = $k;
                         }
                     }
-                    $start = date('Y-m-d', strtotime($start) + 86400);
-                    $end = date('Y-m-d', strtotime($start) - 86400 * 6);
+
                     $TraceLogList = $trace_day_log = '';
                     $isUpdate = true;
                 }
@@ -124,9 +127,9 @@ class TraceLogService {
 
         if(empty($TraceLogList) || isset($selectAll) ){
             $TraceLogList = TraceLog::find()
-                ->select("count(*) as Number , ApplicationId ,date(`AddDate`) as `dateline`  ")
+                ->select("count(1) as Number , ApplicationId ,date(`AddDate`) as `dateline`  ")
                 ->where(['between','AddDate',$end,$start])
-                ->groupBy("ApplicationId")
+                ->groupBy("date(`AddDate`),ApplicationId")
                 ->asArray()->all();
         }
 
@@ -145,11 +148,7 @@ class TraceLogService {
 
         $result = [];
         for($i=1;$i < 6;$i++){
-            if(!empty($trace_day_log)){
-                $result[date('Ymd',strtotime($start) - 86400 * $i)] = $category;
-            }else{
-                $result[date('Y-m-d',strtotime($start) - 86400 * $i)] = $category;
-            }
+            $result[date('Y-m-d',strtotime($start) - 86400 * $i)] = $category;
         }
 
         foreach($TraceLogList as $k => $v){
@@ -161,8 +160,8 @@ class TraceLogService {
             $i = 0;
             $x = 0;
             foreach($result as $k => $v){
-                $date = date('Ymd',strtotime($k));
-                if(in_array($k,$in)){
+                $date = date('Y-m-d',strtotime($k));
+                if(  !empty($in) && in_array($k,$in)){
                     foreach ($v as $kk => $vv) {
                         $searchInsertData[$x][] = $kk;
                         $searchInsertData[$x][] = $vv;
@@ -179,6 +178,7 @@ class TraceLogService {
                     $i++;
                 }
             }
+
             if(!empty($searchInsertData)){
                 $insertData = $searchInsertData;
             }
@@ -191,11 +191,7 @@ class TraceLogService {
         $data = [];
         $i = 0;
         foreach($result as $k => $v){
-            if(!empty($trace_day_log)){
-                $data[$i]['name'] = substr($k,0,4).'-'.substr($k,3,2).substr($k,5,2);
-            }else{
-                $data[$i]['name'] = $k;
-            }
+            $data[$i]['name'] = $k;
             $data[$i]['data'] = array_values($v);
             $i++;
         }
@@ -329,9 +325,9 @@ class TraceLogService {
     public static function getTraceCategory($isReturnData = true)
     {
         $ApplicationIds = TraceLog::find()
-            ->select('ApplicationId,count(*) as Number')
+            ->select('ApplicationId,count(1) as Number')
             ->groupBy('ApplicationId')
-            ->orderBy("count(*) DESC")
+            ->orderBy("count(1) DESC")
             ->asArray()->all();
         $sql = "SELECT `ApplicationId`, count(*) as Number FROM `TraceLog` GROUP BY `ApplicationId` ORDER BY count(*) DESC";
         $total['name'] = '跟踪日志列表';

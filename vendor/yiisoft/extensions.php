@@ -93,15 +93,6 @@ return array (
       '@dosamigos/datepicker' => $vendorDir . '/2amigos/yii2-date-picker-widget/src',
     ),
   ),
-  '2amigos/yii2-gallery-widget' => 
-  array (
-    'name' => '2amigos/yii2-gallery-widget',
-    'version' => '1.0.1.0',
-    'alias' => 
-    array (
-      '@dosamigos/gallery' => $vendorDir . '/2amigos/yii2-gallery-widget/src',
-    ),
-  ),
   '2amigos/yii2-file-upload-widget' => 
   array (
     'name' => '2amigos/yii2-file-upload-widget',
@@ -120,15 +111,6 @@ return array (
       '@nirvana/showloading' => $vendorDir . '/nirvana-msu/yii2-showloading',
     ),
   ),
-  'miloschuman/yii2-highcharts-widget' => 
-  array (
-    'name' => 'miloschuman/yii2-highcharts-widget',
-    'version' => '4.2.1.0',
-    'alias' => 
-    array (
-      '@miloschuman/highcharts' => $vendorDir . '/miloschuman/yii2-highcharts-widget/src',
-    ),
-  ),
   '2amigos/yii2-date-time-picker-widget' => 
   array (
     'name' => '2amigos/yii2-date-time-picker-widget',
@@ -136,6 +118,33 @@ return array (
     'alias' => 
     array (
       '@dosamigos/datetimepicker' => $vendorDir . '/2amigos/yii2-date-time-picker-widget/src',
+    ),
+  ),
+  'miloschuman/yii2-highcharts-widget' => 
+  array (
+    'name' => 'miloschuman/yii2-highcharts-widget',
+    'version' => '4.2.3.0',
+    'alias' => 
+    array (
+      '@miloschuman/highcharts' => $vendorDir . '/miloschuman/yii2-highcharts-widget/src',
+    ),
+  ),
+  '2amigos/yii2-gallery-widget' => 
+  array (
+    'name' => '2amigos/yii2-gallery-widget',
+    'version' => '1.0.2.0',
+    'alias' => 
+    array (
+      '@dosamigos/gallery' => $vendorDir . '/2amigos/yii2-gallery-widget/src',
+    ),
+  ),
+  'mootensai/yii2-jsblock' => 
+  array (
+    'name' => 'mootensai/yii2-jsblock',
+    'version' => '1.0.0.0',
+    'alias' => 
+    array (
+      '@mootensai/components' => $vendorDir . '/mootensai/yii2-jsblock',
     ),
   ),
 );

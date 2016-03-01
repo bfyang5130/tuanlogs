@@ -18,6 +18,7 @@ return array(
     'yii2mod\\user\\' => array($vendorDir . '/yii2mod/yii2-user'),
     'yii2mod\\rbac\\' => array($vendorDir . '/yii2mod/yii2-rbac'),
     'nirvana\\showloading\\' => array($vendorDir . '/nirvana-msu/yii2-showloading'),
+    'mootensai\\components\\' => array($vendorDir . '/mootensai/yii2-jsblock'),
     'miloschuman\\highcharts\\' => array($vendorDir . '/miloschuman/yii2-highcharts-widget/src'),
     'kucha\\ueditor\\' => array($vendorDir . '/kucha/ueditor'),
     'dosamigos\\gallery\\' => array($vendorDir . '/2amigos/yii2-gallery-widget/src'),

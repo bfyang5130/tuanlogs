@@ -1,54 +1,5 @@
 [
     {
-        "name": "yiisoft/yii2-composer",
-        "version": "2.0.3",
-        "version_normalized": "2.0.3.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/yiisoft/yii2-composer.git",
-            "reference": "ca8d23707ae47d20b0454e4b135c156f6da6d7be"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/yiisoft/yii2-composer/zipball/ca8d23707ae47d20b0454e4b135c156f6da6d7be",
-            "reference": "ca8d23707ae47d20b0454e4b135c156f6da6d7be",
-            "shasum": ""
-        },
-        "require": {
-            "composer-plugin-api": "1.0.0"
-        },
-        "time": "2015-03-01 06:22:44",
-        "type": "composer-plugin",
-        "extra": {
-            "class": "yii\\composer\\Plugin",
-            "branch-alias": {
-                "dev-master": "2.0.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "yii\\composer\\": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Qiang Xue",
-                "email": "qiang.xue@gmail.com"
-            }
-        ],
-        "description": "The composer plugin for Yii extension installer",
-        "keywords": [
-            "composer",
-            "extension installer",
-            "yii2"
-        ]
-    },
-    {
         "name": "ezyang/htmlpurifier",
         "version": "v4.6.0",
         "version_normalized": "4.6.0.0",
@@ -157,106 +108,6 @@
         ]
     },
     {
-        "name": "bower-asset/jquery",
-        "version": "2.1.4",
-        "version_normalized": "2.1.4.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/jquery/jquery.git",
-            "reference": "7751e69b615c6eca6f783a81e292a55725af6b85"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/jquery/jquery/zipball/7751e69b615c6eca6f783a81e292a55725af6b85",
-            "reference": "7751e69b615c6eca6f783a81e292a55725af6b85",
-            "shasum": ""
-        },
-        "require-dev": {
-            "bower-asset/qunit": "1.14.0",
-            "bower-asset/requirejs": "2.1.10",
-            "bower-asset/sinon": "1.8.1",
-            "bower-asset/sizzle": "2.1.1-patch2"
-        },
-        "type": "bower-asset-library",
-        "extra": {
-            "bower-asset-main": "dist/jquery.js",
-            "bower-asset-ignore": [
-                "**/.*",
-                "build",
-                "dist/cdn",
-                "speed",
-                "test",
-                "*.md",
-                "AUTHORS.txt",
-                "Gruntfile.js",
-                "package.json"
-            ]
-        },
-        "installation-source": "dist",
-        "license": [
-            "MIT"
-        ],
-        "keywords": [
-            "javascript",
-            "jquery",
-            "library"
-        ]
-    },
-    {
-        "name": "bower-asset/jquery.inputmask",
-        "version": "3.1.63",
-        "version_normalized": "3.1.63.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/RobinHerbots/jquery.inputmask.git",
-            "reference": "c40c7287eadc31e341ebbf0c02352eb55b9cbc48"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/RobinHerbots/jquery.inputmask/zipball/c40c7287eadc31e341ebbf0c02352eb55b9cbc48",
-            "reference": "c40c7287eadc31e341ebbf0c02352eb55b9cbc48",
-            "shasum": ""
-        },
-        "require": {
-            "bower-asset/jquery": ">=1.7"
-        },
-        "type": "bower-asset-library",
-        "extra": {
-            "bower-asset-main": [
-                "./dist/inputmask/jquery.inputmask.js",
-                "./dist/inputmask/jquery.inputmask.extensions.js",
-                "./dist/inputmask/jquery.inputmask.date.extensions.js",
-                "./dist/inputmask/jquery.inputmask.numeric.extensions.js",
-                "./dist/inputmask/jquery.inputmask.phone.extensions.js",
-                "./dist/inputmask/jquery.inputmask.regex.extensions.js"
-            ],
-            "bower-asset-ignore": [
-                "**/.*",
-                "qunit/",
-                "nuget/",
-                "tools/",
-                "js/",
-                "*.md",
-                "build.properties",
-                "build.xml",
-                "jquery.inputmask.jquery.json"
-            ]
-        },
-        "installation-source": "dist",
-        "license": [
-            "http://opensource.org/licenses/mit-license.php"
-        ],
-        "description": "jquery.inputmask is a jquery plugin which create an input mask.",
-        "keywords": [
-            "form",
-            "input",
-            "inputmask",
-            "jquery",
-            "mask",
-            "plugins"
-        ]
-    },
-    {
         "name": "bower-asset/punycode",
         "version": "v1.3.2",
         "version_normalized": "1.3.2.0",
@@ -319,96 +170,6 @@
         "installation-source": "dist",
         "license": [
             "MIT"
-        ]
-    },
-    {
-        "name": "yiisoft/yii2",
-        "version": "2.0.6",
-        "version_normalized": "2.0.6.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/yiisoft/yii2-framework.git",
-            "reference": "f42b2eb80f61992438661b01d0d74c6738e2ff38"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/f42b2eb80f61992438661b01d0d74c6738e2ff38",
-            "reference": "f42b2eb80f61992438661b01d0d74c6738e2ff38",
-            "shasum": ""
-        },
-        "require": {
-            "bower-asset/jquery": "2.1.*@stable | 1.11.*@stable",
-            "bower-asset/jquery.inputmask": "3.1.*",
-            "bower-asset/punycode": "1.3.*",
-            "bower-asset/yii2-pjax": ">=2.0.1",
-            "cebe/markdown": "~1.0.0 | ~1.1.0",
-            "ext-mbstring": "*",
-            "ezyang/htmlpurifier": "4.6.*",
-            "lib-pcre": "*",
-            "php": ">=5.4.0",
-            "yiisoft/yii2-composer": "*"
-        },
-        "time": "2015-08-05 22:00:30",
-        "bin": [
-            "yii"
-        ],
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.0.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "yii\\": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Qiang Xue",
-                "email": "qiang.xue@gmail.com",
-                "homepage": "http://www.yiiframework.com/",
-                "role": "Founder and project lead"
-            },
-            {
-                "name": "Alexander Makarov",
-                "email": "sam@rmcreative.ru",
-                "homepage": "http://rmcreative.ru/",
-                "role": "Core framework development"
-            },
-            {
-                "name": "Maurizio Domba",
-                "homepage": "http://mdomba.info/",
-                "role": "Core framework development"
-            },
-            {
-                "name": "Carsten Brandt",
-                "email": "mail@cebe.cc",
-                "homepage": "http://cebe.cc/",
-                "role": "Core framework development"
-            },
-            {
-                "name": "Timur Ruziev",
-                "email": "resurtm@gmail.com",
-                "homepage": "http://resurtm.com/",
-                "role": "Core framework development"
-            },
-            {
-                "name": "Paul Klimov",
-                "email": "klimov.paul@gmail.com",
-                "role": "Core framework development"
-            }
-        ],
-        "description": "Yii PHP Framework Version 2",
-        "homepage": "http://www.yiiframework.com/",
-        "keywords": [
-            "framework",
-            "yii2"
         ]
     },
     {
@@ -1206,116 +967,6 @@
         ]
     },
     {
-        "name": "bower-asset/blueimp-canvas-to-blob",
-        "version": "2.2.0",
-        "version_normalized": "2.2.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/blueimp/JavaScript-Canvas-to-Blob.git",
-            "reference": "b107a012d06bc4cb1ae93f4e1e9c64653814d6c4"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/blueimp/JavaScript-Canvas-to-Blob/zipball/b107a012d06bc4cb1ae93f4e1e9c64653814d6c4",
-            "reference": "b107a012d06bc4cb1ae93f4e1e9c64653814d6c4",
-            "shasum": ""
-        },
-        "type": "bower-asset-library",
-        "extra": {
-            "bower-asset-main": "js/canvas-to-blob.js",
-            "bower-asset-ignore": [
-                "/*.*",
-                "test"
-            ]
-        },
-        "installation-source": "dist",
-        "license": [
-            "MIT"
-        ],
-        "description": "JavaScript Canvas to Blob is a function to convert canvas elements into Blob objects.",
-        "keywords": [
-            "blob",
-            "canvas",
-            "conversion",
-            "convert",
-            "javascript"
-        ]
-    },
-    {
-        "name": "bower-asset/blueimp-load-image",
-        "version": "1.14.0",
-        "version_normalized": "1.14.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/blueimp/JavaScript-Load-Image.git",
-            "reference": "464fa505204e2a6592805e799a4b5f63578bea09"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/blueimp/JavaScript-Load-Image/zipball/464fa505204e2a6592805e799a4b5f63578bea09",
-            "reference": "464fa505204e2a6592805e799a4b5f63578bea09",
-            "shasum": ""
-        },
-        "type": "bower-asset-library",
-        "extra": {
-            "bower-asset-main": [
-                "js/load-image.js",
-                "js/load-image-ios.js",
-                "js/load-image-orientation.js",
-                "js/load-image-meta.js",
-                "js/load-image-exif.js",
-                "js/load-image-exif-map.js"
-            ],
-            "bower-asset-ignore": [
-                "/*.*",
-                "css",
-                "js/vendor",
-                "js/demo.js",
-                "test"
-            ]
-        },
-        "installation-source": "dist",
-        "license": [
-            "MIT"
-        ],
-        "description": "JavaScript Load Image is a library to load images provided as File or Blob objects or via URL. It returns an optionally scaled and/or cropped HTML img or canvas element. It also provides a method to parse image meta data to extract Exif tags and thumbnails and to restore the complete image header after resizing.",
-        "keywords": [
-            "blob",
-            "canvas",
-            "crop",
-            "exif",
-            "file",
-            "image",
-            "img",
-            "javascript",
-            "load",
-            "loading",
-            "meta",
-            "resizing",
-            "scale",
-            "thumbnail",
-            "url"
-        ]
-    },
-    {
-        "name": "bower-asset/blueimp-tmpl",
-        "version": "2.5.6",
-        "version_normalized": "2.5.6.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/blueimp/JavaScript-Templates.git",
-            "reference": "91d3f6f859521d43d424ad44b191536db0b7168b"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/blueimp/JavaScript-Templates/zipball/91d3f6f859521d43d424ad44b191536db0b7168b",
-            "reference": "91d3f6f859521d43d424ad44b191536db0b7168b",
-            "shasum": ""
-        },
-        "type": "bower-asset-library",
-        "installation-source": "dist"
-    },
-    {
         "name": "bower-asset/blueimp-file-upload",
         "version": "9.9.4",
         "version_normalized": "9.9.4.0",
@@ -1458,73 +1109,6 @@
             "touch",
             "transition",
             "video"
-        ]
-    },
-    {
-        "name": "2amigos/yii2-gallery-widget",
-        "version": "1.0.1",
-        "version_normalized": "1.0.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/2amigos/yii2-gallery-widget.git",
-            "reference": "77b82b4a4d33a5cb9013220ff843de75984e7e82"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/2amigos/yii2-gallery-widget/zipball/77b82b4a4d33a5cb9013220ff843de75984e7e82",
-            "reference": "77b82b4a4d33a5cb9013220ff843de75984e7e82",
-            "shasum": ""
-        },
-        "require": {
-            "bower-asset/blueimp-gallery": "~2.15.0",
-            "yiisoft/yii2": "~2.0.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "~4.0"
-        },
-        "time": "2015-04-12 22:21:58",
-        "type": "yii2-extension",
-        "extra": {
-            "asset-installer-paths": {
-                "npm-asset-library": "vendor/npm",
-                "bower-asset-library": "vendor/bower"
-            },
-            "branch-alias": {
-                "dev-master": "1.0-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "dosamigos\\gallery\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "2amigOS! Consulting Group",
-                "email": "hola@2amigos.us",
-                "homepage": "http://2amigos.us",
-                "role": "Developer"
-            },
-            {
-                "name": "Alexander Kochetov",
-                "email": "creocoder@gmail.com",
-                "role": "Developer"
-            }
-        ],
-        "description": "Blueimp gallery widget for the Yii framework",
-        "homepage": "https://github.com/2amigos/yii2-gallery-widget",
-        "keywords": [
-            "2amigos",
-            "gallery",
-            "widget",
-            "yii",
-            "yii 2",
-            "yii2"
         ]
     },
     {
@@ -1687,53 +1271,6 @@
         ]
     },
     {
-        "name": "miloschuman/yii2-highcharts-widget",
-        "version": "v4.2.1",
-        "version_normalized": "4.2.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/miloschuman/yii2-highcharts.git",
-            "reference": "a62c1259ff97bc5ada0960ed50b9ddc00c9745b1"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/miloschuman/yii2-highcharts/zipball/a62c1259ff97bc5ada0960ed50b9ddc00c9745b1",
-            "reference": "a62c1259ff97bc5ada0960ed50b9ddc00c9745b1",
-            "shasum": ""
-        },
-        "require": {
-            "yiisoft/yii2": "*"
-        },
-        "time": "2016-01-13 16:39:49",
-        "type": "yii2-extension",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "miloschuman\\highcharts\\": "src/"
-            }
-        },
-        "notification-url": "http://packagist.cn/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Milo Schuman",
-                "email": "miloschuman@gmail.com"
-            }
-        ],
-        "description": "Highcharts widget for Yii 2 Framework.",
-        "homepage": "https://github.com/miloschuman/yii2-highcharts",
-        "keywords": [
-            "extension",
-            "highcharts",
-            "highmaps",
-            "highstock",
-            "widget",
-            "yii2"
-        ]
-    },
-    {
         "name": "bower-asset/smalot-bootstrap-datetimepicker",
         "version": "2.3.1",
         "version_normalized": "2.3.1.0",
@@ -1829,6 +1366,433 @@
             "widget",
             "yii",
             "yii 2",
+            "yii2"
+        ]
+    },
+    {
+        "name": "yiisoft/yii2-composer",
+        "version": "2.0.4",
+        "version_normalized": "2.0.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/yiisoft/yii2-composer.git",
+            "reference": "7452fd908a5023b8bb5ea1b123a174ca080de464"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/yiisoft/yii2-composer/zipball/7452fd908a5023b8bb5ea1b123a174ca080de464",
+            "reference": "7452fd908a5023b8bb5ea1b123a174ca080de464",
+            "shasum": ""
+        },
+        "require": {
+            "composer-plugin-api": "^1.0"
+        },
+        "time": "2016-02-06 00:49:24",
+        "type": "composer-plugin",
+        "extra": {
+            "class": "yii\\composer\\Plugin",
+            "branch-alias": {
+                "dev-master": "2.0.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "yii\\composer\\": ""
+            }
+        },
+        "notification-url": "http://packagist.cn/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Qiang Xue",
+                "email": "qiang.xue@gmail.com"
+            }
+        ],
+        "description": "The composer plugin for Yii extension installer",
+        "keywords": [
+            "composer",
+            "extension installer",
+            "yii2"
+        ]
+    },
+    {
+        "name": "bower-asset/jquery",
+        "version": "2.2.1",
+        "version_normalized": "2.2.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/jquery/jquery-dist.git",
+            "reference": "788eaba2f83e7b7445c7a83a50c81c0704423874"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/jquery/jquery-dist/zipball/788eaba2f83e7b7445c7a83a50c81c0704423874",
+            "reference": "788eaba2f83e7b7445c7a83a50c81c0704423874",
+            "shasum": ""
+        },
+        "type": "bower-asset-library",
+        "extra": {
+            "bower-asset-main": "dist/jquery.js",
+            "bower-asset-ignore": [
+                "package.json"
+            ]
+        },
+        "installation-source": "dist",
+        "license": [
+            "MIT"
+        ],
+        "keywords": [
+            "browser",
+            "javascript",
+            "jquery",
+            "library"
+        ]
+    },
+    {
+        "name": "bower-asset/jquery.inputmask",
+        "version": "3.2.7",
+        "version_normalized": "3.2.7.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/RobinHerbots/jquery.inputmask.git",
+            "reference": "5a72c563b502b8e05958a524cdfffafe9987be38"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/RobinHerbots/jquery.inputmask/zipball/5a72c563b502b8e05958a524cdfffafe9987be38",
+            "reference": "5a72c563b502b8e05958a524cdfffafe9987be38",
+            "shasum": ""
+        },
+        "require": {
+            "bower-asset/jquery": ">=1.7"
+        },
+        "type": "bower-asset-library",
+        "extra": {
+            "bower-asset-main": [
+                "./dist/inputmask/inputmask.js"
+            ],
+            "bower-asset-ignore": [
+                "**/*",
+                "!dist/*",
+                "!dist/inputmask/*",
+                "!dist/min/*",
+                "!dist/min/inputmask/*",
+                "!extra/bindings/*",
+                "!extra/dependencyLibs/*",
+                "!extra/phone-codes/*"
+            ]
+        },
+        "installation-source": "dist",
+        "license": [
+            "http://opensource.org/licenses/mit-license.php"
+        ],
+        "description": "jquery.inputmask is a jquery plugin which create an input mask.",
+        "keywords": [
+            "form",
+            "input",
+            "inputmask",
+            "jquery",
+            "mask",
+            "plugins"
+        ]
+    },
+    {
+        "name": "yiisoft/yii2",
+        "version": "2.0.7",
+        "version_normalized": "2.0.7.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/yiisoft/yii2-framework.git",
+            "reference": "f45651582cb853b4326730d9d187a0f7a44a45a3"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/f45651582cb853b4326730d9d187a0f7a44a45a3",
+            "reference": "f45651582cb853b4326730d9d187a0f7a44a45a3",
+            "shasum": ""
+        },
+        "require": {
+            "bower-asset/jquery": "2.2.*@stable | 2.1.*@stable | 1.11.*@stable",
+            "bower-asset/jquery.inputmask": "~3.2.2",
+            "bower-asset/punycode": "1.3.*",
+            "bower-asset/yii2-pjax": "~2.0.1",
+            "cebe/markdown": "~1.0.0 | ~1.1.0",
+            "ext-ctype": "*",
+            "ext-mbstring": "*",
+            "ezyang/htmlpurifier": "4.6.*",
+            "lib-pcre": "*",
+            "php": ">=5.4.0",
+            "yiisoft/yii2-composer": "~2.0.4"
+        },
+        "time": "2016-02-14 14:45:55",
+        "bin": [
+            "yii"
+        ],
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.0.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "yii\\": ""
+            }
+        },
+        "notification-url": "http://packagist.cn/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Qiang Xue",
+                "email": "qiang.xue@gmail.com",
+                "homepage": "http://www.yiiframework.com/",
+                "role": "Founder and project lead"
+            },
+            {
+                "name": "Alexander Makarov",
+                "email": "sam@rmcreative.ru",
+                "homepage": "http://rmcreative.ru/",
+                "role": "Core framework development"
+            },
+            {
+                "name": "Maurizio Domba",
+                "homepage": "http://mdomba.info/",
+                "role": "Core framework development"
+            },
+            {
+                "name": "Carsten Brandt",
+                "email": "mail@cebe.cc",
+                "homepage": "http://cebe.cc/",
+                "role": "Core framework development"
+            },
+            {
+                "name": "Timur Ruziev",
+                "email": "resurtm@gmail.com",
+                "homepage": "http://resurtm.com/",
+                "role": "Core framework development"
+            },
+            {
+                "name": "Paul Klimov",
+                "email": "klimov.paul@gmail.com",
+                "role": "Core framework development"
+            },
+            {
+                "name": "Dmitry Naumenko",
+                "email": "d.naumenko.a@gmail.com",
+                "role": "Core framework development"
+            }
+        ],
+        "description": "Yii PHP Framework Version 2",
+        "homepage": "http://www.yiiframework.com/",
+        "keywords": [
+            "framework",
+            "yii2"
+        ]
+    },
+    {
+        "name": "miloschuman/yii2-highcharts-widget",
+        "version": "v4.2.3",
+        "version_normalized": "4.2.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/miloschuman/yii2-highcharts.git",
+            "reference": "f7af817c44c209fb38236721e580b67e0e51e364"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/miloschuman/yii2-highcharts/zipball/f7af817c44c209fb38236721e580b67e0e51e364",
+            "reference": "f7af817c44c209fb38236721e580b67e0e51e364",
+            "shasum": ""
+        },
+        "require": {
+            "yiisoft/yii2": "*"
+        },
+        "time": "2016-02-11 18:21:07",
+        "type": "yii2-extension",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "miloschuman\\highcharts\\": "src/"
+            }
+        },
+        "notification-url": "http://packagist.cn/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Milo Schuman",
+                "email": "miloschuman@gmail.com"
+            }
+        ],
+        "description": "Highcharts widget for Yii 2 Framework.",
+        "homepage": "https://github.com/miloschuman/yii2-highcharts",
+        "keywords": [
+            "extension",
+            "highcharts",
+            "highmaps",
+            "highstock",
+            "widget",
+            "yii2"
+        ]
+    },
+    {
+        "name": "2amigos/yii2-gallery-widget",
+        "version": "1.0.2",
+        "version_normalized": "1.0.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/2amigos/yii2-gallery-widget.git",
+            "reference": "77ae3c5e19b027f5c2f2147ce8c14a7a916ad6fc"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/2amigos/yii2-gallery-widget/zipball/77ae3c5e19b027f5c2f2147ce8c14a7a916ad6fc",
+            "reference": "77ae3c5e19b027f5c2f2147ce8c14a7a916ad6fc",
+            "shasum": ""
+        },
+        "require": {
+            "bower-asset/blueimp-gallery": "~2.15.0",
+            "yiisoft/yii2": "~2.0.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~4.0",
+            "scrutinizer/ocular": "~1.1"
+        },
+        "time": "2016-01-04 06:27:31",
+        "type": "yii2-extension",
+        "extra": {
+            "asset-installer-paths": {
+                "npm-asset-library": "vendor/npm",
+                "bower-asset-library": "vendor/bower"
+            },
+            "branch-alias": {
+                "dev-master": "1.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "dosamigos\\gallery\\": "src"
+            }
+        },
+        "notification-url": "http://packagist.cn/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "2amigOS! Consulting Group",
+                "email": "hola@2amigos.us",
+                "homepage": "http://2amigos.us",
+                "role": "Developer"
+            }
+        ],
+        "description": "Blueimp gallery widget for the Yii framework",
+        "homepage": "https://github.com/2amigos/yii2-gallery-widget",
+        "keywords": [
+            "2amigos",
+            "gallery",
+            "widget",
+            "yii",
+            "yii 2",
+            "yii2"
+        ]
+    },
+    {
+        "name": "bower-asset/blueimp-canvas-to-blob",
+        "version": "v3.3.0",
+        "version_normalized": "3.3.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/blueimp/JavaScript-Canvas-to-Blob.git",
+            "reference": "cb5add6fd18abba567c4824a601f57b9a9e30e04"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/blueimp/JavaScript-Canvas-to-Blob/zipball/cb5add6fd18abba567c4824a601f57b9a9e30e04",
+            "reference": "cb5add6fd18abba567c4824a601f57b9a9e30e04",
+            "shasum": ""
+        },
+        "type": "bower-asset-library",
+        "installation-source": "dist"
+    },
+    {
+        "name": "bower-asset/blueimp-load-image",
+        "version": "v2.6.0",
+        "version_normalized": "2.6.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/blueimp/JavaScript-Load-Image.git",
+            "reference": "eca5709e8d8ee037800e924b6ccb828bcfa82a6d"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/blueimp/JavaScript-Load-Image/zipball/eca5709e8d8ee037800e924b6ccb828bcfa82a6d",
+            "reference": "eca5709e8d8ee037800e924b6ccb828bcfa82a6d",
+            "shasum": ""
+        },
+        "type": "bower-asset-library",
+        "installation-source": "dist"
+    },
+    {
+        "name": "bower-asset/blueimp-tmpl",
+        "version": "v3.3.0",
+        "version_normalized": "3.3.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/blueimp/JavaScript-Templates.git",
+            "reference": "14d8b68c1175033d4080600b907390cc89263380"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/blueimp/JavaScript-Templates/zipball/14d8b68c1175033d4080600b907390cc89263380",
+            "reference": "14d8b68c1175033d4080600b907390cc89263380",
+            "shasum": ""
+        },
+        "type": "bower-asset-library",
+        "installation-source": "dist"
+    },
+    {
+        "name": "mootensai/yii2-jsblock",
+        "version": "1.0.0",
+        "version_normalized": "1.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/mootensai/yii2-jsblock.git",
+            "reference": "d27864ba27760ffa634c01081f3e47ebddace9d5"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/mootensai/yii2-jsblock/zipball/d27864ba27760ffa634c01081f3e47ebddace9d5",
+            "reference": "d27864ba27760ffa634c01081f3e47ebddace9d5",
+            "shasum": ""
+        },
+        "time": "2015-06-27 03:49:10",
+        "type": "yii2-extension",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "mootensai\\components\\": ""
+            }
+        },
+        "notification-url": "http://packagist.cn/downloads/",
+        "authors": [
+            {
+                "name": "mdmunir",
+                "email": "misbahuldmunir@gmail.com"
+            }
+        ],
+        "description": "Embed Javascript block with IDE checking",
+        "keywords": [
+            "block",
+            "javascript",
             "yii2"
         ]
     }

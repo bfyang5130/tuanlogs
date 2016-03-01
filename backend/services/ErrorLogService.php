@@ -57,6 +57,7 @@ class ErrorLogService {
             $appname_list[] = $value['appname'];
         }
         #更新统计数据
+
         if ($application_list) {
             foreach ($application_list as $oneAppValue) {
                 if (empty($oneAppValue['lastupdatetime'])) {
@@ -71,10 +72,12 @@ class ErrorLogService {
             }
         }
         #获得没有统计在ApplicateName里的错误信息
+        #由于有自动任务的处理所以每次更新的时候以前两天的数据再统计一次不存在的数据就可以了，以前两天为了有个时间宽度作保证
+        $lastvaluetime = date('Y-m-d H:i:s', strtotime('-2 day'));
         if ($appname_list) {
             $listString = implode("','", $appname_list);
             $listString = "'" . $listString . "'";
-            $sql = "insert into ApplicateName(`appname`,`newname`,`logtotal`,`logtype`,`lastupdatetime`) select ApplicationId,ApplicationId,count(*),1,now() from ErrorLog where ApplicationId not in($listString) group by ApplicationId";
+            $sql = "insert into ApplicateName(`appname`,`newname`,`logtotal`,`logtype`,`lastupdatetime`) select ApplicationId,ApplicationId,count(*),1,now() from ErrorLog where ApplicationId not in($listString) AND AddDate>='$lastvaluetime' group by ApplicationId";
             \Yii::$app->db->createCommand($sql)->execute();
         }
         //获得统计日志最后更新时间

@@ -48,7 +48,7 @@ class ErrorLogService {
     public static function countErrorByApplicationId() {
         //查找Error的appname
         $application_query = new Query();
-        $application_query->select("appname,lastupdatetime")
+        $application_query->select("id,appname,lastupdatetime,logtotal")
                 ->from("ApplicateName")
                 ->where("logtype=1"); //1-Error类型 0-trace
         $application_list = $application_query->all();
@@ -57,60 +57,69 @@ class ErrorLogService {
             $appname_list[] = $value['appname'];
         }
         #更新统计数据
-//        if ($application_list) {
-//            foreach ($application_list as $oneAppValue) {
-//                $updateQuery= new Query();
-//            }
-//        }
-//        print_r($appname_list);
-        exit;
-        #获得没有统计在ApplicateName里的错误信息
-        #$newApplicateNameType=new Query();
-        #$newApplicateNameType->
-        #insert into ApplicateName(`appname`,`newname`,`logtotal`,`logtype`,`lastupdatetime`) select ApplicationId,ApplicationId,count(*),1,datetime() from ErrorLog where ApplicationID not in($appname_list) groud by ApplicationId;
-        //获得统计日志最后更新时间
-        $application_query = new Query();
-        $application_query->select("lastupdatetime")
-                ->from("ApplicateName")
-                ->where("logtype=1 and lastupdatetime>0"); //1-Error类型 0-trace
-        $application = $application_query->one();
-        if (!empty($application)) {
-            $lasupdatetime = $application['lastupdatetime'];
-            $format_time = $lasupdatetime;
-        }
-
-        //统计错误日志的数量
-        $error_query = new Query();
-        $error_query->select("count(id) as total,ApplicationId")
-                ->from("ErrorLog")
-                ->where(["in", "ApplicationId", $appname_list]);
-
-        if (!empty($format_time)) {
-            $error_query->andWhere("AddDate>:adddate", array(":adddate" => $format_time));
-        }
-
-        $error_query->groupBy("ApplicationId");
-
-        $error_count_list = $error_query->all();
-
-        $curtime = date("Y-m-d H:i:s");
-        foreach ($error_count_list as $key => $error_count) {
-            $applicationId = $error_count['ApplicationId'];
-            $application = ApplicateName::findOne(["appname" => $applicationId, "logtype" => 1]);
-            if (!empty($application)) {
-                $application->logtotal = $application->logtotal + $error_count['total'];
-                $application->lastupdatetime = $curtime;
-                $application->save();
-//                $error_count_list[$key]['total'] = $application->logtotal ;
+        if ($application_list) {
+            foreach ($application_list as $oneAppValue) {
+                if (empty($oneAppValue['lastupdatetime'])) {
+                    $oneAppValue['lateupdatetime'] = date('Y-m-d H:i:s');
+                }
+                #获得最新统计数据
+                $nums = ErrorLog::find()->where('ApplicationId=:appid AND AddDate>=:addDate', [':appid' => $oneAppValue['appname'], ':addDate' => $oneAppValue['lastupdatetime']])->count();
+                #更新当前最新统计
+                $updatenums = $oneAppValue['logtotal'] + $nums;
+                $lastupdatetime = date('Y-m-d H:i:s');
+                ApplicateName::updateAll(['logtotal' => $updatenums, 'lastupdatetime' => $lastupdatetime], 'id=:id', [':id' => $oneAppValue['id']]);
             }
         }
-
+        #获得没有统计在ApplicateName里的错误信息
+        if ($appname_list) {
+            $listString = implode("','", $appname_list);
+            $listString = "'" . $listString . "'";
+            $sql = "insert into ApplicateName(`appname`,`newname`,`logtotal`,`logtype`,`lastupdatetime`) select ApplicationId,ApplicationId,count(*),1,now() from ErrorLog where ApplicationId not in($listString) group by ApplicationId";
+            \Yii::$app->db->createCommand($sql)->execute();
+        }
+        //获得统计日志最后更新时间
+//        $application_query = new Query();
+//        $application_query->select("lastupdatetime")
+//                ->from("ApplicateName")
+//                ->where("logtype=1 and lastupdatetime>0"); //1-Error类型 0-trace
+//        $application = $application_query->one();
+//        if (!empty($application)) {
+//            $lasupdatetime = $application['lastupdatetime'];
+//            $format_time = $lasupdatetime;
+//        }
+//
+//        //统计错误日志的数量
+//        $error_query = new Query();
+//        $error_query->select("count(id) as total,ApplicationId")
+//                ->from("ErrorLog")
+//                ->where(["in", "ApplicationId", $appname_list]);
+//
+//        if (!empty($format_time)) {
+//            $error_query->andWhere("AddDate>:adddate", array(":adddate" => $format_time));
+//        }
+//
+//        $error_query->groupBy("ApplicationId");
+//
+//        $error_count_list = $error_query->all();
+//
+//        $curtime = date("Y-m-d H:i:s");
+//        foreach ($error_count_list as $key => $error_count) {
+//            $applicationId = $error_count['ApplicationId'];
+//            $application = ApplicateName::findOne(["appname" => $applicationId, "logtype" => 1]);
+//            if (!empty($application)) {
+//                $application->logtotal = $application->logtotal + $error_count['total'];
+//                $application->lastupdatetime = $curtime;
+//                $application->save();
+////                $error_count_list[$key]['total'] = $application->logtotal ;
+//            }
+//        }
         //重新获取ErrorLog的统计数据
         $error_query = new Query();
-        $error_query->select("count(id) as total,ApplicationId")
-                ->from("ErrorLog")
-                ->where(["in", "ApplicationId", $appname_list])
-                ->groupBy("ApplicationId");
+        $error_query->select("logtotal as total,appname as ApplicationId")
+                ->from("ApplicateName")
+                ->where(["in", "appname", $appname_list])
+                ->where("logtype=1")
+                ->groupBy("appname");
         $error_count_list = $error_query->all();
 
         return $error_count_list;

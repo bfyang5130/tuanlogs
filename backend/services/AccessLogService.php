@@ -12,48 +12,65 @@ use common\models\IisAccessLog;
  */
 class AccessLogService {
 
-    public static function saveToDbForNginx($content_arr){
+    public static function saveToDbForNginx($content_arr,$cdn_tag=false,$short_name='',$source=''){
         $access_log_arr = [] ;
         $num = 0 ;
         foreach($content_arr as $c_val){
-            $mat = ToolService::parseNginxAccessLog($c_val) ;
+            $parse_rs = ToolService::parseNginxAccessLog($c_val,$cdn_tag) ;
 
-            $user_ip1 = empty($mat[1][0])?"":$mat[1][0] ;
-            $user_ip2 = empty($mat[2][0])?"":$mat[2][0] ;
-            $user_ip3 = empty($mat[3][0])?"":$mat[3][0] ;
-            $user_ip4 = empty($mat[4][0])?"":$mat[4][0] ;
-            $request_time = empty($mat[5][0])?"":$mat[5][0] ;
+            $mat = $parse_rs['mat'] ;
+            $china_cache_rs = $parse_rs['china_cache_rs'] ;
 
-            $request_info = empty($mat[6][0])?"":$mat[6][0] ;//再解析
+            $ip_mat = ToolService::parseIp($mat[1][0]) ;
+
+            $user_ip1 = empty($ip_mat[0][0])?"":$ip_mat[0][0] ;
+            $user_ip2 = empty($ip_mat[0][1])?"":$ip_mat[0][1] ;
+            $user_ip3 = empty($ip_mat[0][2])?"":$ip_mat[0][2] ;
+            $user_ip4 = empty($ip_mat[0][3])?"":$ip_mat[0][3] ;
+
+            //处理时间
+            $time = empty($mat[2][0])?"":$mat[2][0] ;
+            if(empty($time)){
+                $request_time = null ;
+            }else{
+                $request_time =ToolService::parseNginxDateTime($time) ;
+            }
+
+            $request_info = empty($mat[3][0])?"":$mat[3][0] ;//再解析
             $request_mat = ToolService::parseRequestInfo($request_info) ;
             $request_type = empty($request_mat[1][0])?"":$request_mat[1][0] ;
             $access_address =  empty($request_mat[2][0])?"":$request_mat[2][0] ;
             $protocol =  empty($request_mat[3][0])?"":$request_mat[3][0] ;
 
-            $status = empty($mat[7][0])?"":$mat[7][0] ;
-            $content_size = empty($mat[8][0])?"":$mat[8][0] ;
-            $http_referer = empty($mat[9][0])?"":$mat[9][0] ;
+            $status = empty($mat[4][0])?0:$mat[4][0] ;
+            $content_size = empty($mat[5][0])?0:$mat[5][0] ;
 
-            $user_agent = empty($mat[10][0])?"":$mat[10][0] ;
 
-            $ua = new UserAgentService($user_agent) ;
-            $plat_form = $ua->platform() ;
-            $browser = $ua->browser() ;
+            if($china_cache_rs==false){
+                $http_referer = empty($mat[6][0])?"":$mat[6][0] ;
 
-            $take_time = empty($mat[11][0])?"":$mat[11][0] ;
+                $user_agent = empty($mat[7][0])?"":$mat[7][0] ;
+
+                $ua = new UserAgentService($user_agent) ;
+                $plat_form = $ua->platform() ;
+                $browser = $ua->browser() ;
+
+                $take_time = empty($mat[8][0])?0:$mat[8][0] ;
+            }else{
+                //有china_cache
+                $http_referer = empty($mat[6][0])?"":$mat[6][0] ;
+                $user_agent = empty($mat[7][0])?"":$mat[7][0] ;
+                $http_x_forward_for =
+                $plat_form = "" ;
+                $browser ="" ;
+                $take_time = empty($mat[8][0])?0:$mat[8][0] ;
+            }
+
 
             $access_log_arr[] = [
                 $user_ip1,$user_ip2,$user_ip3,$user_ip4,$request_time,$request_type,$protocol,$access_address,
-                $status,$content_size,$http_referer,$user_agent,$plat_form,$browser,$take_time
+                $status,$content_size,$http_referer,$user_agent,$plat_form,$browser,$take_time,$short_name,$source
             ] ;
-
-            //每500条批量入库
-            if($num>500){
-                self::batchSaveNginxAccessLog($access_log_arr) ;
-                $access_log_arr = [] ;
-                $num = 0 ;
-            }
-            $num = $num + 1 ;
 
         }
         self::batchSaveNginxAccessLog($access_log_arr) ;
@@ -68,10 +85,12 @@ class AccessLogService {
                 AccessLog::tableName(),
                 [
                     'UserIP1','UserIP2','UserIP3','UserIP4','RequestTime','RequestType','Protocol','AccessAddress' ,
-                    'Status','ContentSize','HttpReferer','ClientType','System','Browser','TakeTime'
+                    'Status','ContentSize','HttpReferer','ClientType','System','Browser','TakeTime','access_type','source'
                 ],
                 $access_log_arr) ;
             $command->execute();
+            unset($access_log_arr) ;
+            $command = null ;
         }
     }
 

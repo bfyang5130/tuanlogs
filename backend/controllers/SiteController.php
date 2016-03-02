@@ -6,6 +6,7 @@ use backend\models\ErrorLogSearch;
 use backend\services\ErrorLogService;
 use backend\services\TraceLogService;
 use backend\services\ToolService;
+use common\models\User;
 use Yii;
 use yii\data\Sort;
 use yii\filters\AccessControl;
@@ -32,7 +33,7 @@ class SiteController extends Controller {
                     ],
                     [
                         'actions' => ['logout', 'index', 'trace', 'sql', 'sqlgraph', 'errorgraph',
-                            'getdata', 'doing', 'countday', 'countmonth', 'tracereport', 'tracedayreport', 'tracemonreport','tip'],
+                            'getdata', 'doing', 'countday', 'countmonth', 'tracereport', 'tracedayreport', 'tracemonreport',],
                         'allow' => true,
                         'roles' => ['@'],
                     ],

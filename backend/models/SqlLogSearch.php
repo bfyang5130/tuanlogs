@@ -42,7 +42,7 @@ class SqlLogSearch extends SqlTrace {
 
     public function search($params) {
         $query = new \yii\db\Query;
-        if (empty($params)||empty($params['databasetype'])) {
+        if (empty($params)||empty($params['SqlLogSearch']['databasetype'])) {
             $dataProvider = new ActiveDataProvider([
                 'query' => $query->from("SqlTrace"),
                 'sort' => [
@@ -53,7 +53,7 @@ class SqlLogSearch extends SqlTrace {
             ]);
         } else {
             $dataProvider = new ActiveDataProvider([
-                'query' => $query->from("SqlTrace ignore index (PRIMARY)"),
+                'query' => $query->from("SqlTrace ignore index (executedate)"),
                 'sort' => [
                     'defaultOrder' => [
                         'executedate' => SORT_DESC,

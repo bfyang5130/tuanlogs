@@ -2,6 +2,7 @@
 
 namespace backend\services;
 
+use common\models\ApplicateName;
 use common\models\TraceLog;
 use common\models\TraceLogMonth;
 use yii\data\ActiveDataProvider;
@@ -52,6 +53,26 @@ class TraceLogService {
         return $data;
     }
 
+    public function search()
+    {
+        $params = Yii::$app->request->get();
+
+        $query = TraceLog::find();
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
+
+        $this->load($params);
+        if (!$this->validate()) {
+            return $dataProvider;
+        }
+
+        return $dataProvider;
+    }
+
     /**
      * 日统计
      * @return array
@@ -94,7 +115,7 @@ class TraceLogService {
             if(empty($TraceLogList) &&  !empty($search_date)){
                 $isUpdate = true;
             }
-            //!empty($search_date) &&
+
             if (!empty($TraceLogList)) {
                 #查询某天没有数据
                 $selectDay = $end;
@@ -134,8 +155,9 @@ class TraceLogService {
         }
 
         #错误类型排序
+
         foreach($TraceLogList as $k => $v){
-            $category[$v['ApplicationId']] += floatval($v['Number']);
+            @$category[$v['ApplicationId']] += floatval($v['Number']);
         }
         arsort($category);
         $dataCategory = [];
@@ -256,7 +278,7 @@ class TraceLogService {
 
         if(empty($result) && !empty($optionDate)){
             $result = TraceLog::find()
-                ->select("count(*) as Number , ApplicationId , DATE(AddDate) as dateline")
+                ->select("count(1) as Number , ApplicationId , DATE(AddDate) as dateline")
                 ->where(['between', 'AddDate', $startMon, $endMon])
                 ->groupBy("DATE(AddDate) ,ApplicationId")
                 ->asArray()->all();
@@ -324,24 +346,33 @@ class TraceLogService {
      */
     public static function getTraceCategory($isReturnData = true)
     {
-        $ApplicationIds = TraceLog::find()
-            ->select('ApplicationId,count(1) as Number')
-            ->groupBy('ApplicationId')
-            ->orderBy("count(1) DESC")
-            ->asArray()->all();
-        $sql = "SELECT `ApplicationId`, count(*) as Number FROM `TraceLog` GROUP BY `ApplicationId` ORDER BY count(*) DESC";
-        $total['name'] = '跟踪日志列表';
-        foreach($ApplicationIds as $k => $v){
-            $category[] = trim($v['ApplicationId']);
-            $total['data'][] = floatval($v['Number']);
+        if($isReturnData){
+            $ApplicationIds = TraceLog::find()
+                ->select('ApplicationId,count(*) as Number')
+                ->groupBy('ApplicationId')
+                ->orderBy("count(*) DESC")
+                ->asArray()->all();
+
+            $total['name'] = '跟踪日志列表';
+            foreach($ApplicationIds as $k => $v){
+                $category[] = trim($v['ApplicationId']);
+                $total['data'][] = floatval($v['Number']);
+            }
+            return [
+                'category' => $category,
+                'series' => [$total],
+            ];
+        }else{
+            $ApplicationIds = ApplicateName::find()
+                ->select('appname as ApplicationId')
+                ->where(['logtype'=>1])->asArray()->all();
+            foreach($ApplicationIds as $k => $v){
+                $category[] = trim($v['ApplicationId']);
+            }
+            if(!$isReturnData){
+                return $category;
+            }
         }
-        if(!$isReturnData){
-            return $category;
-        }
-        return [
-            'category' => $category,
-            'series' => [$total],
-        ];
     }
 
     /**

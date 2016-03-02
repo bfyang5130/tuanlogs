@@ -30,6 +30,12 @@ class TraceLogSearch extends TraceLog {
         return [
             ['id', 'integer'],
             ['type', 'safe'],
+            [['Method'], 'string', 'max' => 128],
+            [['Parameter'], 'string', 'max' => 1024],
+            [['Content'], 'string'],
+            [['ApplicationId'], 'string'],
+            [['start_date'], 'string'],
+            [['end_date'], 'string'],
         ];
     }
 
@@ -44,21 +50,11 @@ class TraceLogSearch extends TraceLog {
     //put your code here
     public function search($params) {
         $query = TraceLog::find();
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-        $this->load($params);
-        if (!$this->validate()) {
-            return $dataProvider;
-        }
+        $values = $params['TraceLogSearch'];
+        $query->andFilterWhere(['>','AddDate',$values['start_date']]);
+        $query->andFilterWhere(['<','AddDate',$values['end_date']]);
         if (isset($params['id'])) {
             $query->andWhere(['ApplicationId' => $params['id']]);
-        }
-        if (isset($params['TraceLogSearch']['start_date']) && !empty($params['TraceLogSearch']['start_date'])) {
-            $query->andWhere(" AddDate>=:start_date", [':start_date' => $params['TraceLogSearch']['start_date']]);
-        }
-        if (isset($params['TraceLogSearch']['end_date']) && !empty($params['TraceLogSearch']['end_date'])) {
-            $query->andWhere(" AddDate<=:end_date", [':end_date' => $params['TraceLogSearch']['end_date']]);
         }
         if (isset($params['TraceLogSearch']['Parameter']) && !empty($params['TraceLogSearch']['Parameter'])) {
             $query->andWhere(['like', 'Parameter', $params['TraceLogSearch']['Parameter']]);
@@ -66,10 +62,17 @@ class TraceLogSearch extends TraceLog {
         if (isset($params['TraceLogSearch']['Method']) && !empty($params['TraceLogSearch']['Method'])) {
             $query->andWhere(['like', 'Method', $params['TraceLogSearch']['Method']]);
         }
-        if(!empty($params['TraceLogSearch']['ApplicationId'])){
+        if(!empty($params['TraceLogSearch']['ApplicationId']) && $params['TraceLogSearch']['ApplicationId'] != 'all'){
             $query->andWhere(['ApplicationId'=> $params['TraceLogSearch']['ApplicationId']]);
         }
         $query->orderBy('AddDate desc ');
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+        $this->load($params);
+        if (!$this->validate()) {
+            return $dataProvider;
+        }
         return $dataProvider;
     }
 

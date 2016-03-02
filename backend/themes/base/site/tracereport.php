@@ -10,6 +10,7 @@ use yii\widgets\Breadcrumbs;
 use yii\helpers\Url;
 use nirvana\showloading\ShowLoadingAsset;
 use miloschuman\highcharts\Highcharts;
+use yii\widgets\Pjax;
 
 
 ShowLoadingAsset::register($this);
@@ -19,6 +20,7 @@ $params = \Yii::$app->request->queryParams;
 $page = empty(Yii::$app->request->get('page')) ? '1' : intval(Yii::$app->request->get('page'));
 $years = \Yii::$app->request->get('years', '');
 ?>
+<?php Pjax::begin(['id'=>'grid'])?>
 <div class="site-index">
     <?php
     echo Breadcrumbs::widget([
@@ -201,6 +203,16 @@ $years = \Yii::$app->request->get('years', '');
                                 'credits' => [
                                     'enabled' => false
                                 ],
+//                                'lang' =>[
+//                                    'noData'=>'Nichts zu anzeigen'
+//                                ],
+//                                'noData'=>[
+//                                    'style'=>[
+//                                    'fontWeight'=>'bold',
+//                                    'fontSize'=>'20px',
+//                                    'color'=>'#303030',
+//                                    ]
+//                                ],
                                 'series' => $trace_series
                             ]
                         ]);
@@ -294,5 +306,5 @@ $years = \Yii::$app->request->get('years', '');
     </div>
 
 </div>
-
+<?php Pjax::end()?>
 

@@ -8,15 +8,26 @@ use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
+use yii\bootstrap\ActiveForm;
+use dosamigos\datetimepicker\DateTimePicker ;
 
 $this->title = '日志列表';
 #获得日志统计记录
 
 $params = \Yii::$app->request->queryParams;
-$searchModel = new TraceLogSearch();
-$result = $searchModel->find()->groupBy(['ApplicationId'])->addSelect('ApplicationId')->asArray()->all();
-$category = ArrayHelper::map($result,'ApplicationId','ApplicationId');
+if(!isset($params['TraceLogSearch']['start_date'])){
+    $params['TraceLogSearch']['start_date'] = date('Y-m-d h:i:s',strtotime('-1 month'));
+}
+if(!isset($params['TraceLogSearch']['end_date'])){
+    $params['TraceLogSearch']['end_date'] = date('Y-m-d h:i:s');
+}
+$searchModel  = new TraceLogSearch();
+$applicationName = new \common\models\ApplicateName();
+$category = $applicationName->find()->select('appname')->where(['logtype'=>1])->asArray()->all();
+$category = ArrayHelper::map($category,'appname','appname');
+$category = ['all'=>'全部'] + $category;
 $dataProvider = $searchModel->search($params);
+
 ?>
 <div class="site-index">
     <?php
@@ -40,9 +51,53 @@ $dataProvider = $searchModel->search($params);
                         <a href="<?= Url::toRoute(['site/tracereport'])?>" class="btn btn-default">图形</a>
                     </div>
                 </div>
+                <?php $form = ActiveForm::begin([
+                    'id' => 'searchBox',
+                    'action' => ['site/trace'],
+                    'method' => 'get',
+                    'options' => [
+                        'class' => 'form-inline ',
+                        'style' => 'margin:20px 0'
+                    ],
+                ]) ?>
+                <?= $form->field($searchModel, 'ApplicationId')->dropDownList($category,['style'=>'width:100px'])->label('类型')->error(false) ?>
+                <?= $form->field($searchModel, 'Method')->textInput()->label('函数')->error(false) ?>
+                <?= $form->field($searchModel, 'Parameter')->textInput($category)->label('参数')->error(false) ?>
+                <div class="form-group">
+                    <label for="exampleInputEmail2">时间：</label>
+                    <?= DateTimePicker::widget([
+                        'language' => 'zh-CN',
+                        'model' => $searchModel,
+                        'attribute' => 'start_date',
+                        'pickButtonIcon' => 'glyphicon glyphicon-time',
+                        'template' => '{input}{button}',
+                        'clientOptions' => [
+                            'autoclose' => true,
+                            'format' => 'yyyy-mm-dd hh:ii:ss',
+                            'todayBtn' => true,
+                        ],
+                    ]);?>
+                    <label for="exampleInputEmail2">至</label>
+                    <?= DateTimePicker::widget([
+                        'language' => 'zh-CN',
+                        'model' => $searchModel,
+                        'attribute' => 'end_date',
+                        'pickButtonIcon' => 'glyphicon glyphicon-time',
+                        'template' => '{input}{button}',
+                        'clientOptions' => [
+                            'autoclose' => true,
+                            'format' => 'yyyy-mm-dd hh:ii:ss',
+                            'todayBtn' => true,
+                        ],
+                    ]);?>
+                </div>
+                <?= Html::submitButton('查询', ['class' => 'btn btn-primary']) ?>
+                <?php ActiveForm::end() ?>
+
                 <?php
                 Pjax::begin(['id' => 'countries']);
                 ?>
+
                 <?php
                 echo GridView::widget([
                     'dataProvider' => $dataProvider,
@@ -50,12 +105,12 @@ $dataProvider = $searchModel->search($params);
                     'columns' => [
                         [
                             'class' => 'yii\grid\SerialColumn',
-                            'headerOptions' => ['style' => 'width:80px;'],
+//                            'headerOptions' => ['style' => 'width:80px;'],
                         ],
                         [
                             'attribute' => 'ApplicationName',
                             'label' => '类型',
-                            'filter' => Html::activeDropDownList($searchModel,'ApplicationId',$category, ['class' => 'form-control','prompt' => '全部']),
+//                            'filter' => Html::activeDropDownList($searchModel,'ApplicationId',$category, ['class' => 'form-control','prompt' => '全部']),
                             'value' =>
                                 function ($model) {
                                     return Html::encode($model->ApplicationId);
@@ -63,7 +118,7 @@ $dataProvider = $searchModel->search($params);
                         ],
                         [
                             'label' => '函数',
-                            'filter' => Html::activeTextInput($searchModel, 'Method', ['class' => 'form-control']),
+//                            'filter' => Html::activeTextInput($searchModel, 'Method', ['class' => 'form-control']),
                             'format' => 'raw',
                             'value' => function ($model) {
                                 return Html::encode($model->Method);
@@ -71,37 +126,37 @@ $dataProvider = $searchModel->search($params);
                         ],
                         [
                             'label' => '参数',
-                            'filter' => Html::activeTextInput($searchModel, 'Parameter', ['class' => 'form-control']),
+//                            'filter' => Html::activeTextInput($searchModel, 'Parameter', ['class' => 'form-control']),
                             'format' => 'raw',
                             'value' => function ($model) {
                                 return Html::encode($model->Parameter);
                             },
                         ],
                         [
-                            'attribute' => 'start_date',
+//                            'attribute' => 'start_date',
                             'label' => '开始时间',
                             'value' => 'AddDate',
-                            'filter' => \yii\jui\DatePicker::widget([
-                                'model' => $searchModel,
-                                'options' => ['style' => 'width:80px;'],
-                                'attribute' => 'start_date',
-                                'language' => 'zh-CN',
-                                'dateFormat' => 'yyyy-MM-dd'
-                            ]),
+//                            'filter' => \yii\jui\DatePicker::widget([
+//                                'model' => $searchModel,
+//                                'options' => ['style' => 'width:80px;'],
+//                                'attribute' => 'start_date',
+//                                'language' => 'zh-CN',
+//                                'dateFormat' => 'yyyy-MM-dd'
+//                            ]),
                             'format' => 'html',
                         ],
                         [
-                            'attribute' => 'end_date',
+//                            'attribute' => 'end_date',
                             'label' => '结束时间',
                             'value' => 'AddDate',
-                            'filter' => \yii\jui\DatePicker::widget([
-                                'model' => $searchModel,
-                                'options' => ['style' => 'width:80px;'],
-                                'attribute' => 'end_date',
-                                'language' => 'zh-CN',
-                                'dateFormat' => 'yyyy-MM-dd',
-                                'value' => date('Y-m-d'),
-                            ]),
+//                            'filter' => \yii\jui\DatePicker::widget([
+//                                'model' => $searchModel,
+//                                'options' => ['style' => 'width:80px;'],
+//                                'attribute' => 'end_date',
+//                                'language' => 'zh-CN',
+//                                'dateFormat' => 'yyyy-MM-dd',
+//                                'value' => date('Y-m-d'),
+//                            ]),
                             'format' => 'html',
                         ],
                         [

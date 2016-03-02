@@ -47,8 +47,12 @@ $search_date = Yii::$app->request->get("search_date");
 
                                                     <div class="form-group pull-right">
                                                         <label for="exampleInputEmail2">更多统计:</label>
+                                                        <?php
+                                                        $dataTypeLists = backend\models\forms\TableFitForm::findDatabase();
+                                                        array_unshift($dataTypeLists, '请选择');
+                                                        ?>
                                                         <?=
-                                                        Html::dropDownList('更多统计:', 'databaseid', backend\models\forms\TableFitForm::findDatabase(), ['class' => 'form-control','onChange'=>'window.location.href="/sql/database.html?type="+this.value;']);
+                                                        Html::dropDownList('更多统计:', 'databaseid', $dataTypeLists, ['placeholder' => '请选择', 'class' => 'form-control', 'onChange' => 'window.location.href="/sql/database.html?type="+this.value;']);
                                                         ?>
                                                         <label for="exampleInputEmail2">时间:</label>
                                                         <?=

@@ -16,10 +16,11 @@ $this->title = '日志列表';
 
 $params = \Yii::$app->request->queryParams;
 if(!isset($params['TraceLogSearch']['start_date'])){
-    $params['TraceLogSearch']['start_date'] = date('Y-m-d h:i:s',strtotime('-1 month'));
+    $params['TraceLogSearch']['start_date'] = date('Y-m-01 00:00:00');
 }
 if(!isset($params['TraceLogSearch']['end_date'])){
-    $params['TraceLogSearch']['end_date'] = date('Y-m-d h:i:s');
+    $monthFirstDay = date('Y-m-01 00:00:00');
+    $params['TraceLogSearch']['end_date'] = date('Y-m-d 23:59:59', strtotime("$monthFirstDay +1 month -1 day"));
 }
 $searchModel  = new TraceLogSearch();
 $applicationName = new \common\models\ApplicateName();

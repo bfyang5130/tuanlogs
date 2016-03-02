@@ -9,8 +9,12 @@ return [
     'language'=>'zh-CN',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
-    'bootstrap' => ['log'],
+    'bootstrap' => ['debug'],
     'modules' => [
+        'debug'=>[
+            'class'=>'yii\debug\Module',
+            'allowedIPs' => ['*.*.*.*', '127.0.0.1', '::1']
+        ],
         'admin' => [
             'class' => 'app\modules\admin\Module',
             'modules' => [

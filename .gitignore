@@ -33,4 +33,7 @@ phpunit.phar
 /phpunit.xml
 !/vendor/
 /backend/config
+/backend/bak
+/backend/resource17
+/backend/resource23
 !/backend/config/main.php

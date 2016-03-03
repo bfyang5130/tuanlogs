@@ -53,7 +53,7 @@ $page = Yii::$app->request->get("page");
                                                         'chart' => [
                                                             'type' => 'bar',
                                                             'plotShadow' => false, //设置阴影
-                                                            'height' => 1200,
+                                                            'height' => 8000,
                                                         ],
                                                         'title' => [
                                                             'text' => '错误日志月统计'

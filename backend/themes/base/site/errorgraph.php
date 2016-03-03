@@ -54,7 +54,7 @@ $params = \Yii::$app->request->queryParams;
                                                         'chart' => [
                                                             'type' => 'bar',
                                                             'plotShadow' => false, //设置阴影
-                                                            'height' => 600
+                                                            'height' => 1000
                                                         ],
                                                         'title' => [
                                                             'text' => ' 统计'

@@ -82,7 +82,7 @@ $search_date = Yii::$app->request->get("search_date");
                                                         'chart' => [
                                                             'type' => 'bar',
                                                             'plotShadow' => false, //设置阴影
-                                                            'height' => 1200,
+                                                            'height' => 8000,
                                                         ],
                                                         'title' => [
                                                             'text' => '错误日志日统计'

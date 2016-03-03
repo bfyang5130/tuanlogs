@@ -24,7 +24,6 @@ $searchModel = new TraceLogSearch();
 $applicationName = new \common\models\ApplicateName();
 $category = $applicationName->find()->select('appname')->where(['logtype' => 1])->asArray()->all();
 $category = ArrayHelper::map($category, 'appname', 'appname');
-$category = ['all' => '全部'] + $category;
 $dataProvider = $searchModel->search($params);
 $searchModel->start_date = empty($searchModel->start_date) ? $month_info['str_time'] : $searchModel->start_date;
 $searchModel->end_date = empty($searchModel->end_date) ? $month_info['end_time'] : $searchModel->end_date;

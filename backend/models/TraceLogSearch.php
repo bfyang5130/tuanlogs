@@ -59,11 +59,11 @@ class TraceLogSearch extends TraceLog {
         if (!$this->validate()) {
             return $dataProvider;
         }
+        $query->andFilterWhere(['ApplicationId' => $this->ApplicationId,]);
         $query->andFilterWhere(['>', 'AddDate', $this->start_date]);
         $query->andFilterWhere(['<', 'AddDate', $this->end_date]);
         $query->andFilterWhere(['like', 'Parameter', $this->Parameter]);
         $query->andFilterWhere(['like', 'Method', $this->Method]);
-        $query->andFilterWhere(['like', 'ApplicationId', $this->ApplicationId]);
         $query->orderBy('AddDate desc ');
         return $dataProvider;
     }

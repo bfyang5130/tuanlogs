@@ -347,16 +347,63 @@ class TraceLogService {
     public static function getTraceCategory($isReturnData = true)
     {
         if($isReturnData){
+            //统计表数据
+            $appNameTotal = ApplicateName::find()
+                ->select("appname,logtotal,lastupdatetime")
+                ->where(['logtype'=>1])->asArray()->all();
+
             $ApplicationIds = TraceLog::find()
                 ->select('ApplicationId,count(*) as Number')
+                ->where(['>','AddDate',$appNameTotal[0]['lastupdatetime']])
                 ->groupBy('ApplicationId')
                 ->orderBy("count(*) DESC")
                 ->asArray()->all();
 
+            if(!empty($ApplicationIds)){
+                $a = ArrayHelper::map($ApplicationIds,'ApplicationId','Number');
+                $b = ArrayHelper::map($appNameTotal,'appname','logtotal');
+                $updateData = [];
+                $noExistData = [];
+                $ApplicationIds = [];
+                foreach($a as $k => $v){
+                    if(array_key_exists($k,$b)){
+                        $updateData[$k] = $b[$k] + $v;
+                        $ApplicationIds[$k] = $b[$k] + $v;
+                        ApplicateName::updateAll(
+                            ['logtotal'=>$b[$k] + $v,'lastupdatetime'=>date("Y-m-d h:i:s")],
+                            'logtype=1 AND appname=:appname',[':appname'=>$k]
+                        );
+                    }else{
+                        $noExistData[$k] =  $v;
+                        $ApplicationIds[$k] = $v;
+                    }
+                }
+
+                if(!empty($noExistData)){
+                    $insertData = [];
+                    $i = 0;
+                    foreach($noExistData as $k => $v){
+                        $insertData[$i]['appname'] = $k;
+                        $insertData[$i]['newname'] = $k;
+                        $insertData[$i]['logtotal'] = $v;
+                        $insertData[$i]['logtype'] = 1;
+                        $insertData[$i]['lastdatetime'] = date('Y-m-d h:i:s');
+                        $i++;
+                    }
+                    \Yii::$app->db->createCommand()->batchInsert('ApplicateName',
+                        ['appname','newname','logtotal','logtype','lastupdatetime'],
+                        $insertData
+                    )->execute();
+                }
+            }else{
+                $ApplicationIds = ArrayHelper::map($appNameTotal,'appname','logtotal');
+            }
+
             $total['name'] = '跟踪日志列表';
+            arsort($ApplicationIds);
             foreach($ApplicationIds as $k => $v){
-                $category[] = trim($v['ApplicationId']);
-                $total['data'][] = floatval($v['Number']);
+                $category[] = trim($k);
+                $total['data'][] = floatval($v);
             }
             return [
                 'category' => $category,

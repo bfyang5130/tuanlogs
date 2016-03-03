@@ -9,26 +9,25 @@ use yii\widgets\Breadcrumbs;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\bootstrap\ActiveForm;
-use dosamigos\datetimepicker\DateTimePicker ;
+use dosamigos\datetimepicker\DateTimePicker;
 
 $this->title = '日志列表';
 #获得日志统计记录
 
 $params = \Yii::$app->request->queryParams;
-if(!isset($params['TraceLogSearch']['start_date'])){
-    $params['TraceLogSearch']['start_date'] = date('Y-m-01 00:00:00');
-}
-if(!isset($params['TraceLogSearch']['end_date'])){
-    $monthFirstDay = date('Y-m-01 00:00:00');
-    $params['TraceLogSearch']['end_date'] = date('Y-m-d 23:59:59', strtotime("$monthFirstDay +1 month -1 day"));
-}
-$searchModel  = new TraceLogSearch();
-$applicationName = new \common\models\ApplicateName();
-$category = $applicationName->find()->select('appname')->where(['logtype'=>1])->asArray()->all();
-$category = ArrayHelper::map($category,'appname','appname');
-$category = ['all'=>'全部'] + $category;
-$dataProvider = $searchModel->search($params);
+//月首
+$month_info['str_time'] = date('Y-m-01 00:00:00');
+//月尾
+$month_info['end_time'] = date('Y-m-d 23:59:59', strtotime($month_info['str_time'] . " +1 month -1 day"));
 
+$searchModel = new TraceLogSearch();
+$applicationName = new \common\models\ApplicateName();
+$category = $applicationName->find()->select('appname')->where(['logtype' => 1])->asArray()->all();
+$category = ArrayHelper::map($category, 'appname', 'appname');
+$category = ['all' => '全部'] + $category;
+$dataProvider = $searchModel->search($params);
+$searchModel->start_date = empty($searchModel->start_date) ? $month_info['str_time'] : $searchModel->start_date;
+$searchModel->end_date = empty($searchModel->end_date) ? $month_info['end_time'] : $searchModel->end_date;
 ?>
 <div class="site-index">
     <?php
@@ -48,25 +47,28 @@ $dataProvider = $searchModel->search($params);
             <div class="panel-body">
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin:10px 0px;">
                     <div class="btn-group pull-right" role="group" aria-label="First group">
-                        <a href="<?= Url::toRoute(['site/trace'])?>" class="btn btn-default">列表</a>
-                        <a href="<?= Url::toRoute(['site/tracereport'])?>" class="btn btn-default">图形</a>
+                        <a href="<?= Url::toRoute(['site/trace']) ?>" class="btn btn-default">列表</a>
+                        <a href="<?= Url::toRoute(['site/tracereport']) ?>" class="btn btn-default">图形</a>
                     </div>
                 </div>
-                <?php $form = ActiveForm::begin([
-                    'id' => 'searchBox',
-                    'action' => ['site/trace'],
-                    'method' => 'get',
-                    'options' => [
-                        'class' => 'form-inline ',
-                        'style' => 'margin:20px 0'
-                    ],
-                ]) ?>
-                <?= $form->field($searchModel, 'ApplicationId')->dropDownList($category,['style'=>'width:100px'])->label('类型')->error(false) ?>
+                <?php
+                $form = ActiveForm::begin([
+                            'id' => 'searchBox',
+                            'action' => ['site/trace'],
+                            'method' => 'get',
+                            'options' => [
+                                'class' => 'form-inline ',
+                                'style' => 'margin:20px 0'
+                            ],
+                        ])
+                ?>
+                <?= $form->field($searchModel, 'ApplicationId')->dropDownList($category, ['style' => 'width:100px'])->label('类型')->error(false) ?>
                 <?= $form->field($searchModel, 'Method')->textInput()->label('函数')->error(false) ?>
                 <?= $form->field($searchModel, 'Parameter')->textInput($category)->label('参数')->error(false) ?>
                 <div class="form-group">
                     <label for="exampleInputEmail2">时间：</label>
-                    <?= DateTimePicker::widget([
+                    <?=
+                    DateTimePicker::widget([
                         'language' => 'zh-CN',
                         'model' => $searchModel,
                         'attribute' => 'start_date',
@@ -77,9 +79,11 @@ $dataProvider = $searchModel->search($params);
                             'format' => 'yyyy-mm-dd hh:ii:ss',
                             'todayBtn' => true,
                         ],
-                    ]);?>
+                    ]);
+                    ?>
                     <label for="exampleInputEmail2">至</label>
-                    <?= DateTimePicker::widget([
+                    <?=
+                    DateTimePicker::widget([
                         'language' => 'zh-CN',
                         'model' => $searchModel,
                         'attribute' => 'end_date',
@@ -90,7 +94,8 @@ $dataProvider = $searchModel->search($params);
                             'format' => 'yyyy-mm-dd hh:ii:ss',
                             'todayBtn' => true,
                         ],
-                    ]);?>
+                    ]);
+                    ?>
                 </div>
                 <?= Html::submitButton('查询', ['class' => 'btn btn-primary']) ?>
                 <?php ActiveForm::end() ?>
@@ -113,9 +118,9 @@ $dataProvider = $searchModel->search($params);
                             'label' => '类型',
 //                            'filter' => Html::activeDropDownList($searchModel,'ApplicationId',$category, ['class' => 'form-control','prompt' => '全部']),
                             'value' =>
-                                function ($model) {
-                                    return Html::encode($model->ApplicationId);
-                                },
+                            function ($model) {
+                                return Html::encode($model->ApplicationId);
+                            },
                         ],
                         [
                             'label' => '函数',

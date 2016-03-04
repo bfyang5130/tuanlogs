@@ -358,7 +358,7 @@ class TraceLogService {
                     $lastupdatetime = date('Y-m-d H:i:s');
                     ApplicateName::updateAll(['logtotal' => $updatenums, 'lastupdatetime' => $lastupdatetime], 'id=:id', [':id' => $oneAppValue['id']]);
                 }
-                $appname_list = ArrayHelper::map($appNameTotal, 'logtotal', 'ApplicationId');
+                $appname_list = ArrayHelper::map($appNameTotal, 'logtotal', 'appname');
             }
             #获得没有统计在ApplicateName里的错误信息
             #由于有自动任务的处理所以每次更新的时候以前两天的数据再统计一次不存在的数据就可以了，以前两天为了有个时间宽度作保证

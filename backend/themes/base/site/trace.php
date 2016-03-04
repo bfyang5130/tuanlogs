@@ -50,6 +50,7 @@ $searchModel->end_date = empty($searchModel->end_date) ? $month_info['end_time']
                         <a href="<?= Url::toRoute(['site/tracereport']) ?>" class="btn btn-default">图形</a>
                     </div>
                 </div>
+                
                 <?php
                 $form = ActiveForm::begin([
                             'id' => 'searchBox',

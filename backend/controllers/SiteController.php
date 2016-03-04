@@ -271,11 +271,6 @@ class SiteController extends Controller {
     }
 
     public function actionTracereport() {
-//        $traceService = new TraceLogService();
-//        $data = [];
-//        foreach ($traceService->TraceGroupBy() as $trace) {
-//            $data[] = [$trace['ApplicationId'], floatval($trace['total'])];
-//        }
         $data = TraceLogService::getTraceCategory();
         $data['type'] = '';
         return $this->render('tracereport', $data);

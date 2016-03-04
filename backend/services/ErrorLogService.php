@@ -77,7 +77,7 @@ class ErrorLogService {
         if ($appname_list) {
             $listString = implode("','", $appname_list);
             $listString = "'" . $listString . "'";
-            $sql = "insert into ApplicateName(`appname`,`newname`,`logtotal`,`logtype`,`lastupdatetime`) select ApplicationId,ApplicationId,count(*),1,now() from ErrorLog where ApplicationId not in($listString) AND AddDate>='$lastvaluetime' group by ApplicationId";
+            $sql = "insert into ApplicateName(`appname`,`newname`,`logtotal`,`logtype`,`lastupdatetime`) select ApplicationId,ApplicationId,count(*),0,now() from ErrorLog where ApplicationId not in($listString) AND AddDate>='$lastvaluetime' group by ApplicationId";
             \Yii::$app->db->createCommand($sql)->execute();
         }
         //重新获取ErrorLog的统计数据

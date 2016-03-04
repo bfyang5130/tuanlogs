@@ -362,7 +362,7 @@ class TraceLogService {
             }
             #获得没有统计在ApplicateName里的错误信息
             #由于有自动任务的处理所以每次更新的时候以前两天的数据再统计一次不存在的数据就可以了，以前两天为了有个时间宽度作保证
-            $lastvaluetime = date('Y-m-d H:i:s', strtotime('-2 day'));
+            $lastvaluetime = date('Y-m-d H:i:s', strtotime('-1 day'));
             if ($appname_list) {
                 $listString = implode("','", $appname_list);
                 $listString = "'" . $listString . "'";

@@ -50,60 +50,64 @@ $searchModel->end_date = empty($searchModel->end_date) ? $month_info['end_time']
                         <a href="<?= Url::toRoute(['site/tracereport']) ?>" class="btn btn-default">图形</a>
                     </div>
                 </div>
-                
-                <?php
-                $form = ActiveForm::begin([
-                            'id' => 'searchBox',
-                            'action' => ['site/trace'],
-                            'method' => 'get',
-                            'options' => [
-                                'class' => 'form-inline ',
-                                'style' => 'margin:20px 0'
-                            ],
-                        ])
-                ?>
-                <?= $form->field($searchModel, 'ApplicationId')->dropDownList($category, ['style' => 'width:100px'])->label('类型')->error(false) ?>
-                <?= $form->field($searchModel, 'Method')->textInput()->label('函数')->error(false) ?>
-                <?= $form->field($searchModel, 'Parameter')->textInput($category)->label('参数')->error(false) ?>
-                <div class="form-group">
-                    <label for="exampleInputEmail2">时间：</label>
-                    <?=
-                    DateTimePicker::widget([
-                        'language' => 'zh-CN',
-                        'model' => $searchModel,
-                        'attribute' => 'start_date',
-                        'pickButtonIcon' => 'glyphicon glyphicon-time',
-                        'template' => '{input}{button}',
-                        'clientOptions' => [
-                            'autoclose' => true,
-                            'format' => 'yyyy-mm-dd hh:ii:ss',
-                            'todayBtn' => true,
-                        ],
-                    ]);
-                    ?>
-                    <label for="exampleInputEmail2">至</label>
-                    <?=
-                    DateTimePicker::widget([
-                        'language' => 'zh-CN',
-                        'model' => $searchModel,
-                        'attribute' => 'end_date',
-                        'pickButtonIcon' => 'glyphicon glyphicon-time',
-                        'template' => '{input}{button}',
-                        'clientOptions' => [
-                            'autoclose' => true,
-                            'format' => 'yyyy-mm-dd hh:ii:ss',
-                            'todayBtn' => true,
-                        ],
-                    ]);
-                    ?>
+                <div class="tab-content">
+                    <table class="table table-bordered table-striped table-condensed">
+                        <tbody>
+                            <tr>
+                                <td colspan="3">
+                                    <?php
+                                    $form = ActiveForm::begin([
+                                                'id' => 'searchBox',
+                                                'action' => ['site/trace'],
+                                                'method' => 'get',
+                                                'options' => [
+                                                    'class' => 'form-inline ',
+                                                    'style' => 'margin:20px 0'
+                                                ],
+                                            ])
+                                    ?>
+                                    <?= $form->field($searchModel, 'ApplicationId')->dropDownList($category, ['style' => 'width:100px'])->label('类型')->error(false) ?>
+                                    <?= $form->field($searchModel, 'Method')->textInput()->label('函数')->error(false) ?>
+                                    <?= $form->field($searchModel, 'Parameter')->textInput($category)->label('参数')->error(false) ?>
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail2">时间：</label>
+                                        <?=
+                                        DateTimePicker::widget([
+                                            'language' => 'zh-CN',
+                                            'model' => $searchModel,
+                                            'attribute' => 'start_date',
+                                            'pickButtonIcon' => 'glyphicon glyphicon-time',
+                                            'template' => '{input}{button}',
+                                            'clientOptions' => [
+                                                'autoclose' => true,
+                                                'format' => 'yyyy-mm-dd hh:ii:ss',
+                                                'todayBtn' => true,
+                                            ],
+                                        ]);
+                                        ?>
+                                        <label for="exampleInputEmail2">至</label>
+                                        <?=
+                                        DateTimePicker::widget([
+                                            'language' => 'zh-CN',
+                                            'model' => $searchModel,
+                                            'attribute' => 'end_date',
+                                            'pickButtonIcon' => 'glyphicon glyphicon-time',
+                                            'template' => '{input}{button}',
+                                            'clientOptions' => [
+                                                'autoclose' => true,
+                                                'format' => 'yyyy-mm-dd hh:ii:ss',
+                                                'todayBtn' => true,
+                                            ],
+                                        ]);
+                                        ?>
+                                    </div>
+                                    <?= Html::submitButton('查询', ['class' => 'btn btn-primary']) ?>
+                                    <?php ActiveForm::end() ?>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <?= Html::submitButton('查询', ['class' => 'btn btn-primary']) ?>
-                <?php ActiveForm::end() ?>
-
-                <?php
-                Pjax::begin(['id' => 'countries']);
-                ?>
-
                 <?php
                 echo GridView::widget([
                     'dataProvider' => $dataProvider,
@@ -182,8 +186,6 @@ $searchModel->end_date = empty($searchModel->end_date) ? $month_info['end_time']
                         ],
                     ],
                 ]);
-
-                Pjax::end();
                 ?>
             </div>
         </div>

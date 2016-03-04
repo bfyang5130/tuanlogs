@@ -67,8 +67,8 @@ $searchModel->end_date = empty($searchModel->end_date) ? $month_info['end_time']
                                             ])
                                     ?>
                                     <?= $form->field($searchModel, 'ApplicationId')->dropDownList($category, ['style' => 'width:100px'])->label('类型')->error(false) ?>
-                                    <?= $form->field($searchModel, 'Method')->textInput()->label('函数')->error(false) ?>
-                                    <?= $form->field($searchModel, 'Parameter')->textInput($category)->label('参数')->error(false) ?>
+                                    <?= $form->field($searchModel, 'Method', ['inputOptions' => ['style' => 'width:160px']])->textInput()->label('函数')->error(false) ?>
+                                    <?= $form->field($searchModel, 'Parameter', ['inputOptions' => ['style' => 'width:160px']])->textInput($category)->label('参数')->error(false) ?>
                                     <div class="form-group">
                                         <label for="exampleInputEmail2">时间：</label>
                                         <?=

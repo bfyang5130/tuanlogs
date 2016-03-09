@@ -215,14 +215,7 @@ class ToolService {
      * 根据日志名判断是否使用cdn format
      */
     public static  function isCdn($name){
-        $cdn_arr = [
-            'app.tuandai.com',
-            'www.tuandai.com',
-            'hd.tuandai.com',
-            'm.tuandai.com',
-            'image.hao8dai.com'
-        ] ;
-
+        $cdn_arr = \Yii::$app->params['iscdn'] ;
         if(in_array($name,$cdn_arr)){
             return true ;
         }else{

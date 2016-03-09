@@ -6,6 +6,7 @@ use yii\data\ActiveDataProvider;
 use yii\data\Pagination;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
+use Yii ;
 
 
 /**
@@ -18,7 +19,7 @@ class ToolService {
     //每500000分发一个作业
     const DISTRIBUTE_NUM = 500000 ;
     //每次读日志的行数
-    const READ_LINE = 1000 ;
+    const READ_LINE = 10000 ;
 
     public static function getPagedRows($query, $config = [])
     {
@@ -247,6 +248,86 @@ class ToolService {
             $short_name = $file_name ;
         }
         return $short_name ;
+    }
+
+
+    /**
+     * 转换IP
+     * @param $ip
+     * @param $ipdatafile
+     * @return string
+     */
+    public static function convertip_tiny($ip, $ipdatafile) {
+
+        static $fp = NULL, $offset = array(), $index = NULL;
+
+        $ipdot = explode('.', $ip);
+        $ip    = pack('N', ip2long($ip));
+
+        $ipdot[0] = (int)$ipdot[0];
+        $ipdot[1] = (int)$ipdot[1];
+
+        if($fp === NULL && $fp = @fopen($ipdatafile, 'rb')) {
+            $offset = @unpack('Nlen', @fread($fp, 4));
+            $index  = @fread($fp, $offset['len'] - 4);
+        } elseif($fp == FALSE) {
+            return  'Invalid IP data file';
+        }
+
+        $length = $offset['len'] - 1028;
+        $start  = @unpack('Vlen', $index[$ipdot[0] * 4] . $index[$ipdot[0] * 4 + 1] . $index[$ipdot[0] * 4 + 2] . $index[$ipdot[0] * 4 + 3]);
+
+        for ($start = $start['len'] * 8 + 1024; $start < $length; $start += 8) {
+
+            if ($index{$start} . $index{$start + 1} . $index{$start + 2} . $index{$start + 3} >= $ip) {
+                $index_offset = @unpack('Vlen', $index{$start + 4} . $index{$start + 5} . $index{$start + 6} . "\x0");
+                $index_length = @unpack('Clen', $index{$start + 7});
+                break;
+            }
+        }
+
+        @fseek($fp, $offset['len'] + $index_offset['len'] - 1024);
+
+
+        if($index_length['len']) {
+            return @fread($fp, $index_length['len']);
+        } else {
+            return 'Unknown';
+        }
+
+    }
+
+    public static function getIpAddress($ip){
+        $ip_file = Yii::getAlias("@common")."/data/tinyipdata.dat" ;
+        $parse_ip =self::convertip_tiny($ip,$ip_file) ;
+        $parse_ip = str_replace("中国","",$parse_ip) ;
+
+        $strlen = mb_strlen($parse_ip) ;
+
+        //三个字的省特殊处理
+        $three_preg_rs = preg_match("/(黑龙江)|(内蒙古)|(新加坡)|(菲律宾)|(西班牙)|(意大利)|(葡萄牙)|(新西兰)|(肯尼亚)/",$parse_ip) ;
+
+        if($three_preg_rs){
+            if($strlen>3){
+                $province = mb_substr($parse_ip,0,3,'utf-8') ;
+                $city =  mb_substr($parse_ip,3,$strlen,'utf-8') ;
+            }else{
+                $province = mb_substr($parse_ip,0,3,'utf-8') ;
+                $city = null ;
+            }
+        }else{
+            if($strlen>2){
+                $province = mb_substr($parse_ip,0,2,'utf-8') ;
+                $city =  mb_substr($parse_ip,2,$strlen,'utf-8') ;
+            }else{
+                $province = mb_substr($parse_ip,0,2,'utf-8') ;
+                $city = null ;
+            }
+        }
+
+
+        $loaction = ["province"=>$province,"city"=>$city] ;
+        return $loaction ;
     }
 
 }

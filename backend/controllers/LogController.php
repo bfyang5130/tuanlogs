@@ -3,7 +3,9 @@
 namespace backend\controllers;
 
 use backend\services\AccessLogService;
+use backend\services\IpLocationService;
 use backend\services\ToolService;
+use Composer\Package\Loader\ValidatingArrayLoader;
 use Faker\Provider\Base;
 use Yii;
 use yii\data\Sort;
@@ -26,7 +28,7 @@ class LogController extends Controller {
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['nginx-access-file','iis-access-file','dist-one','dist-two'],
+                        'actions' => ['nginx-access-file'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -41,94 +43,70 @@ class LogController extends Controller {
         ];
     }
 
-
     /**
-     * 分发17机子
-     */
-    public function actionDistOne(){
-        //17机子的目录
-        $dir = Yii::getAlias("@backend")."/resource17" ;
-        $handle = dir($dir) ;
-        $source = "17" ;
-        while($entry = $handle->read()) {
-            if(!in_array($entry, array('.', '..'))){
-                $file_url = $dir."/".$entry ;
-                $total_line = ToolService::count_line($file_url) ;
-                $short_name = ToolService::parseFileName($entry) ;
-                $dist_num = ceil($total_line/ToolService::DISTRIBUTE_NUM) ;
-                for($i=0;$i<$dist_num;$i++){
-                    $str_num = $i*ToolService::DISTRIBUTE_NUM + 1;
-                    $out = popen("../../yii log-deal/front-distribute $str_num $file_url $short_name $source $total_line &", "r");
-                    pclose($out);
-                }
-            }
-        }
-        if(empty($file_url)){
-            $msg = $dir." 目录下没有可读取的文件" ;
-        }else{
-            $msg = "分发成功,请等待结果" ;
-        }
-        Yii::$app->getSession()->setFlash('message', $msg);
-        return $this->redirect(['/site/tip']) ;
-    }
-
-    /**
-     * 分发23机子
-     */
-    public function actionDistTwo(){
-        //23机子的目录
-        $dir = Yii::getAlias("@backend")."/resource23" ;
-        $handle = dir($dir) ;
-        $source = "23" ;
-        while($entry = $handle->read()) {
-            if(!in_array($entry, array('.', '..'))){
-                $file_url = $dir."/".$entry ;
-                $total_line = ToolService::count_line($file_url) ;
-                $short_name = ToolService::parseFileName($entry) ;
-                $dist_num = ceil($total_line/ToolService::DISTRIBUTE_NUM) ;
-                for($i=0;$i<$dist_num;$i++){
-                    $str_num = $i*ToolService::DISTRIBUTE_NUM + 1;
-                    $out = popen("../../yii log-deal/front-distribute $str_num $file_url $short_name $source $total_line &", "r");
-                    pclose($out);
-                }
-            }
-        }
-        if(empty($file_url)){
-            $msg = $dir." 目录下没有可读取的文件" ;
-        }else{
-            $msg = "分发成功,请等待结果" ;
-        }
-        Yii::$app->getSession()->setFlash('message', $msg);
-        return $this->redirect(['/site/tip']) ;
-    }
-
-
-    /**
-     * 读取nginx配置文件
+     * 分析nginx配置文件
      * @return type
      */
     public function actionNginxAccessFile(){
+        header("Content-type: text/html; charset=utf-8");
         set_time_limit(0) ;
-        ini_set('memory_limit','1024M');
+        ini_set('memory_limit','4024M');
         $save_rs = false ;
-        $sorce_file = "/resource/vip.tuandai.com.access.log" ;
-        $file_url = Yii::getAlias("@backend").$sorce_file ;
-        $total_line = ToolService::count_line($file_url) ;
-        $total_page = ceil($total_line/ToolService::READ_LINE) ;
-        for($i=0;$i<$total_page;$i++){
-            $start_num = $i*ToolService::READ_LINE+1 ;
-            $end_num = $i*ToolService::READ_LINE + ToolService::READ_LINE ;
-            $content_arr = ToolService::getFileLines($file_url,$start_num,$end_num) ;
-            $save_rs = AccessLogService::saveToDbForNginx($content_arr) ;
-            unset($content_arr) ;
+
+        $dir = Yii::getAlias("@backend")."/resource17" ;
+        $handle = dir($dir) ;
+        $source = "17" ;
+
+        while($entry = $handle->read()) {
+            if (!in_array($entry, array('.', '..'))) {
+                $file_url = $dir . "/" . $entry;
+
+                //获取文件名
+                $short_name = ToolService::parseFileName($entry) ;
+                //判断是否用cdn格式
+                $isCdn = ToolService::isCdn($short_name) ;
+
+                $cur_date = date("Y-m-d") ;
+                $deal_date = Yii::$app->cache->get("deal_date") ;
+
+                //日期不一致时,删除上次读到的最后一行,
+                //为隔天时,可以从第一行读取
+                $end_num_cache_name = "end_num".$entry ;
+                if($deal_date!=$cur_date){
+                    Yii::$app->cache->delete($end_num_cache_name);
+                }
+                //读取上次读到的最后一行
+                $last_end_num = empty(Yii::$app->cache->get($end_num_cache_name))?0:Yii::$app->cache->get($end_num_cache_name) ;
+
+                $total_line = ToolService::count_line($file_url) ;
+
+                $start_num = $last_end_num +1 ;
+                $end_num =  $total_line;
+                $content_arr = ToolService::getFileLines($file_url,$start_num,$end_num) ;
+                $save_rs = AccessLogService::analyForNginx($content_arr,$isCdn,$short_name,null) ;
+                unset($content_arr) ;
+
+                //记录读到的最后一行
+                Yii::$app->cache->set($end_num_cache_name,$total_line) ;
+                //记录日期
+                Yii::$app->cache->set("deal_date",date("Y-m-d")) ;
+
+                if($save_rs==true) {
+                    //处理完后删除文件,防范重复入库
+//                  @unlink($file_url);
+                }
+            }
         }
-        if($save_rs==true) {
-            //处理完后删除文件,防范重复入库
-//        @unlink($file_url);
+
+        if(empty($file_url)){
+            $msg = $dir." 目录下没有可读取的文件" ;
+        }else{
+            $msg = "处理成功" ;
         }
-        Yii::$app->getSession()->setFlash('message', '处理成功');
+        Yii::$app->getSession()->setFlash('message', $msg);
         return $this->redirect(['site/tip']) ;
     }
+
 
     /**
      * 读取iis配置文件

@@ -37,3 +37,5 @@ phpunit.phar
 /backend/resource17
 /backend/resource23
 !/backend/config/main.php
+!/backend/config/bootstrap.php
+!/backend/config/params.php

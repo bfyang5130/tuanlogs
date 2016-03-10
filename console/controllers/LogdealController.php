@@ -23,6 +23,7 @@ class LogdealController extends Controller {
      * @return type
      */
     public function actionNginxaccessfile($message = '17', $fitdata = '') {
+        //
         set_time_limit(0);
         ini_set('memory_limit', '4024M');
         $save_rs = false;

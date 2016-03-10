@@ -44,7 +44,6 @@ class LogdealController extends Controller {
         while ($entry = $handle->read()) {
             if (!in_array($entry, array('.', '..'))) {
                 $file_url = $dir . "/" . $entry;
-
                 //获取文件名
                 $short_name = ToolService::parseFileName($entry);
                 //判断是否用cdn格式
@@ -63,7 +62,6 @@ class LogdealController extends Controller {
                 $last_end_num = empty(Yii::$app->cache->get($end_num_cache_name)) ? 0 : Yii::$app->cache->get($end_num_cache_name);
 
                 $total_line = ToolService::count_line($file_url);
-
                 $start_num = $last_end_num + 1;
                 $end_num = $total_line;
                 $content_arr = ToolService::getFileLines($file_url, $start_num, $end_num);

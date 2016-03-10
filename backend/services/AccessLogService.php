@@ -22,22 +22,39 @@ class AccessLogService {
      * @param string $source
      * @return bool
      */
-    public static function analyForNginx($content_arr, $cdn_tag = false, $short_name = '', $source = '') {
-        $access_statistic_arr = [];
-        $request_type_arr = [];
-        $protocol_arr = [];
-        $user_ip1_city_arr = [];
-        $user_ip1_province_arr = [];
-        $mobile_arr = [];
-        $plat_form_arr = [];
-        $browser_arr = [];
-        $status_arr = [];
-        $total_content_size = 0;
-        $total_take_time = 0;
-        $num = 0;
-        $end_check_time = null;
-        $str_check_time = 0;
+    public static function analyForNginx($content_arr, $cdn_tag = false, $short_name = '', $source = '', $endDateNumFit = false, $str_check_time = 0, $preArray = array()) {
 
+        //如果存在上一次处理留下来的数据，那么数据继续跑跑跑。。
+        if (!empty($preArray)) {
+            $access_statistic_arr = $preArray['access_statistic_arr']; //--
+            $request_type_arr = $preArray['request_type_arr']; //--
+            $protocol_arr = $preArray['protocol_arr']; //--
+            $user_ip1_city_arr = $preArray['user_ip1_city_arr']; //--
+            $user_ip1_province_arr = $preArray['user_ip1_province_arr']; //--
+            $mobile_arr = $preArray['mobile_arr']; //--
+            $plat_form_arr = $preArray['plat_form_arr']; //--
+            $browser_arr = $preArray['browser_arr']; //--
+            $status_arr = $preArray['status_arr']; //--
+            $total_content_size = $preArray['total_content_size'];
+            $total_take_time = $preArray['total_take_time'];
+        } else {
+            $access_statistic_arr = []; //--
+            $request_type_arr = []; //--
+            $protocol_arr = []; //--
+            $user_ip1_city_arr = []; //--
+            $user_ip1_province_arr = []; //--
+            $mobile_arr = []; //--
+            $plat_form_arr = []; //--
+            $browser_arr = []; //--
+            $status_arr = []; //--
+            $total_content_size = 0; //--
+            $total_take_time = 0; //--
+        }
+        $num = 0;
+        //计算总共的行数
+        $content_arrCount = count($content_arr);
+        //开始循环处理每一行的信息
+        $content_arr_count = 1;
         foreach ($content_arr as $c_val) {
             $parse_rs = ToolService::parseNginxAccessLog($c_val, $cdn_tag);
 
@@ -56,47 +73,38 @@ class AccessLogService {
             $time = empty($mat[2][0]) ? "" : $mat[2][0];
             if (empty($time)) {
                 $request_time = null;
+                //时间为空，那么就是当前这条有问题，直接跳过分析
+                continue;
             } else {
                 $request_time = ToolService::parseNginxDateTime($time);
             }
-
-            //空时或当前记录的request_time大于上次计算的next_check_time时重新给值
-            if (empty($end_check_time)) {
-                $str_check_time = strtotime(date("Y-m-d 00:00:00", strtotime($request_time)));
-                $end_check_time = strtotime("+10 minute", $str_check_time);
-
-                //如果请求时间大于每次10分钟的结束时间,证明中间有空格时间,需要算出正确的当前request_time处在的正确的区间
-                for ($i = 0; $i < 100; $i++) {
-                    if (strtotime($request_time) < $end_check_time && strtotime($request_time) > $str_check_time) {
-                        break;
-                    }
-                    $str_check_time = strtotime("+10 minute", $str_check_time);
-                    $end_check_time = strtotime("+10 minute", $str_check_time);
-                }
+            //处理当前时间为对应的数值
+            //对上一次10分钟处理的时间进行判断处理
+            if ($str_check_time == 0) {
+                //获得对应的分钟
+                $minshow = ToolService::getTenMinute(strtotime($request_time));
+                $str_check_time = strtotime(date("Y-m-d H:$minshow:00", strtotime($request_time)));
             }
-
-            if (strtotime($request_time) > $end_check_time) {
+            //处理当前的时间
+            //获得对应的分钟
+            $minshow = ToolService::getTenMinute(strtotime($request_time));
+            $thisdateTime = strtotime(date("Y-m-d H:$minshow:00", strtotime($request_time)));
+            //另外的10分钟已经开始数据开始入库
+            if ($thisdateTime > $str_check_time) {
+                //----------------------------
+                //todoing..............something这里有一个坑，如果没有数据的时候，做一下判断
                 //每10分入库
-                $end_format_time = date("Y-m-d H:i:s", $end_check_time);
+                $end_format_time = date("Y-m-d H:i:s", $str_check_time);
                 $access_statistic_arr = self::arrDeal($request_type_arr, $status_arr, $protocol_arr, $plat_form_arr, $mobile_arr, $browser_arr, $user_ip1_province_arr, $user_ip1_city_arr, $total_content_size, $total_take_time, $end_format_time, $short_name);
                 if ($source == '21') {
                     self::batchSaveAccessStatistic($access_statistic_arr);
                 } else {
                     self::batchSaveAccessStatisticOne($access_statistic_arr);
                 }
-                unset($access_statistic_arr);
-
-                //如果请求时间大于每次10分钟的结束时间,证明中间有空格时间,需要算出正确的当前request_time处在的正确的区间
-                for ($i = 0; $i < 100; $i++) {
-                    if (strtotime($request_time) < $end_check_time && strtotime($request_time) > $str_check_time) {
-                        break;
-                    }
-                    $str_check_time = strtotime("+10 minute", $str_check_time);
-                    $end_check_time = strtotime("+10 minute", $str_check_time);
-                }
+                $access_statistic_arr=[];
+                //10分钟过后,那么开始检查的10分钟更改为装的10分钟
+                $str_check_time = $thisdateTime;
             }
-
-
             $request_info = empty($mat[3][0]) ? "" : $mat[3][0]; //再解析
             $request_mat = ToolService::parseRequestInfo($request_info);
             $request_type = empty($request_mat[1][0]) ? "" : $request_mat[1][0];
@@ -204,15 +212,44 @@ class AccessLogService {
             $total_take_time += $take_time;
 
             $num = $num + 1;
+            $content_arr_count++;
         }
-
-        if (!empty($total_content_size) && !empty($total_take_time)) {
-            $end_format_time = date("Y-m-d H:i:s", $end_check_time);
-            $access_statistic_arr = self::arrDeal($request_type_arr, $status_arr, $protocol_arr, $plat_form_arr, $mobile_arr, $browser_arr, $user_ip1_province_arr, $user_ip1_city_arr, $total_content_size, $total_take_time, $end_format_time, $short_name);
-            self::batchSaveAccessStatistic($access_statistic_arr);
-            unset($access_statistic_arr);
+        //最近的一部分数据走完之后，还没有达到10钟的条件
+        //如果已经走完所有的数据，那么直接进行入库处理
+        if ($endDateNumFit == true) {
+            //最近的数据
+            if (!empty($total_content_size) && !empty($total_take_time)) {
+                $end_format_time = date("Y-m-d H:i:s", $str_check_time);
+                $access_statistic_arr = self::arrDeal($request_type_arr, $status_arr, $protocol_arr, $plat_form_arr, $mobile_arr, $browser_arr, $user_ip1_province_arr, $user_ip1_city_arr, $total_content_size, $total_take_time, $end_format_time, $short_name);
+                
+                if ($source == '21') {
+                    self::batchSaveAccessStatistic($access_statistic_arr);
+                } else {
+                    self::batchSaveAccessStatisticOne($access_statistic_arr);
+                }
+                $access_statistic_arr=[];
+            }
+            return [];
+        } else {
+            //当前部分数据走完
+            //返回这部分数据待下次再进行处理
+            //doing some thing here ..........
+             $preArray['access_statistic_arr']=$access_statistic_arr; //--
+             $preArray['request_type_arr']=$request_type_arr; //--
+             $preArray['protocol_arr']=$protocol_arr; //--
+             $preArray['user_ip1_city_arr']=$user_ip1_city_arr; //--
+             $preArray['user_ip1_province_arr']=$user_ip1_province_arr; //--
+             $preArray['mobile_arr']=$mobile_arr; //--
+             $preArray['plat_form_arr']=$plat_form_arr; //--
+             $preArray['browser_arr']=$browser_arr; //--
+             $preArray['status_arr']=$status_arr; //--
+             $preArray['total_content_size']=$total_content_size;
+             $preArray['total_take_time']=$total_take_time;
+             return [
+                 'leaveDate'=>$preArray,
+                 'str_check_time'=>$str_check_time
+             ];
         }
-        return true;
     }
 
     public static function saveToDbForNginx($content_arr, $cdn_tag = false, $short_name = '', $source = '') {
@@ -272,7 +309,7 @@ class AccessLogService {
             $access_log_arr[] = [
                 $user_ip1, $user_ip2, $user_ip3, $user_ip4, $request_time, $request_type, $protocol, $access_address,
                 $status, $content_size, $http_referer, $user_agent, $plat_form, $browser, $take_time, $short_name, $source
-                    ];
+            ];
         }
         self::batchSaveNginxAccessLog($access_log_arr);
         return true;
@@ -331,7 +368,7 @@ class AccessLogService {
             $access_log_arr[] = [
                 $request_datetime, $server_ip, $request_type, $cs_url_stem, $cs_url_query, $server_port, $cs_username,
                 $client_ip, $user_agent, $system, $browser, $status, $sub_status, $w32_status, $time_taken
-                    ];
+            ];
 
             //每500条批量入库
             if ($num > 500) {
@@ -366,7 +403,9 @@ class AccessLogService {
                     AccessStatistic::tableName(), [
                 'CheckTime', 'TopType', 'DetailType1', 'DetailType2', 'Amount', 'LogType',
                     ], $access_statistic_arr);
-            $command->execute();
+            $abc=$command->execute();
+            echo $abc;
+            echo "\n";
         }
     }
 
@@ -387,7 +426,7 @@ class AccessLogService {
         foreach ($request_type_arr as $r_key => $r_val) {
             $access_statistic_arr[] = [
                 $check_time, "request_type", $r_key, '', $r_val, $short_name
-                    ];
+            ];
         }
         $request_type_arr = [];
 
@@ -395,7 +434,7 @@ class AccessLogService {
         foreach ($status_arr as $s_key => $s_val) {
             $access_statistic_arr[] = [
                 $check_time, "status", $s_key, '', $s_val, $short_name
-                    ];
+            ];
         }
         $status_arr = [];
 
@@ -403,7 +442,7 @@ class AccessLogService {
         foreach ($protocol_arr as $p_key => $p_val) {
             $access_statistic_arr[] = [
                 $check_time, "protocol", $p_key, '', $p_val, $short_name
-                    ];
+            ];
         }
         $protocol_arr = [];
 
@@ -411,7 +450,7 @@ class AccessLogService {
         foreach ($plat_form_arr as $pf_key => $pf_val) {
             $access_statistic_arr[] = [
                 $check_time, "plat_form", $pf_key, '', $pf_val, $short_name
-                    ];
+            ];
         }
         $plat_form_arr = [];
 
@@ -420,7 +459,7 @@ class AccessLogService {
             foreach ($m_val as $mb_key => $mb_val) {
                 $access_statistic_arr[] = [
                     $check_time, "plat_form", $m_key, $mb_key, $mb_val, $short_name
-                        ];
+                ];
             }
         }
         $mobile_arr = [];
@@ -428,7 +467,7 @@ class AccessLogService {
         foreach ($browser_arr as $b_key => $b_val) {
             $access_statistic_arr[] = [
                 $check_time, "browser", $b_key, '', $b_val, $short_name
-                    ];
+            ];
         }
         $browser_arr = [];
 
@@ -436,7 +475,7 @@ class AccessLogService {
         foreach ($user_ip1_province_arr as $ip_key => $ip_val) {
             $access_statistic_arr[] = [
                 $check_time, "user_ip_1", $ip_key, '', $ip_val, $short_name
-                    ];
+            ];
         }
         $user_ip1_province_arr = [];
 
@@ -445,7 +484,7 @@ class AccessLogService {
             foreach ($ic_val_arr as $c_key => $c_val) {
                 $access_statistic_arr[] = [
                     $check_time, "user_ip_1", $ic_key, $c_key, $c_val, $short_name
-                        ];
+                ];
             }
         }
         $user_ip1_city_arr = [];
@@ -454,13 +493,13 @@ class AccessLogService {
         //内容大小
         $access_statistic_arr[] = [
             $check_time, "content_size", '', '', $total_content_size, $short_name
-                ];
+        ];
         $total_content_size = 0;
 
         //花费时间
         $access_statistic_arr[] = [
             $check_time, "take_time", '', '', $total_take_time, $short_name
-                ];
+        ];
         $total_take_time = 0;
         return $access_statistic_arr;
     }

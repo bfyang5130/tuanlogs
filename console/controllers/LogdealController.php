@@ -52,7 +52,7 @@ class LogdealController extends Controller {
                 //判断是否用cdn格式
                 $isCdn = ToolService::isCdn($short_name);
 
-                $cur_date = date("Y-m-d");
+                $cur_date = $fitdata;
                 $deal_date = Yii::$app->cache->get("deal_date");
 
                 //日期不一致时,删除上次读到的最后一行,
@@ -61,14 +61,36 @@ class LogdealController extends Controller {
                 if ($deal_date != $cur_date) {
                     Yii::$app->cache->delete($end_num_cache_name);
                 }
+                Yii::$app->cache->delete($end_num_cache_name);
                 //读取上次读到 的最后一行
                 $last_end_num = empty(Yii::$app->cache->get($end_num_cache_name)) ? 0 : Yii::$app->cache->get($end_num_cache_name);
 
                 $total_line = ToolService::count_line($file_url);
                 $start_num = $last_end_num + 1;
                 $end_num = $total_line;
-                $content_arr = ToolService::getFileLines($file_url, $start_num, $end_num);
-                $save_rs = AccessLogService::analyForNginx($content_arr, $isCdn, $short_name,$source);
+                $save_rs = [];
+                //一次处理500条数据
+                while ($start_num < $end_num) {
+                    //设定要处理的终结行
+                    $fit_endNum = $start_num + 1000;
+                    //是否是最后一条数据的处理
+                    $endDateNumFit = false;
+                    if ($fit_endNum >= $end_num) {
+                        $fit_endNum = $end_num;
+                        $endDateNumFit = true;
+                    }
+                    //开始处理行数
+                    $content_arr = ToolService::getFileLines($file_url, $start_num, $fit_endNum);
+                    //$save_rs是前一次处理留下来的数据。这里做一下判断处理
+                    $st_check_t = 0; //上次的检查时间
+                    $preA = []; //上次处理留下的数据
+                    if (!empty($save_rs)) {
+                        $st_check_t = $save_rs['str_check_time'];
+                        $preA = $save_rs['leaveDate'];
+                    }
+                    $save_rs = AccessLogService::analyForNginx($content_arr, $isCdn, $short_name, $source, $endDateNumFit, $st_check_t, $preA);
+                    $start_num = $fit_endNum;
+                }
                 unset($content_arr);
 
                 //记录读到的最后一行
@@ -76,7 +98,7 @@ class LogdealController extends Controller {
                 //记录日期
                 Yii::$app->cache->set("deal_date", date("Y-m-d"));
 
-                if ($save_rs == true) {
+                if (empty($save_rs)) {
                     //处理完后删除文件,防范重复入库
 //                  @unlink($file_url);
                 }

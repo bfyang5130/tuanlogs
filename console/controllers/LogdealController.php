@@ -68,7 +68,7 @@ class LogdealController extends Controller {
                 $start_num = $last_end_num + 1;
                 $end_num = $total_line;
                 $content_arr = ToolService::getFileLines($file_url, $start_num, $end_num);
-                $save_rs = AccessLogService::analyForNginx($content_arr, $isCdn, $short_name, null);
+                $save_rs = AccessLogService::analyForNginx($content_arr, $isCdn, $short_name,$source);
                 unset($content_arr);
 
                 //记录读到的最后一行

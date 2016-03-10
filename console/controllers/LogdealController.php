@@ -18,12 +18,11 @@ use yii\filters\VerbFilter;
  */
 class LogdealController extends Controller {
 
-
     /**
      * 分析nginx配置文件
      * @return type
      */
-    public function actionNginxaccessfile($message = '17', $fitdata = ''){
+    public function actionNginxaccessfile($message = '17', $fitdata = '') {
         set_time_limit(0);
         ini_set('memory_limit', '4024M');
         $save_rs = false;
@@ -38,14 +37,17 @@ class LogdealController extends Controller {
             $dir = \Yii::$app->params['proxy21'];
             $source = "21";
         }
-        $dir.='/'.$fitdata;
+        $dir.='/' . $fitdata;
         $handle = dir($dir);
-
+        $fitFileArray = \Yii::$app->params['nginxfitfile'];
         while ($entry = $handle->read()) {
             if (!in_array($entry, array('.', '..'))) {
                 $file_url = $dir . "/" . $entry;
                 //获取文件名
                 $short_name = ToolService::parseFileName($entry);
+                if (!in_array($short_name, $fitFileArray)) {
+                    continue;
+                }
                 //判断是否用cdn格式
                 $isCdn = ToolService::isCdn($short_name);
 
@@ -58,7 +60,7 @@ class LogdealController extends Controller {
                 if ($deal_date != $cur_date) {
                     Yii::$app->cache->delete($end_num_cache_name);
                 }
-                //读取上次读到的最后一行
+                //读取上次读到 的最后一行
                 $last_end_num = empty(Yii::$app->cache->get($end_num_cache_name)) ? 0 : Yii::$app->cache->get($end_num_cache_name);
 
                 $total_line = ToolService::count_line($file_url);
@@ -87,17 +89,18 @@ class LogdealController extends Controller {
         }
         echo $msg;
     }
+
     //后台分发程序,直接在后台运行
-    public function actionBackDistribute(){
-        $save_rs = false ;
-        $sorce_file = "/resource/access.log" ;
-        $short_name = ToolService::parseFileName("access.log") ;
-        $file_url = Yii::getAlias("@backend").$sorce_file ;
-        $total_line = ToolService::count_line($file_url) ;
-        $dist_num = ceil($total_line/ToolService::DISTRIBUTE_NUM) ;
-        $source = "23" ;
-        for($i=0;$i<$dist_num;$i++){
-            $str_num = $i*ToolService::DISTRIBUTE_NUM + 1;
+    public function actionBackDistribute() {
+        $save_rs = false;
+        $sorce_file = "/resource/access.log";
+        $short_name = ToolService::parseFileName("access.log");
+        $file_url = Yii::getAlias("@backend") . $sorce_file;
+        $total_line = ToolService::count_line($file_url);
+        $dist_num = ceil($total_line / ToolService::DISTRIBUTE_NUM);
+        $source = "23";
+        for ($i = 0; $i < $dist_num; $i++) {
+            $str_num = $i * ToolService::DISTRIBUTE_NUM + 1;
             //阻塞
 //            exec("/home/wuxin/web/tuanlogs/yii demo/myfunc $str_num&") ;
             //异步,非阻塞,放在后台运行
@@ -107,26 +110,23 @@ class LogdealController extends Controller {
     }
 
     //供前台调用
-    public function actionFrontDistribute($str_num,$file_url,$short_name,$source,$total_line){
-        ini_set('memory_limit','1024M');
-        $isCdn = ToolService::isCdn($short_name) ;
-        $total_page = ceil(ToolService::DISTRIBUTE_NUM/ToolService::READ_LINE) ;
+    public function actionFrontDistribute($str_num, $file_url, $short_name, $source, $total_line) {
+        ini_set('memory_limit', '1024M');
+        $isCdn = ToolService::isCdn($short_name);
+        $total_page = ceil(ToolService::DISTRIBUTE_NUM / ToolService::READ_LINE);
         $end_num = $str_num + ToolService::DISTRIBUTE_NUM - 1;
-        if($end_num>=$total_line){
-            $end_num = $total_line ;
+        if ($end_num >= $total_line) {
+            $end_num = $total_line;
         }
-        $id = DistributeLogService::saveToDb($str_num,$end_num,$short_name,$file_url,$source) ;
-        for($i=0;$i<$total_page;$i++){
-            $start_num = $i*ToolService::READ_LINE + $str_num ;
-            $end_num = $start_num + ToolService::READ_LINE - 1 ;
-            $content_arr = ToolService::getFileLines($file_url,$start_num,$end_num) ;
-            AccessLogService::saveToDbForNginx($content_arr,$isCdn,$short_name,$source) ;
-            unset($content_arr) ;
+        $id = DistributeLogService::saveToDb($str_num, $end_num, $short_name, $file_url, $source);
+        for ($i = 0; $i < $total_page; $i++) {
+            $start_num = $i * ToolService::READ_LINE + $str_num;
+            $end_num = $start_num + ToolService::READ_LINE - 1;
+            $content_arr = ToolService::getFileLines($file_url, $start_num, $end_num);
+            AccessLogService::saveToDbForNginx($content_arr, $isCdn, $short_name, $source);
+            unset($content_arr);
         }
-        DistributeLogService::updateToDb($id) ;
+        DistributeLogService::updateToDb($id);
     }
-
-
-
 
 }

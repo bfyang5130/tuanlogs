@@ -16,8 +16,7 @@ use yii\filters\VerbFilter;
 /**
  * 日志处理后台程序
  */
-class LogDealController extends Controller {
-
+class LogDealController extends Controller{
 
     /**
      * 分析nginx配置文件

@@ -40,7 +40,9 @@ class LogdealController extends Controller {
         }
         $dir.='/' . $fitdata;
         $handle = dir($dir);
+
         $fitFileArray = \Yii::$app->params['nginxfitfile'];
+        
         while ($entry = $handle->read()) {
             if (!in_array($entry, array('.', '..'))) {
                 $file_url = $dir . "/" . $entry;

@@ -20,11 +20,11 @@ class AccessLogService {
      * @param bool|false $cdn_tag
      * @param string $short_name
      * @param string $source
-     * @return bool
+     * @return array
      */
-    public static function analyForNginx($content_arr, $cdn_tag = false, $short_name = '', $source = '', $endDateNumFit = false, $str_check_time = 0, $preArray = array()) {
+    public static function analyForNginx($content_arr, $cdn_tag = false, $short_name = '', $source = '', $endDateNumFit = false, $str_check_time = 0, $preArray = array(), $writeLine = 0, $end_num_cache_name = '') {
 
-        //如果存在上一次处理留下来的数据，那么数据继续跑跑跑。。
+        //如果存在上一次处理留下来的数据，那么数据继续跑跑跑。
         if (!empty($preArray)) {
             $access_statistic_arr = $preArray['access_statistic_arr']; //--
             $request_type_arr = $preArray['request_type_arr']; //--
@@ -74,6 +74,8 @@ class AccessLogService {
             if (empty($time)) {
                 $request_time = null;
                 //时间为空，那么就是当前这条有问题，直接跳过分析
+                //记录读到的行数，用来做异常处理
+                $writeLine++;
                 continue;
             } else {
                 $request_time = ToolService::parseNginxDateTime($time);
@@ -97,11 +99,11 @@ class AccessLogService {
                 $end_format_time = date("Y-m-d H:i:s", $str_check_time);
                 $access_statistic_arr = self::arrDeal($request_type_arr, $status_arr, $protocol_arr, $plat_form_arr, $mobile_arr, $browser_arr, $user_ip1_province_arr, $user_ip1_city_arr, $total_content_size, $total_take_time, $end_format_time, $short_name);
                 if ($source == '21') {
-                    self::batchSaveAccessStatistic($access_statistic_arr);
+                    self::batchSaveAccessStatistic($access_statistic_arr, $writeLine, $end_num_cache_name);
                 } else {
-                    self::batchSaveAccessStatisticOne($access_statistic_arr);
+                    self::batchSaveAccessStatisticOne($access_statistic_arr, $writeLine, $end_num_cache_name);
                 }
-                $access_statistic_arr=[];
+                $access_statistic_arr = [];
                 //10分钟过后,那么开始检查的10分钟更改为装的10分钟
                 $str_check_time = $thisdateTime;
             }
@@ -213,6 +215,7 @@ class AccessLogService {
 
             $num = $num + 1;
             $content_arr_count++;
+            $writeLine++;
         }
         //最近的一部分数据走完之后，还没有达到10钟的条件
         //如果已经走完所有的数据，那么直接进行入库处理
@@ -221,34 +224,34 @@ class AccessLogService {
             if (!empty($total_content_size) && !empty($total_take_time)) {
                 $end_format_time = date("Y-m-d H:i:s", $str_check_time);
                 $access_statistic_arr = self::arrDeal($request_type_arr, $status_arr, $protocol_arr, $plat_form_arr, $mobile_arr, $browser_arr, $user_ip1_province_arr, $user_ip1_city_arr, $total_content_size, $total_take_time, $end_format_time, $short_name);
-                
+
                 if ($source == '21') {
-                    self::batchSaveAccessStatistic($access_statistic_arr);
+                    self::batchSaveAccessStatistic($access_statistic_arr, $writeLine, $end_num_cache_name);
                 } else {
-                    self::batchSaveAccessStatisticOne($access_statistic_arr);
+                    self::batchSaveAccessStatisticOne($access_statistic_arr, $writeLine, $end_num_cache_name);
                 }
-                $access_statistic_arr=[];
+                $access_statistic_arr = [];
             }
             return [];
         } else {
             //当前部分数据走完
             //返回这部分数据待下次再进行处理
             //doing some thing here ..........
-             $preArray['access_statistic_arr']=$access_statistic_arr; //--
-             $preArray['request_type_arr']=$request_type_arr; //--
-             $preArray['protocol_arr']=$protocol_arr; //--
-             $preArray['user_ip1_city_arr']=$user_ip1_city_arr; //--
-             $preArray['user_ip1_province_arr']=$user_ip1_province_arr; //--
-             $preArray['mobile_arr']=$mobile_arr; //--
-             $preArray['plat_form_arr']=$plat_form_arr; //--
-             $preArray['browser_arr']=$browser_arr; //--
-             $preArray['status_arr']=$status_arr; //--
-             $preArray['total_content_size']=$total_content_size;
-             $preArray['total_take_time']=$total_take_time;
-             return [
-                 'leaveDate'=>$preArray,
-                 'str_check_time'=>$str_check_time
-             ];
+            $preArray['access_statistic_arr'] = $access_statistic_arr; //--
+            $preArray['request_type_arr'] = $request_type_arr; //--
+            $preArray['protocol_arr'] = $protocol_arr; //--
+            $preArray['user_ip1_city_arr'] = $user_ip1_city_arr; //--
+            $preArray['user_ip1_province_arr'] = $user_ip1_province_arr; //--
+            $preArray['mobile_arr'] = $mobile_arr; //--
+            $preArray['plat_form_arr'] = $plat_form_arr; //--
+            $preArray['browser_arr'] = $browser_arr; //--
+            $preArray['status_arr'] = $status_arr; //--
+            $preArray['total_content_size'] = $total_content_size;
+            $preArray['total_take_time'] = $total_take_time;
+            return [
+                'leaveDate' => $preArray,
+                'str_check_time' => $str_check_time
+            ];
         }
     }
 
@@ -396,28 +399,52 @@ class AccessLogService {
     }
 
     //入AccessStatistic库
-    private static function batchSaveAccessStatistic($access_statistic_arr) {
+    private static function batchSaveAccessStatistic($access_statistic_arr, $writeLine, $end_num_cache_name) {
         if (!empty($access_statistic_arr)) {
-            $command = \Yii::$app->db->createCommand();
-            $command->batchInsert(
-                    AccessStatistic::tableName(), [
-                'CheckTime', 'TopType', 'DetailType1', 'DetailType2', 'Amount', 'LogType',
-                    ], $access_statistic_arr);
-            $abc=$command->execute();
-            echo $abc;
-            echo "\n";
+            try {
+                $command = \Yii::$app->db->createCommand();
+                $command->batchInsert(
+                        AccessStatistic::tableName(), [
+                    'CheckTime', 'TopType', 'DetailType1', 'DetailType2', 'Amount', 'LogType',
+                        ], $access_statistic_arr);
+                $abc = $command->execute();
+                \Yii::$app->cache->set($end_num_cache_name, $writeLine);
+                echo "当前处理到";
+                echo "\n";
+                echo $writeLine;
+                echo "\n";
+                echo $abc;
+                echo "\n";
+            } catch (yii\db\Exception $e) {
+                //记录读到的最后一行,没有处理的行会被后退
+                print_r($e);
+                exit;
+            }
         }
     }
 
     //入AccessStatisticOne库
-    private static function batchSaveAccessStatisticOne($access_statistic_arr) {
+    private static function batchSaveAccessStatisticOne($access_statistic_arr, $writeLine, $end_num_cache_name) {
         if (!empty($access_statistic_arr)) {
-            $command = \Yii::$app->db->createCommand();
-            $command->batchInsert(
-                    AccessStatisticOne::tableName(), [
-                'CheckTime', 'TopType', 'DetailType1', 'DetailType2', 'Amount', 'LogType',
-                    ], $access_statistic_arr);
-            $command->execute();
+            try {
+                $command = \Yii::$app->db->createCommand();
+                $command->batchInsert(
+                        AccessStatisticOne::tableName(), [
+                    'CheckTime', 'TopType', 'DetailType1', 'DetailType2', 'Amount', 'LogType',
+                        ], $access_statistic_arr);
+                $abc = $command->execute();
+                \Yii::$app->cache->set($end_num_cache_name, $writeLine);
+                echo "当前处理到";
+                echo "\n";
+                echo $writeLine;
+                echo "\n";
+                echo $abc;
+                echo "\n";
+            } catch (yii\db\Exception $e) {
+                //记录读到的最后一行,没有处理的行会被后退
+                print_r($e);
+                exit;
+            }
         }
     }
 

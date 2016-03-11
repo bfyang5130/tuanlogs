@@ -60,11 +60,16 @@ class LogdealController extends Controller {
                 $end_num_cache_name = "end_num" . $entry;
                 if ($deal_date != $cur_date) {
                     Yii::$app->cache->delete($end_num_cache_name);
+                    Yii::$app->cache->set("deal_date", $cur_date);
                 }
-                Yii::$app->cache->delete($end_num_cache_name);
                 //读取上次读到 的最后一行
                 $last_end_num = empty(Yii::$app->cache->get($end_num_cache_name)) ? 0 : Yii::$app->cache->get($end_num_cache_name);
-
+                echo 'filename:';
+                echo "\n";
+                echo $file_url;
+                echo 'thisRemark';
+                echo $last_end_num;
+                echo "\n";
                 $total_line = ToolService::count_line($file_url);
                 $start_num = $last_end_num + 1;
                 $end_num = $total_line;
@@ -88,7 +93,7 @@ class LogdealController extends Controller {
                         $st_check_t = $save_rs['str_check_time'];
                         $preA = $save_rs['leaveDate'];
                     }
-                    $save_rs = AccessLogService::analyForNginx($content_arr, $isCdn, $short_name, $source, $endDateNumFit, $st_check_t, $preA);
+                    $save_rs = AccessLogService::analyForNginx($content_arr, $isCdn, $short_name, $source, $endDateNumFit, $st_check_t, $preA,$start_num,$end_num_cache_name);
                     $start_num = $fit_endNum;
                 }
                 unset($content_arr);
@@ -96,7 +101,7 @@ class LogdealController extends Controller {
                 //记录读到的最后一行
                 Yii::$app->cache->set($end_num_cache_name, $total_line);
                 //记录日期
-                Yii::$app->cache->set("deal_date", date("Y-m-d"));
+                Yii::$app->cache->set("deal_date", $cur_date);
 
                 if (empty($save_rs)) {
                     //处理完后删除文件,防范重复入库

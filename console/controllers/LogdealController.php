@@ -20,6 +20,8 @@ class LogdealController extends Controller {
 
     /**
      * 分析nginx配置文件
+     * $message string 指定是那个代理的文件
+     * $fitdata string 指定是那一天的数据
      * @return type
      */
     public function actionNginxaccessfile($message = '17', $fitdata = '') {
@@ -27,9 +29,13 @@ class LogdealController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '4024M');
         $save_rs = false;
+        //步增判断，当天的数据，最后一部分的数据不会入库
+        $step = TRUE;
         //如果有传入时间参数那么以时间参数为准 
         if (empty($fitdata)) {
             $fitdata = date("Ymd", time());
+        } else {
+            $step = FALSE;
         }
         if ($message == '17') {
             $dir = \Yii::$app->params['proxy17'];
@@ -42,7 +48,7 @@ class LogdealController extends Controller {
         $handle = dir($dir);
 
         $fitFileArray = \Yii::$app->params['nginxfitfile'];
-        
+
         while ($entry = $handle->read()) {
             if (!in_array($entry, array('.', '..'))) {
                 $file_url = $dir . "/" . $entry;
@@ -95,7 +101,7 @@ class LogdealController extends Controller {
                         $st_check_t = $save_rs['str_check_time'];
                         $preA = $save_rs['leaveDate'];
                     }
-                    $save_rs = AccessLogService::analyForNginx($content_arr, $isCdn, $short_name, $source, $endDateNumFit, $st_check_t, $preA,$start_num,$end_num_cache_name);
+                    $save_rs = AccessLogService::analyForNginx($content_arr, $isCdn, $short_name, $source, $endDateNumFit, $st_check_t, $preA, $start_num, $end_num_cache_name,$step);
                     $start_num = $fit_endNum;
                 }
                 unset($content_arr);

@@ -22,7 +22,7 @@ class AccessLogService {
      * @param string $source
      * @return array
      */
-    public static function analyForNginx($content_arr, $cdn_tag = false, $short_name = '', $source = '', $endDateNumFit = false, $str_check_time = 0, $preArray = array(), $writeLine = 0, $end_num_cache_name = '') {
+    public static function analyForNginx($content_arr, $cdn_tag = false, $short_name = '', $source = '', $endDateNumFit = false, $str_check_time = 0, $preArray = array(), $writeLine = 0, $end_num_cache_name = '',$step=true) {
 
         //如果存在上一次处理留下来的数据，那么数据继续跑跑跑。
         if (!empty($preArray)) {
@@ -99,9 +99,9 @@ class AccessLogService {
                 $end_format_time = date("Y-m-d H:i:s", $str_check_time);
                 $access_statistic_arr = self::arrDeal($request_type_arr, $status_arr, $protocol_arr, $plat_form_arr, $mobile_arr, $browser_arr, $user_ip1_province_arr, $user_ip1_city_arr, $total_content_size, $total_take_time, $end_format_time, $short_name);
                 if ($source == '21') {
-                    self::batchSaveAccessStatistic($access_statistic_arr, $writeLine, $end_num_cache_name);
+                    self::batchSaveAccessStatistic($access_statistic_arr, $writeLine, $end_num_cache_name,$end_format_time);
                 } else {
-                    self::batchSaveAccessStatisticOne($access_statistic_arr, $writeLine, $end_num_cache_name);
+                    self::batchSaveAccessStatisticOne($access_statistic_arr, $writeLine, $end_num_cache_name,$end_format_time);
                 }
                 $access_statistic_arr = [];
                 //10分钟过后,那么开始检查的10分钟更改为装的10分钟
@@ -218,17 +218,17 @@ class AccessLogService {
             $writeLine++;
         }
         //最近的一部分数据走完之后，还没有达到10钟的条件
-        //如果已经走完所有的数据，那么直接进行入库处理
-        if ($endDateNumFit == true) {
+        //如果已经走完所有的数据并且不是步增(实时数据，如果处理前一天的数据就不是步增的，也就是说可以把余下的数据入库,如果是实时的，无法判断这一部分数据是那个区间段的),，那么直接进行入库处理
+        if ($endDateNumFit == true&&$step==FALSE) {
             //最近的数据
             if (!empty($total_content_size) && !empty($total_take_time)) {
                 $end_format_time = date("Y-m-d H:i:s", $str_check_time);
                 $access_statistic_arr = self::arrDeal($request_type_arr, $status_arr, $protocol_arr, $plat_form_arr, $mobile_arr, $browser_arr, $user_ip1_province_arr, $user_ip1_city_arr, $total_content_size, $total_take_time, $end_format_time, $short_name);
 
                 if ($source == '21') {
-                    self::batchSaveAccessStatistic($access_statistic_arr, $writeLine, $end_num_cache_name);
+                    self::batchSaveAccessStatistic($access_statistic_arr, $writeLine, $end_num_cache_name,$end_format_time);
                 } else {
-                    self::batchSaveAccessStatisticOne($access_statistic_arr, $writeLine, $end_num_cache_name);
+                    self::batchSaveAccessStatisticOne($access_statistic_arr, $writeLine, $end_num_cache_name,$end_format_time);
                 }
                 $access_statistic_arr = [];
             }
@@ -399,7 +399,7 @@ class AccessLogService {
     }
 
     //入AccessStatistic库
-    private static function batchSaveAccessStatistic($access_statistic_arr, $writeLine, $end_num_cache_name) {
+    private static function batchSaveAccessStatistic($access_statistic_arr, $writeLine, $end_num_cache_name,$checktime) {
         if (!empty($access_statistic_arr)) {
             try {
                 $command = \Yii::$app->db->createCommand();
@@ -413,6 +413,8 @@ class AccessLogService {
                 echo "\n";
                 echo $writeLine;
                 echo "\n";
+                echo $checktime;
+                echo "\n";
                 echo $abc;
                 echo "\n";
             } catch (yii\db\Exception $e) {
@@ -424,7 +426,7 @@ class AccessLogService {
     }
 
     //入AccessStatisticOne库
-    private static function batchSaveAccessStatisticOne($access_statistic_arr, $writeLine, $end_num_cache_name) {
+    private static function batchSaveAccessStatisticOne($access_statistic_arr, $writeLine, $end_num_cache_name,$checktime) {
         if (!empty($access_statistic_arr)) {
             try {
                 $command = \Yii::$app->db->createCommand();
@@ -437,6 +439,8 @@ class AccessLogService {
                 echo "当前处理到";
                 echo "\n";
                 echo $writeLine;
+                echo "\n";
+                echo $checktime;
                 echo "\n";
                 echo $abc;
                 echo "\n";

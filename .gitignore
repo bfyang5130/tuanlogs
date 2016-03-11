@@ -38,3 +38,4 @@ phpunit.phar
 !/backend/config/main.php
 !/backend/config/bootstrap.php
 !/backend/config/params.php
+!/backend/config/

@@ -2,6 +2,7 @@
 /* @var $this yii\web\View */
 
 use yii\widgets\Breadcrumbs;
+use backend\services\NginxService;
 
 $this->title = '访问日志';
 ?>
@@ -25,18 +26,19 @@ $this->title = '访问日志';
                     <div class="tab-pane active">
                         <div class="row">
                             <div class="col-lg-6">
+                                <?php
+                                //获得21今日访问情况
+                                $userVisits = NginxService::findOneVisitis('2016-02-26', NginxService::AccessStatistic)
+                                ?>
                                 <table class="table table-bordered table-striped table-condensed">
                                     <tbody>
                                         <tr>
                                             <td colspan="6"><h5>21代理服务器</h5></td>
                                         </tr>
                                         <tr>
-                                            <td>今日访问量：</td>
-                                            <td>10</td>
-                                            <td>总流量：</td>
-                                            <td>1000G</td>
-                                            <td>网站吞吐量：</td>
-                                            <td>10M/s</td>
+                                            <td>今日访问量：</td><td><?= $userVisits ?></td>
+                                            <td>总流量：</td><td>1000G</td>
+                                            <td>网站吞吐量：</td><td>10M/s</td>
                                         </tr>
                                     </tbody>
                                 </table>

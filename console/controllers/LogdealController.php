@@ -61,15 +61,14 @@ class LogdealController extends Controller {
                 $isCdn = ToolService::isCdn($short_name);
 
                 $cur_date = $fitdata;
-                $deal_date = Yii::$app->cache->get("deal_date".$entry);
+                $deal_date = Yii::$app->cache->get($source."deal_date".$entry);
 
                 //日期不一致时,删除上次读到的最后一行,
                 //为隔天时,可以从第一行读取
                 $end_num_cache_name = "end_num" . $entry;
-                Yii::$app->cache->set($end_num_cache_name, 241046);
                 if ($deal_date != $cur_date) {
                     Yii::$app->cache->delete($end_num_cache_name);
-                    Yii::$app->cache->set("deal_date".$entry, $cur_date);
+                    Yii::$app->cache->set($source."deal_date".$entry, $cur_date);
                 }
                 echo $end_num_cache_name;
                 echo "\n";
@@ -112,7 +111,7 @@ class LogdealController extends Controller {
                 //记录读到的最后一行
                 Yii::$app->cache->set($end_num_cache_name, $total_line);
                 //记录日期
-                Yii::$app->cache->set("deal_date".$entry, $cur_date);
+                Yii::$app->cache->set($source."deal_date".$entry, $cur_date);
 
                 if (empty($save_rs)) {
                     //处理完后删除文件,防范重复入库

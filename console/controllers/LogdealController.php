@@ -52,7 +52,7 @@ class LogdealController extends Controller {
         while ($entry = $handle->read()) {
             if (!in_array($entry, array('.', '..'))) {
                 $file_url = $dir . "/" . $entry;
-                //获取文件名
+                //获取文件名22
                 $short_name = ToolService::parseFileName($entry);
                 if (!in_array($short_name, $fitFileArray)) {
                     continue;

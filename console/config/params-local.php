@@ -1,8 +1,8 @@
 <?php
 return [
     'adminEmail' => 'admin@example.com',
-    'proxy17'=>Yii::getAlias("@backend")."/resource17",
-    'proxy21'=>"F:/tudailogbase/21_nginx_proxy/21_nginx_proxy",
+    'proxy17'=>"F:/tudailogbase/nginx_proxy_log/17_nginx_proxy",
+    'proxy21'=>"F:/tudailogbase/nginx_proxy_log/21_nginx_proxy",
     'iscdn'=>[
             'app.tuandai.com',
             'www.tuandai.com',

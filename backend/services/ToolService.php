@@ -96,19 +96,40 @@ class ToolService {
     //解析nginx-access日志
     public static function parseNginxAccessLog($body, $cdn_format = false) {
         $china_cache_rs = false;
-        if ($cdn_format == true) {
-            //使用CDN格式
-            preg_match_all('/(.*?)[\[](.*?)[\]]\s[\"](.*?)[\"]\s(\d{1,})\s(\d{1,})\s[\"](.*?)[\"]\s[\"](.*?)[\"]\s[\"](.*?)[\"].*?/', $body, $mat);
-        } else {
-            //不使用CDN格式
+        $special_parse_tag = Yii::$app->params['special_parse_tag'] ;
+        $mat = array() ;
+        //配置文件设置特别分割符,先按分割符分割
+        if(!empty($special_parse_tag)){
+            $ex_arr = explode($special_parse_tag,$body) ;
+            $ip1 = empty($ex_arr[0])?"-":$ex_arr[0] ;
+            $ip2 = empty($ex_arr[1])?"-":$ex_arr[1] ;
+            $ip3 = empty($ex_arr[2])?"-":$ex_arr[2] ;
+            $ip4 = empty($ex_arr[3])?"-":$ex_arr[3] ;
+            $mat[1][0] = $ip1." - ".$ip2." - ".$ip3." - ".$ip4 ;
+            $mat[2][0] = trim(empty($ex_arr[4])?"":$ex_arr[4]) ;
+            $mat[3][0] =  trim(preg_replace("/(\")/", "", empty($ex_arr[5])?"":$ex_arr[5]));
+            $mat[4][0] = trim(empty($ex_arr[6])?"":$ex_arr[6]) ;
+            $mat[5][0] = trim(empty($ex_arr[7])?"":$ex_arr[7]) ;
+            $mat[6][0] = trim(preg_replace("/(\")/", "", empty($ex_arr[8])?"":$ex_arr[8]));
+            $mat[7][0] = trim(preg_replace("/(\")/", "", empty($ex_arr[9])?"":$ex_arr[9]));
+            $mat[8][0] = trim(preg_replace("/(\")/", "", empty($ex_arr[10])?"":$ex_arr[10]));
+
             $china_cache_rs = preg_match('/(ChinaCache)/', $body);
-            if ($china_cache_rs == true) {
-                preg_match_all('/(.*?)[\[](.*?)[\]]\s[\"](.*?)[\"]\s(\d{1,})\s(\d{1,})\s[\"](.*?)[\"]\s[\"](.*?)[\"].*?/', $body, $mat);
+
+        }
+        //如果请求方式为空时,说明用分割符匹配不到,需按原来正则来解析
+        if(empty($mat[5][0])){
+            if ($cdn_format == true) {
+                //使用CDN格式
+                $cdn_parse = Yii::$app->params['cdn_parse'] ;
+                preg_match_all($cdn_parse, $body, $mat);
             } else {
-                preg_match_all('/(.*?)[\[](.*?)[\]]\s[\"](.*?)[\"]\s(\d{1,})\s(\d{1,})\s[\"](.*?)[\"]\s[\"](.*?)[\"].*?/', $body, $mat);
+                //不使用CDN格式
+                $china_cache_rs = preg_match('/(ChinaCache)/', $body);
+                $not_cdn_parse = Yii::$app->params['not_cdn_parse'] ;
+                preg_match_all($not_cdn_parse, $body, $mat);
             }
         }
-
         return array('mat' => $mat, 'china_cache_rs' => $china_cache_rs);
     }
 

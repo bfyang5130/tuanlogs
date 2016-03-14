@@ -64,6 +64,7 @@ class LogController extends Controller {
             $source = "21";
         }
         $dir.='/'.$fitdata;
+        $dir = Yii::getAlias("@backend")."/resource17" ;
         $handle = dir($dir);
 
         while ($entry = $handle->read()) {
@@ -84,6 +85,7 @@ class LogController extends Controller {
                 if ($deal_date != $cur_date) {
                     Yii::$app->cache->delete($end_num_cache_name);
                 }
+                Yii::$app->cache->delete($end_num_cache_name);
                 //读取上次读到的最后一行
                 $last_end_num = empty(Yii::$app->cache->get($end_num_cache_name)) ? 0 : Yii::$app->cache->get($end_num_cache_name);
 
@@ -92,7 +94,7 @@ class LogController extends Controller {
                 $start_num = $last_end_num + 1;
                 $end_num = $total_line;
                 $content_arr = ToolService::getFileLines($file_url, $start_num, $end_num);
-                $save_rs = AccessLogService::analyForNginx($content_arr, $isCdn, $short_name, null);
+                $save_rs = AccessLogService::analyForNginx($content_arr, $isCdn, $short_name, '17');
                 unset($content_arr);
 
                 //记录读到的最后一行

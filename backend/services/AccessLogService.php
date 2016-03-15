@@ -3,6 +3,8 @@
 namespace backend\services;
 
 use common\models\AccessLog;
+use common\models\AccessLogErrorStatus;
+use common\models\AccessLogSqlInject;
 use common\models\AccessStatistic;
 use common\models\AccessStatisticOne;
 use common\models\IisAccessLog;
@@ -99,6 +101,8 @@ class AccessLogService {
                 //todoing..............something这里有一个坑，如果没有数据的时候，做一下判断
                 //每10分入库
                 $end_format_time = date("Y-m-d H:i:s", $str_check_time);
+                //统计总访问量,入库
+                self::countRequest($request_type_arr,$source,$short_name) ;
                 $access_statistic_arr = self::arrDeal($request_type_arr, $status_arr, $protocol_arr, $plat_form_arr, $mobile_arr, $browser_arr, $user_ip1_province_arr, $user_ip1_city_arr, $total_content_size, $total_take_time, $end_format_time, $short_name);
                 if ($source == '21') {
                     self::batchSaveAccessStatistic($access_statistic_arr, $writeLine, $end_num_cache_name, $end_format_time);
@@ -118,6 +122,10 @@ class AccessLogService {
             $status = empty($mat[4][0]) ? 0 : $mat[4][0];
             $content_size = empty($mat[5][0]) ? 0 : $mat[5][0];
 
+            //状态400 500记录到日志中
+            self::addErrorStatusLog($status,$access_address,$user_ip1,$source,$short_name,$request_time) ;
+            //检查是否有sql注入,有的话记日志
+            self::addSqlInjectLog($c_val,$source,$short_name,$access_address);
 
             if ($china_cache_rs == false) {
                 $http_referer = empty($mat[6][0]) ? "" : $mat[6][0];
@@ -225,8 +233,8 @@ class AccessLogService {
             //最近的数据
             if (!empty($total_content_size) && !empty($total_take_time)) {
                 $end_format_time = date("Y-m-d H:i:s", $str_check_time);
+                self::countRequest($request_type_arr,$source,$short_name) ;
                 $access_statistic_arr = self::arrDeal($request_type_arr, $status_arr, $protocol_arr, $plat_form_arr, $mobile_arr, $browser_arr, $user_ip1_province_arr, $user_ip1_city_arr, $total_content_size, $total_take_time, $end_format_time, $short_name);
-
                 if ($source == '21') {
                     self::batchSaveAccessStatistic($access_statistic_arr, $writeLine, $end_num_cache_name, $end_format_time);
                 } else {
@@ -535,6 +543,91 @@ class AccessLogService {
         ];
         $total_take_time = 0;
         return $access_statistic_arr;
+    }
+
+    /**
+     * 统计一天的总的访问量
+     */
+    public static function countRequest($request_type_arr,$source,$log_type){
+        $total_request = 0 ;
+        foreach($request_type_arr as $val){
+            $total_request = $total_request+$val ;
+        }
+
+        $cur_date = date("Y-m-d 00:00:00") ;
+
+        if($source=='21'){
+            $access_statistic = AccessStatistic::find()
+                ->where(["CheckTime"=>$cur_date,"TopType"=>"total_access","LogType"=>$log_type])
+                ->one() ;
+
+            if(empty($access_statistic)){
+                //插入
+                $access_statistic = new AccessStatistic() ;
+                $access_statistic->CheckTime = $cur_date ;
+                $access_statistic->TopType = "total_access" ;
+                $access_statistic->Amount = $total_request ;
+                $access_statistic->LogType = $log_type ;
+                $access_statistic->save() ;
+            }else{
+                //更新
+                $access_statistic->Amount = $access_statistic->Amount + $total_request ;
+                $access_statistic->save() ;
+            }
+
+        }elseif($source=='17'){
+            $access_statistic_one = AccessStatisticOne::find()
+                ->where(["CheckTime"=>$cur_date,"TopType"=>"total_access","LogType"=>$log_type])
+                ->one() ;
+
+            if(empty($access_statistic_one)){
+                //插入
+                $access_statistic_one = new AccessStatisticOne() ;
+                $access_statistic_one->CheckTime = $cur_date ;
+                $access_statistic_one->TopType = "total_access" ;
+                $access_statistic_one->Amount = $total_request ;
+                $access_statistic_one->LogType = $log_type ;
+                $access_statistic_one->save() ;
+            }else{
+                //更新
+                $access_statistic_one->Amount = $access_statistic_one->Amount + $total_request ;
+                $access_statistic_one->save() ;
+            }
+        }
+
+    }
+
+    //400 500状态记录到日志
+    public static function addErrorStatusLog($status,$access_address,$user_ip1,$source,$short_name,$request_time){
+        $access_arr = ['400','500'] ;
+        if(!in_array($status,$access_arr)){
+            return ;
+        }
+        $as = new AccessLogErrorStatus() ;
+        $as->error_status = $status ;
+        $as->request_url = $access_address ;
+        $as->user_ip = $user_ip1 ;
+        $as->source = strval($source) ;
+        $as->log_type = $short_name ;
+        $as->request_time = $request_time ;
+        $as->add_time = date("Y-m-d H:i:s") ;
+        $as->save() ;
+    }
+
+    //检查是否有sql的关键字,有的话记录
+    public static function addSqlInjectLog($access_str,$source,$short_name,$request_url){
+
+        $match_rs = preg_match("/select|insert|and|or|update|delete|\'|\/\*|\*|\.\.\/|\.\/|union|into|load_file|outfile/", $request_url) ;
+        if($match_rs==false){
+            return ;
+        }
+        $ai = new AccessLogSqlInject() ;
+        $ai->access_str = $access_str ;
+        $ai->source = strval($source) ;
+        $ai->log_type = $short_name ;
+        $ai->add_time = date("Y-m-d H:i:s") ;
+        $ai->save() ;
+
     }
 
 }

@@ -87,8 +87,8 @@ if (empty($search_date)) {
                                                                     'dataLabels' => [
                                                                         'enabled' => false
                                                                     ],
+                                                                    'showInLegend' => true,
                                                                 ],
-                                                                'showInLegend' => true,
                                                                 'series' => [
                                                                     'cursor' => 'pointer',
                                                                     'point' => [

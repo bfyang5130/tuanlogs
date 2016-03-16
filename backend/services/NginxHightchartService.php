@@ -30,7 +30,7 @@ class NginxHightchartService {
         $ourCountry = [];
         $otherCountry = [];
         foreach ($dateString as $oneDate) {
-            $url = Url::to('/nginx/city.html?table='.$tableselect.'&date=' . $date . '&cityname=' . urlencode($oneDate[$groupstring]));
+            $url = Url::to('/nginx/city.html?table=' . $tableselect . '&date=' . $date . '&cityname=' . urlencode($oneDate[$groupstring]));
             if (in_array($oneDate[$groupstring], $fitOurCountry)) {
                 $ourCountry['categories'][] = $oneDate[$groupstring];
                 //再多一层的点击url
@@ -88,13 +88,24 @@ class NginxHightchartService {
         }
         $otherCountry = [];
         $otherCountry['series']['name'] = array_values($params);
+        $vist24Hours = [];
+        //把10分钟的数据处理成24小时数据
         foreach ($dateString as $oneDate) {
-            $otherCountry['categories'][] = date('H:i:s',strtotime($oneDate[$groupstring]));
-            $otherCountry['series']['data'][] = [date('H:i:s',strtotime($oneDate[$groupstring])), floatval($oneDate['totalNum'])];
-            
+            $fittime = date('H', strtotime($oneDate[$groupstring]));
+            if (!empty($vist24Hours[$fittime])) {
+                $vist24Hours[$fittime]+=floatval($oneDate['totalNum']);
+            } else {
+                //未有的数据就放进去
+                $otherCountry['categories'][] = date('H', strtotime($oneDate[$groupstring]));
+                $vist24Hours[$fittime] = floatval($oneDate['totalNum']);
+            }
+        }
+        foreach ($vist24Hours as $key=>$oneDate) {
+            $otherCountry['series']['data'][]=[$key,$oneDate];
         }
         return ['in_country' => $otherCountry];
     }
+
 }
 
 ?>

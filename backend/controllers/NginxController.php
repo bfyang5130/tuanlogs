@@ -28,7 +28,7 @@ class NginxController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => [ 'index', 'city'],
+                        'actions' => [ 'index', 'city','errorstatus'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -64,6 +64,13 @@ class NginxController extends Controller {
      */
     public function actionCity() {
         return $this->render('city');
+    }
+
+    /**
+     * 查看某一天的链接错误信息
+     */
+    public function actionErrorstatus() {
+        return $this->render('errorstatus');
     }
 
 }

@@ -5,6 +5,7 @@ use yii\widgets\Breadcrumbs;
 use backend\services\NginxService;
 use backend\services\NginxHightchartService;
 use miloschuman\highcharts\Highcharts;
+use yii\helpers\Url;
 
 $this->title = 'nginx访问统计';
 
@@ -245,8 +246,10 @@ if (empty($search_date)) {
                                                 <td><h5><?= $search_date ?>状态：</h5></td>
                                             </tr>
                                             <tr>
+                                                <td><a class="pull-right"  target="_blank"  href="<?= Url::toRoute('/nginx/errorstatus') . '?source=21&date=' . $search_date ?>">查看错误链接</a></td>
+                                            </tr>
+                                            <tr>
                                                 <td>
-                                                    <h4>响应状态</h4>
                                                     <?php
                                                     //获得访问来源
                                                     $pieflat_form = NginxHightchartService::getPiePlatHightChart($search_date, "TopType=:topT", [':topT' => 'status'], 'DetailType1', NginxHightchartService::AccessStatistic, '访问来源');
@@ -516,8 +519,10 @@ if (empty($search_date)) {
                                                 <td><h5><?= $search_date ?>状态：</h5></td>
                                             </tr>
                                             <tr>
+                                                <td><a class="pull-right" target="_blank" href="<?= Url::toRoute('/nginx/errorstatus') . '?table=17&date=' . $search_date ?>">查看错误链接</a></td>
+                                            </tr>
+                                            <tr>
                                                 <td>
-                                                    <h4>响应状态</h4>
                                                     <?php
                                                     //获得访问来源
                                                     $pieflat_form = NginxHightchartService::getPiePlatHightChart($search_date, "TopType=:topT", [':topT' => 'status'], 'DetailType1', NginxHightchartService::AccessStatisticOne, '访问来源');

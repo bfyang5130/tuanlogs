@@ -9,7 +9,7 @@ use Yii;
  *
  * @property integer $id
  * @property string $access_str
- * @property string $add_time
+ * @property string $request_time
  * @property string $source
  * @property string $log_type
  */
@@ -30,7 +30,7 @@ class AccessLogSqlInject extends \yii\db\ActiveRecord
     {
         return [
             [['access_str'], 'string'],
-            [['add_time'], 'safe'],
+            [['request_time'], 'safe'],
             [['source'], 'string', 'max' => 50],
             [['log_type'], 'string', 'max' => 255]
         ];
@@ -44,7 +44,7 @@ class AccessLogSqlInject extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'access_str' => '错误状态',
-            'add_time' => ' 添加时间',
+            'request_time' => ' 请求时间',
             'source' => ' 来源 17,23',
             'log_type' => ' 日志类型',
         ];

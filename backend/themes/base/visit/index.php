@@ -335,7 +335,7 @@ if (empty($search_date)) {
                                                     <h4>国内来源</h4>
                                                     <?php
                                                     //获得访问来源
-                                                    $pieComeFrom1 = NginxHightchartService::getPieHightChart($search_date, "TopType=:topT", [':topT' => 'user_ip_1'], 'DetailType1', NginxHightchartService::AccessStatisticOne, '访问来源');
+                                                    $pieComeFrom1 = NginxHightchartService::getPieHightChart($search_date, "TopType=:topT", [':topT' => 'user_ip_1'], 'DetailType1', NginxHightchartService::AccessStatisticOne, TRUE);
                                                     ?>
                                                     <?=
                                                     Highcharts::widget([
@@ -360,6 +360,14 @@ if (empty($search_date)) {
                                                                     ],
                                                                     'showInLegend' => true
                                                                 ],
+                                                                'series' => [
+                                                                    'cursor' => 'pointer',
+                                                                    'point' => [
+                                                                        'events' => [
+                                                                            'click' => new \yii\web\JsExpression('function(){window.open(this.options.url);}')
+                                                                        ]
+                                                                    ],
+                                                                ]
                                                             ],
                                                             'legend' => [
                                                                 'verticalAlign' => "bottom",

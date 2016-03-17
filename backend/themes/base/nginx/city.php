@@ -42,6 +42,7 @@ if (empty($cityname)) {
 
     <div class="body-content">
         <div class="panel panel-default">
+            <?= $this->render('common_top.php'); ?>
             <div class="panel-body">
                 <div class="tab-content">
                     <div class="tab-pane active">

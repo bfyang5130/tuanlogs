@@ -616,8 +616,14 @@ class AccessLogService {
 
     //检查是否有sql的关键字,有的话记录
     public static function addSqlInjectLog($access_str,$source,$short_name,$request_url,$request_time,$user_ip1){
+        $url_preg = preg_match("/.*?[\?](.*?)$/",$request_url,$mat) ;
+        //没有参数直接返回
+        if($url_preg==false){
+            return ;
+        }
 
-        $match_rs = preg_match("/select|insert|and|or|update|delete|\'|\/\*|\*|\.\.\/|\.\/|union|into|load_file|outfile/", $request_url) ;
+        $parm_url = empty($mat[1])?"":$mat[1] ;
+        $match_rs = preg_match("/select|insert|and|or|update|delete|\'|\/\*|\*|\.\.\/|\.\/|union|into|load_file|outfile/", $parm_url) ;
         if($match_rs==false){
             return ;
         }

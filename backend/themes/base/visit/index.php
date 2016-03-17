@@ -46,7 +46,7 @@ if (empty($search_date)) {
                                     <table class="table table-bordered table-striped table-condensed">
                                         <tbody>
                                             <tr>
-                                                <td colspan="6"><h5>21代理服务器<a class="pull-right" target="_blank" href="<?= Url::toRoute('/nginx/sqlattack') . '?table=17&date=' . $search_date ?>">查看sql注入攻击</a></h5></td>
+                                                <td colspan="6"><h5>21代理服务器<a class="pull-right" target="_blank" href="<?= Url::toRoute('/nginx/sqlattack') . '?table=21&date=' . $search_date ?>">查看sql注入攻击</a></h5></td>
                                             </tr>
                                             <tr>
                                                 <td><?= $search_date ?>访问量：</td><td><?= $userVisits ?></td>
@@ -316,7 +316,7 @@ if (empty($search_date)) {
                                     <table class="table table-bordered table-striped table-condensed">
                                         <tbody>
                                             <tr>
-                                                <td colspan="6"><h5>17代理服务器</h5></td>
+                                                <td colspan="6"><h5>17代理服务器<a class="pull-right" target="_blank" href="<?= Url::toRoute('/nginx/sqlattack') . '?table=17&date=' . $search_date ?>">查看sql注入攻击</a></h5></td>
                                             </tr>
                                             <tr>
                                                 <td><?= $search_date ?>访问量：</td><td><?= $userVisits ?></td>

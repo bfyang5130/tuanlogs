@@ -125,7 +125,7 @@ class AccessLogService {
             //状态400 500记录到日志中
             self::addErrorStatusLog($status,$access_address,$user_ip1,$source,$short_name,$request_time) ;
             //检查是否有sql注入,有的话记日志
-            self::addSqlInjectLog($c_val,$source,$short_name,$access_address,$request_time);
+            self::addSqlInjectLog($c_val,$source,$short_name,$access_address,$request_time,$user_ip1);
 
             if ($china_cache_rs == false) {
                 $http_referer = empty($mat[6][0]) ? "" : $mat[6][0];
@@ -615,7 +615,7 @@ class AccessLogService {
     }
 
     //检查是否有sql的关键字,有的话记录
-    public static function addSqlInjectLog($access_str,$source,$short_name,$request_url,$request_time){
+    public static function addSqlInjectLog($access_str,$source,$short_name,$request_url,$request_time,$user_ip1){
 
         $match_rs = preg_match("/select|insert|and|or|update|delete|\'|\/\*|\*|\.\.\/|\.\/|union|into|load_file|outfile/", $request_url) ;
         if($match_rs==false){
@@ -623,6 +623,7 @@ class AccessLogService {
         }
         $ai = new AccessLogSqlInject() ;
         $ai->access_str = $access_str ;
+        $ai->user_ip=$user_ip1;
         $ai->source = strval($source) ;
         $ai->log_type = $short_name ;
         $ai->request_time = $request_time ;

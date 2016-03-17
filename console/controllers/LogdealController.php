@@ -5,13 +5,8 @@ namespace console\controllers;
 use backend\services\AccessLogService;
 use backend\services\DistributeLogService;
 use backend\services\ToolService;
-use Faker\Provider\Base;
 use Yii;
 use yii\console\Controller;
-use yii\data\Sort;
-use yii\filters\AccessControl;
-use yii\helpers\ArrayHelper;
-use yii\filters\VerbFilter;
 
 /**
  * 日志处理后台程序

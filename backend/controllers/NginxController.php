@@ -2,12 +2,8 @@
 
 namespace backend\controllers;
 
-use backend\services\ErrorLogService;
-use Yii;
 use yii\filters\AccessControl;
-use yii\helpers\ArrayHelper;
 use yii\web\Controller;
-use common\models\LoginForm;
 use yii\filters\VerbFilter;
 
 /**
@@ -28,7 +24,7 @@ class NginxController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => [ 'index', 'city','errorstatus'],
+                        'actions' => [ 'index', 'city', 'errorstatus','sqlattack'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -71,6 +67,12 @@ class NginxController extends Controller {
      */
     public function actionErrorstatus() {
         return $this->render('errorstatus');
+    }
+    /**
+     * 查看sql攻击信息
+     */
+    public function actionSqlattack() {
+        return $this->render('sqlattack');
     }
 
 }

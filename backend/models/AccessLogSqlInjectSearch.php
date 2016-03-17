@@ -2,7 +2,7 @@
 
 namespace backend\models;
 
-use common\models\AccessLogErrorStatus;
+use common\models\AccessLogSqlInject;
 use yii\data\ActiveDataProvider;
 use yii\base\Model;
 
@@ -16,7 +16,7 @@ use yii\base\Model;
  *
  * @author Administrator
  */
-class AccessLogErrorStatusSearch extends AccessLogErrorStatus {
+class AccessLogSqlInjectSearch extends AccessLogSqlInject {
 
     public $start_date;
     public $end_date;
@@ -26,7 +26,7 @@ class AccessLogErrorStatusSearch extends AccessLogErrorStatus {
      */
     public function rules() {
         return [
-            [['error_status', 'user_ip', 'start_date','end_date', 'source', 'log_type'], 'safe'],
+            [['user_ip', 'start_date', 'end_date', 'source', 'log_type'], 'safe'],
         ];
     }
 
@@ -40,7 +40,7 @@ class AccessLogErrorStatusSearch extends AccessLogErrorStatus {
 
     //put your code here
     public function search($params) {
-        $query = AccessLogErrorStatus::find();
+        $query = AccessLogSqlInject::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -57,11 +57,9 @@ class AccessLogErrorStatusSearch extends AccessLogErrorStatus {
             return $dataProvider;
         }
 
-        $query->andFilterWhere(['error_status' => $this->error_status]);
-        $query->andFilterWhere(['user_ip' => $this->user_ip]);
         $query->andFilterWhere(['source' => $this->source]);
         $query->andFilterWhere(['log_type' => $this->log_type]);
-
+        $query->andFilterWhere(['user_ip' => $this->user_ip]);
         $query->andFilterWhere(['>=', 'request_time', $this->start_date]);
         $query->andFilterWhere(['<', 'request_time', $this->end_date]);
 

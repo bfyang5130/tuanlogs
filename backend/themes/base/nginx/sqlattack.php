@@ -12,29 +12,15 @@ $this->title = 'sql攻击信息';
 $params = \Yii::$app->request->get();
 $search_date = Yii::$app->request->get("date");
 //处理时间
-if (empty($search_date)) {
-    $search_date = date('Y-m-d');
-    $start_date = date('Y-m-d 00:00:00', strtotime($search_date));
-} else {
-    $start_date = date('Y-m-d 00:00:00', strtotime($search_date));
-}
-$end_date = date('Y-m-d 00:00:00', strtotime('+1 day', strtotime($start_date)));
-$params['start_date'] = $start_date;
-$params['end_date'] = $end_date;
-$table = Yii::$app->request->get("source");
+if (!empty($search_date)) {
+    $params['AccessLogSqlInjectSearch']['request_time'] = date('Y-m-d 00:00:00',  strtotime($search_date));
+  }
 //处理来源
-if (empty($table)) {
-    $table = 1;
+$source = Yii::$app->request->get("source");
+if (!empty($source)) {
+    $params['AccessLogSqlInjectSearch']['source'] = $source;
 }
-if ($table == 1) {
-    $table = 21;
-} else {
-    $table = 17;
-}
-$params['source'] = $table;
 $accLogErr = new AccessLogSqlInjectSearch();
-
-
 $thisDayErrorsLists = $accLogErr->search($params);
 $pager = $thisDayErrorsLists->getPagination();
 $datas = $thisDayErrorsLists->getModels();
@@ -69,7 +55,7 @@ if ($begin > $end) {
                                             <td colspan="3">
                                                 <?php
                                                 $form = ActiveForm::begin([
-                                                            'action' => ['/sql/index'],
+                                                            'action' => ['/nginx/sqlattack'],
                                                             'method' => 'get',
                                                 ]);
                                                 ?>

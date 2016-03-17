@@ -26,7 +26,7 @@ class AccessLogSqlInjectSearch extends AccessLogSqlInject {
      */
     public function rules() {
         return [
-            [['user_ip', 'start_date', 'end_date', 'source', 'log_type'], 'safe'],
+            [['request_time','user_ip', 'start_date', 'end_date', 'source', 'log_type'], 'safe'],
         ];
     }
 
@@ -40,6 +40,7 @@ class AccessLogSqlInjectSearch extends AccessLogSqlInject {
 
     //put your code here
     public function search($params) {
+
         $query = AccessLogSqlInject::find();
 
         $dataProvider = new ActiveDataProvider([
@@ -52,11 +53,13 @@ class AccessLogSqlInjectSearch extends AccessLogSqlInject {
         ]);
 
         $this->load($params);
-
         if (!$this->validate()) {
             return $dataProvider;
         }
-
+        if ($this->request_time) {
+            $this->start_date = $this->request_time;
+            $this->end_date = date('Y-m-d 00:00:00', strtotime('+1 day', strtotime($this->start_date)));
+        }
         $query->andFilterWhere(['source' => $this->source]);
         $query->andFilterWhere(['log_type' => $this->log_type]);
         $query->andFilterWhere(['user_ip' => $this->user_ip]);

@@ -26,7 +26,7 @@ class AccessLogErrorStatusSearch extends AccessLogErrorStatus {
      */
     public function rules() {
         return [
-            [['error_status', 'user_ip', 'start_date','end_date', 'source', 'log_type'], 'safe'],
+            [['request_time', 'error_status', 'user_ip', 'start_date', 'end_date', 'source', 'log_type'], 'safe'],
         ];
     }
 
@@ -56,7 +56,10 @@ class AccessLogErrorStatusSearch extends AccessLogErrorStatus {
         if (!$this->validate()) {
             return $dataProvider;
         }
-
+        if ($this->request_time) {
+            $this->start_date = $this->request_time;
+            $this->end_date = date('Y-m-d 00:00:00', strtotime('+1 day', strtotime($this->start_date)));
+        }
         $query->andFilterWhere(['error_status' => $this->error_status]);
         $query->andFilterWhere(['user_ip' => $this->user_ip]);
         $query->andFilterWhere(['source' => $this->source]);

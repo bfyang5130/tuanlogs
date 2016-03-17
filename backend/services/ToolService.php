@@ -331,9 +331,19 @@ class ToolService {
         $strlen = mb_strlen($parse_ip);
 
         //三个字的省特殊处理
-        $three_preg_rs = preg_match("/(黑龙江)|(内蒙古)|(新加坡)|(菲律宾)|(西班牙)|(意大利)|(葡萄牙)|(新西兰)|(肯尼亚)/", $parse_ip);
+        $three_preg_rs = preg_match("/(黑龙江)|(内蒙古)|(新加坡)|(菲律宾)|(西班牙)|(意大利)|(葡萄牙)|(新西兰)|(肯尼亚)|(俄罗斯)|(加拿大)|(乌克兰)|(以色列)|(伊拉克)|(土耳其)|(墨西哥)|(奥地利)|(阿根廷)/", $parse_ip);
 
-        if ($three_preg_rs) {
+        $four_preg_rs = preg_match("/(马来西亚)|(澳大利亚)|(白俄罗斯)|(马尔代夫)/", $parse_ip);
+
+        if($four_preg_rs){
+            if ($strlen > 4) {
+                $province = mb_substr($parse_ip, 0, 4, 'utf-8');
+                $city = mb_substr($parse_ip, 4, $strlen, 'utf-8');
+            } else {
+                $province = mb_substr($parse_ip, 0, 4, 'utf-8');
+                $city = null;
+            }
+        }elseif ($three_preg_rs) {
             if ($strlen > 3) {
                 $province = mb_substr($parse_ip, 0, 3, 'utf-8');
                 $city = mb_substr($parse_ip, 3, $strlen, 'utf-8');
@@ -349,6 +359,10 @@ class ToolService {
                 $province = mb_substr($parse_ip, 0, 2, 'utf-8');
                 $city = null;
             }
+        }
+
+        if(empty($province)&&empty($city)){
+            $province = "其它" ;
         }
 
 

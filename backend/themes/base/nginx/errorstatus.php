@@ -78,6 +78,9 @@ if ($begin > $end) {
                                                         <div class="col-md-12">
                                                             <label for="sqllogsearch-sqltext">用户IP：</label>
                                                             <?= Html::activeTextInput($accLogErr, 'user_ip', ['class' => 'form-control', 'style' => "width:200px"]) ?>
+                                                            <label for="sqllogsearch-sqltext">状态：</label>
+                                                            <?= Html::activeTextInput($accLogErr, 'error_status', ['class' => 'form-control', 'style' => 'width:100px']) ?>
+
                                                             <label for="sqllogsearch-sqltext">来源：</label>
                                                             <?= Html::activeTextInput($accLogErr, 'source', ['class' => 'form-control', 'style' => 'width:100px']) ?>
 
@@ -113,7 +116,8 @@ if ($begin > $end) {
                                     <tbody>
                                         <tr>
                                             <th>用户IP</th>
-                                            <th width="820px">请求地址</th>
+                                            <th>状态</th>
+                                            <th width="600px">请求地址</th>
                                             <th>请求时间</th>
                                             <th>请求域名</th>
                                             <th>来源</th>
@@ -121,7 +125,7 @@ if ($begin > $end) {
                                         <?php foreach ($datas as $oneErrorValue): ?>
                                             <tr>
                                                 <td class="center"><?= Html::encode($oneErrorValue['user_ip']) ?></td>
-
+                                                <td class="center"><?= Html::encode($oneErrorValue['error_status']) ?></td>
                                                 <td>
                                                     <code><?= Html::encode($oneErrorValue['request_url']) ?></code>
                                                 </td>
@@ -131,7 +135,7 @@ if ($begin > $end) {
                                             </tr>
                                         <?php endforeach; ?>
                                         <tr>
-                                            <td colspan="11" class="text-center">
+                                            <td colspan="6" class="text-center">
                                                 <?= LinkPager::widget(['pagination' => $pager]); ?>
                                             </td>
                                         </tr>

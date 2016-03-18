@@ -599,8 +599,7 @@ class AccessLogService {
 
     //400 500状态记录到日志
     public static function addErrorStatusLog($status,$access_address,$user_ip1,$source,$short_name,$request_time){
-        $access_arr = ['400','500'] ;
-        if(!in_array($status,$access_arr)){
+        if($status<400){
             return ;
         }
         $as = new AccessLogErrorStatus() ;

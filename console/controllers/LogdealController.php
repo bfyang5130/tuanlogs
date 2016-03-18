@@ -60,7 +60,7 @@ class LogdealController extends Controller {
 
                 //日期不一致时,删除上次读到的最后一行,
                 //为隔天时,可以从第一行读取
-                $end_num_cache_name = "end_num" . $entry;
+                $end_num_cache_name = $source."end_num" . $entry;
                 if ($deal_date != $cur_date) {
                     Yii::$app->cache->delete($end_num_cache_name);
                     Yii::$app->cache->set($source."deal_date".$entry, $cur_date);

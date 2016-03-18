@@ -122,10 +122,14 @@ class AccessLogService {
             $status = empty($mat[4][0]) ? 0 : $mat[4][0];
             $content_size = empty($mat[5][0]) ? 0 : $mat[5][0];
 
-            //状态400 500记录到日志中
-            self::addErrorStatusLog($status,$access_address,$user_ip1,$source,$short_name,$request_time) ;
-            //检查是否有sql注入,有的话记日志
-            self::addSqlInjectLog($c_val,$source,$short_name,$access_address,$request_time,$user_ip1);
+
+            $repeat_rs =self::checkRepeat($preArray,$num) ;
+            if($repeat_rs==true){
+                //状态400 500记录到日志中
+                self::addErrorStatusLog($status,$access_address,$user_ip1,$source,$short_name,$request_time) ;
+                //检查是否有sql注入,有的话记日志
+                self::addSqlInjectLog($c_val,$source,$short_name,$access_address,$request_time,$user_ip1);
+            }
 
             if ($china_cache_rs == false) {
                 $http_referer = empty($mat[6][0]) ? "" : $mat[6][0];
@@ -633,6 +637,28 @@ class AccessLogService {
         $ai->log_type = $short_name ;
         $ai->request_time = $request_time ;
         $ai->save() ;
+
+    }
+
+    public static function checkRepeat($pre_arr,$cur_num){
+        //没有10分钟前的记录,表示为新的记录,可以入库
+        if(empty($pre_arr)){
+            return true ;
+        }
+
+        $protocol_arr = $pre_arr['protocol_arr'] ;
+        //有10分钟的记录,检查当前行数是否大于上次未满10分钟的记录总和,小于上次总和,不入库,反之入库
+        $last_total_count = 0 ;
+        foreach($protocol_arr as $val){
+            $last_total_count = $last_total_count + $val ;
+        }
+
+        if($cur_num<=$last_total_count){
+            return false ;
+        }
+
+        return true ;
+
 
     }
 

@@ -68,6 +68,9 @@ class NginxHightchartService {
         }
         $otherCountry = [];
         foreach ($dateString as $oneDate) {
+            if (trim($oneDate[$groupstring]) == '') {
+                $oneDate[$groupstring] = '其他';
+            }
             $otherCountry['categories'][] = $oneDate[$groupstring];
             $otherCountry['series']['data'][] = ['name' => $oneDate[$groupstring], 'y' => floatval($oneDate['totalNum'])];
             $otherCountry['series']['colorByPoint'] = TRUE;
@@ -100,8 +103,8 @@ class NginxHightchartService {
                 $vist24Hours[$fittime] = floatval($oneDate['totalNum']);
             }
         }
-        foreach ($vist24Hours as $key=>$oneDate) {
-            $otherCountry['series']['data'][]=[$key,$oneDate];
+        foreach ($vist24Hours as $key => $oneDate) {
+            $otherCountry['series']['data'][] = [$key, $oneDate];
         }
         return ['in_country' => $otherCountry];
     }

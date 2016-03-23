@@ -28,7 +28,7 @@ class VisitController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => [ 'index'],
+                        'actions' => [ 'index', 'servicestatus'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -53,9 +53,20 @@ class VisitController extends Controller {
             ],
         ];
     }
+
+    /**
+     * 显示nginx访问首页
+     * @return type
+     */
     public function actionIndex() {
         return $this->render('index');
     }
 
+    /**
+     * 显示服务器状态
+     */
+    public function actionServicestatus() {
+        return $this->render('servicestatus');
+    }
 
 }

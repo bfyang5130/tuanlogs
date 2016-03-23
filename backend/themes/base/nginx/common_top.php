@@ -4,6 +4,14 @@ use yii\helpers\Url;
 
 $id = \Yii::$app->controller->action->id;
 $search_date = Yii::$app->request->get("search_date");
+if(empty($url)){
+   $url='/visit/index'; 
+}
+$ip = Yii::$app->request->get("ip");
+if (empty($ip)) {
+    $ip = '192.168.8.190';
+}
+$toUrl=Url::toRoute($url).'?ip='.$ip;
 ?>
 <div class="panel-heading">
     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
@@ -24,7 +32,7 @@ $search_date = Yii::$app->request->get("search_date");
                     'maxDate' => date("Y-m-d"),
                     'onSelect' => new \yii\web\JsExpression(
                             "function (dateText, inst) {
-                                            var url = '/visit/index.html?search_date='+ dateText;
+                                            var url = '$toUrl&search_date='+ dateText;
                                             location.href = url;
                                         }"
                     ),

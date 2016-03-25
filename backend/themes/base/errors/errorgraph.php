@@ -31,13 +31,13 @@ $params = \Yii::$app->request->queryParams;
             <div class="panel-body">
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                     <div class="btn-group pull-right" role="group" aria-label="First group">
-                        <a href="<?= Url::toRoute('/site/index') ?>" class="btn btn-default">列表</a>
-                        <a href="<?= Url::toRoute('/site/errorgraph') ?>" class="btn btn-default">图形</a>
+                        <a href="<?= Url::toRoute('/errors/index') ?>" class="btn btn-default">列表</a>
+                        <a href="<?= Url::toRoute('/errors/errorgraph') ?>" class="btn btn-default">图形</a>
                     </div>
                     <div class="btn-group pull-left" role="group" aria-label="First group">
-                        <a href="<?= Url::toRoute('/site/errorgraph') ?>" class="btn btn-default">总统计</a>
-                        <a href="<?= Url::toRoute('/site/countday') ?>" class="btn btn-default">日统计</a>
-                        <a href="<?= Url::toRoute('/site/countmonth') ?>" class="btn btn-default">月统计</a>
+                        <a href="<?= Url::toRoute('/errors/errorgraph') ?>" class="btn btn-default">总统计</a>
+                        <a href="<?= Url::toRoute('/errors/countday') ?>" class="btn btn-default">日统计</a>
+                        <a href="<?= Url::toRoute('/errors/countmonth') ?>" class="btn btn-default">月统计</a>
                     </div>
                 </div>
                 <div class="tab-pane" style="margin-top:20px;">
@@ -115,7 +115,7 @@ $params = \Yii::$app->request->queryParams;
     //    $(document).ready(function() {
     //        $("#text_body_c").showLoading();
     //        $.ajax({
-    //            url: "/site/getdata.html?type=1",
+    //            url: "/errors/getdata.html?type=1",
     //            dataType: 'html',
     //            success: function() {
     //                $(this).addClass("done");

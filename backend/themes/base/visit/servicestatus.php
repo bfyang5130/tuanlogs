@@ -74,7 +74,7 @@ if (empty($ip)) {
                                                             'column' => [
                                                                 'stacking' => 'normal',
                                                                 'dataLabels' => [
-                                                                    'enabled' => true,
+                                                                    'enabled' => false,
                                                                     'color' => 'black',
                                                                 ],
                                                             ],

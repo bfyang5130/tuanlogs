@@ -32,8 +32,8 @@ $search_date = Yii::$app->request->get("search_date");
 
                     <div class="box-body text-center">
                         <div class="btn-group pull-left" role="group" aria-label="First group">
-                            <a href="<?= Url::toRoute(['/site/countday', "page" => $pre_page]) ?>" class="btn btn-default">上一页</a>
-                            <a href="<?= Url::toRoute(['/site/countday', "page" => $next_page]) ?>" class="btn btn-default">下一页</a>
+                            <a href="<?= Url::toRoute(['/errors/countday', "page" => $pre_page]) ?>" class="btn btn-default">上一页</a>
+                            <a href="<?= Url::toRoute(['/errors/countday', "page" => $next_page]) ?>" class="btn btn-default">下一页</a>
                         </div>
 
                         <div class="form-group">
@@ -50,7 +50,7 @@ $search_date = Yii::$app->request->get("search_date");
                                     'maxDate' => date("Y-m-d"),
                                     'onSelect' => new \yii\web\JsExpression(
                                             "function (dateText, inst) {
-                                            var url = '/site/countday.html?search_date='+ dateText;
+                                            var url = '/errors/countday.html?search_date='+ dateText;
                                             location.href = url;
                                         }"
                                     ),
@@ -59,10 +59,10 @@ $search_date = Yii::$app->request->get("search_date");
                             ?>
                         </div>
                         <div class="btn-group pull-right" role="group" aria-label="First group">
-                            <a href="<?= Url::toRoute('/site/errorgraph') ?>" class="btn btn-default">总统计</a>
-                            <a href="<?= Url::toRoute('/site/countday') ?>" class="btn btn-default">日统计</a>
-                            <a href="<?= Url::toRoute('/site/countmonth') ?>" class="btn btn-default">月统计</a>
-                            <a href="<?= Url::toRoute(['/site/index']) ?>" class="btn btn-default pull-right">返回列表</a>
+                            <a href="<?= Url::toRoute('/errors/errorgraph') ?>" class="btn btn-default">总统计</a>
+                            <a href="<?= Url::toRoute('/errors/countday') ?>" class="btn btn-default">日统计</a>
+                            <a href="<?= Url::toRoute('/errors/countmonth') ?>" class="btn btn-default">月统计</a>
+                            <a href="<?= Url::toRoute(['/errors/index']) ?>" class="btn btn-default pull-right">返回列表</a>
                         </div>
 
                     </div>
@@ -117,7 +117,7 @@ $search_date = Yii::$app->request->get("search_date");
                                              var end_day = newdt.getDate() ;
                                              var end_year = newdt.getFullYear() ;
                                              var end_date = end_year+"-"+end_month+"-"+end_day ;
-                                            var target_url = "/site/index.html?ErrorLogSearch[start_date]="+this.name+"&ErrorLogSearch[end_date]="+end_date+"&ErrorLogSearch[ApplicationId]="+e.point.category;
+                                            var target_url = "/errors/index.html?ErrorLogSearch[start_date]="+this.name+"&ErrorLogSearch[end_date]="+end_date+"&ErrorLogSearch[ApplicationId]="+e.point.category;
                                             window.open(target_url);
                                          }'
                                                                     ))

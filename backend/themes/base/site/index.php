@@ -1,20 +1,10 @@
 <?php
-/* @var $this yii\web\View */
 
-use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
-use yii\helpers\Url;
-use yii\widgets\LinkPager;
-use yii\widgets\ActiveForm;
-use dosamigos\datetimepicker\DateTimePicker ;
-use backend\services\ToolService ;
-
-$this->title = '日志列表';
-$month_info = ToolService::getMonthFirstAndLastInfo() ;
-$searchModel->start_date = empty($searchModel->start_date)?date("Y-m-d H:i:s",$month_info['str_time']):$searchModel->start_date ;
-$searchModel->end_date = empty($searchModel->end_date)?date("Y-m-d 59:59:59",$month_info['end_time']):$searchModel->end_date ;
+use backend\services\ErrorHightchartService;
+use miloschuman\highcharts\Highcharts;
+use backend\services\SqlHightchartService;
 ?>
-
 <div class="site-index">
     <?php
     echo Breadcrumbs::widget([
@@ -29,105 +19,254 @@ $searchModel->end_date = empty($searchModel->end_date)?date("Y-m-d 59:59:59",$mo
 
     <div class="body-content">
         <div class="panel panel-default">
-            <?= $this->render('common_top.php'); ?>
             <div class="panel-body">
-                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin:10px 0px;">
-                    <div class="btn-group pull-right" role="group" aria-label="First group">
-                        <a href="<?= Url::toRoute('/site/index') ?>" class="btn btn-default">列表</a>
-                        <a href="<?= Url::toRoute('/site/errorgraph') ?>" class="btn btn-default">图形</a>
-                    </div>
-                </div>
-
                 <div class="tab-content">
-                    <table class="table table-bordered table-striped table-condensed">
-                        <tbody>
-                        <tr>
-                            <td colspan="3">
+                    <div class="tab-pane active">
+                        <div class="row">
+                            <div class="col-lg-12">
                                 <?php
-                                $form = ActiveForm::begin([
-                                    'action' => ['/site/index'],
-                                    'method' => 'get',
-                                    'options' => ['class' => 'form-inline'],
-                                ]);
+                                #获得所有错误类型最近五天的趋势
                                 ?>
-                                <?= $form->field($searchModel, 'ApplicationId', [ 'labelOptions' => ['label' => '类型'], 'inputOptions' => ['class'=>'form-control','style' => 'width:140px']])->dropDownList($application_item)->error(false); ?>
-
-                                <?= $form->field($searchModel, 'Method', [ 'labelOptions' => ['label' => '函数'], 'inputOptions' => ['class'=>'form-control','style' => 'width:140px']])->error(false); ?>
-
-                                <?= $form->field($searchModel, 'Parameter', [ 'labelOptions' => ['label' => '参数'], 'inputOptions' => ['class'=>'form-control','style' => 'width:140px']])->error(false); ?>
-
-                                <div class="form-group">
-                                    <label for="exampleInputEmail2">时间：</label>
-                                    <?= DateTimePicker::widget([
-                                        'language' => 'zh-CN',
-                                        'model' => $searchModel,
-                                        'attribute' => 'start_date',
-                                        'pickButtonIcon' => 'glyphicon glyphicon-time',
-                                        'template' => '{input}{button}',
-                                        'clientOptions' => [
-                                            'autoclose' => true,
-                                            'format' => 'yyyy-mm-dd hh:ii:ss',
-                                            'todayBtn' => true,
-                                        ],
-                                    ]);?>
-                                    <label for="exampleInputEmail2">至</label>
-                                    <?= DateTimePicker::widget([
-                                        'language' => 'zh-CN',
-                                        'model' => $searchModel,
-                                        'attribute' => 'end_date',
-                                        'pickButtonIcon' => 'glyphicon glyphicon-time',
-                                        'template' => '{input}{button}',
-                                        'clientOptions' => [
-                                            'autoclose' => true,
-                                            'format' => 'yyyy-mm-dd hh:ii:ss',
-                                            'todayBtn' => true,
-                                        ],
-                                    ]);?>
-                                </div>
-                                <button type="submit" class="btn btn-default btn-primary btn-sm">查询</button>
-                                <?php ActiveForm::end(); ?>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <?php
-                $begin = $pager->page * $pager->pageSize + 1;
-                $end = $begin + $pager->pageSize - 1;
-                if ($begin > $end) {
-                    $begin = $end;
-                }
-                ?>
-                <div class="tab-content">
-                    <div class="summary">第<b><?= $begin . '-' . $end ?></b>条，共<b><?= $pager->totalCount ?></b>条数据.</div>
-                    <?php
-                    foreach ($datas as $oneError) {
-                        ?>
-                        <table class="table table-striped table-bordered">
-                            <tr style="background-color: #ddd;">
-                                <td width="80px;">类型:</td><td><?= Html::encode($oneError->ApplicationId) ?></td><td>ID:</td><td><?= $oneError->Id ?></td>
-                            </tr>
-                            <tr>
-                                <td>时间:</td><td colspan="3"><?= Html::encode($oneError->AddDate) ?></td>
-                            </tr>
-                            <tr>
-                                <td>函数:</td><td colspan="3"><?= Html::encode($oneError->Method) ?></td>
-                            </tr>
-                            <tr>
-                                <td>参数：</td><td colspan="3"><?= Html::encode($oneError->Parameter) ?></td>
-                            </tr>
-                            <tr>
-                                <td colspan="4"><pre><code><?= Html::encode($oneError->Content) ?></code></pre></td>
-                            </tr>
-                        </table>
-                        <?php
-                    }
-                    echo LinkPager::widget(['pagination' => $pager]);
-                    ?>
+                                <table class="table table-bordered table-striped table-condensed">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2"><h5>程序统计</h5></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="50%">
+                                                <?php
+                                                #获得五个错误最多的错误信息
+                                                $error5Nums = ErrorHightchartService::find5Column('logtype=0', [], 5, 'logtotal');
+                                                if (!empty($error5Nums)):
+                                                    ?>
+                                                    <?=
+                                                    Highcharts::widget([
+                                                        'options' => [
+                                                            'chart' => [
+                                                                'type' => 'column',
+                                                                'plotShadow' => true, //设置阴影
+                                                                'height' => 350,
+                                                            ],
+                                                            'title' => [
+                                                                'text' => '最多错误的五个应用'
+                                                            ],
+                                                            'xAxis' => [
+                                                                'categories' => $error5Nums['in_country']['categories'],
+                                                            ],
+                                                            'yAxis' => [
+                                                                'min' => 0,
+                                                                'stackLabels' => [
+                                                                    'enabled' => true,
+                                                                ]
+                                                            ],
+                                                            'credits' => [
+                                                                'enabled' => false//不显示highCharts版权信息
+                                                            ],
+                                                            'plotOptions' => [
+                                                                'column' => [
+                                                                    'stacking' => 'normal',
+                                                                    'dataLabels' => [
+                                                                        'enabled' => FALSE,
+                                                                        'color' => 'black',
+                                                                    ],
+                                                                ],
+                                                            ],
+                                                            'legend' => [
+                                                                'verticalAlign' => "top",
+                                                                'floating' => true,
+                                                                'y' => 20,
+                                                            ],
+                                                            'series' => [$error5Nums['in_country']['series']]
+                                                        ]
+                                                    ]);
+                                                endif;
+                                                ?>
+                                            </td>
+                                            <td>
+                                                <?php
+                                                #获得五个错误最多的错误信息
+                                                $errorLines = ErrorHightchartService::findAllLine('logtype=0', [], 5, 'logtotal');
+                                                if (!empty($errorLines)):
+                                                    ?>
+                                                    <?=
+                                                    Highcharts::widget([
+                                                        'options' => [
+                                                            'chart' => [
+                                                                'type' => 'spline',
+                                                                'plotShadow' => true, //设置阴影
+                                                                'height' => 350,
+                                                            ],
+                                                            'title' => [
+                                                                'text' => '最近五天错误趋势图'
+                                                            ],
+                                                            'xAxis' => [
+                                                                'categories' => $errorLines['categories'],
+                                                            ],
+                                                            'yAxis' => [
+                                                                'min' => 0,
+                                                                'stackLabels' => [
+                                                                    'enabled' => true,
+                                                                ]
+                                                            ],
+                                                            'credits' => [
+                                                                'enabled' => false//不显示highCharts版权信息
+                                                            ],
+                                                            'plotOptions' => [
+                                                                'spline' => [
+                                                                    'dataLabels' => [
+                                                                        'enabled' => FALSE,
+                                                                        'color' => 'black',
+                                                                    ],
+                                                                ],
+                                                            ],
+                                                            'series' => $errorLines['series']
+                                                        ]
+                                                    ]);
+                                                endif;
+                                                ?>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <?php
+                                #获得所有错误类型最近五天的趋势
+                                ?>
+                                <table class="table table-bordered table-striped table-condensed">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2"><h5>SQL统计</h5></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="50%">
+                                                <?php
+                                                #获得五个错误最多的错误信息
+                                                $error5Nums = SqlHightchartService::find5Column('', [], 'databasetype');
+                                                if (!empty($error5Nums)):
+                                                    ?>
+                                                    <?=
+                                                    Highcharts::widget([
+                                                        'options' => [
+                                                            'chart' => [
+                                                                'type' => 'column',
+                                                                'plotShadow' => true, //设置阴影
+                                                                'height' => 350,
+                                                            ],
+                                                            'title' => [
+                                                                'text' => '超过800毫秒的查询'
+                                                            ],
+                                                            'xAxis' => [
+                                                                'categories' => $error5Nums['in_country']['categories'],
+                                                            ],
+                                                            'yAxis' => [
+                                                                'min' => 0,
+                                                                'stackLabels' => [
+                                                                    'enabled' => true,
+                                                                ]
+                                                            ],
+                                                            'credits' => [
+                                                                'enabled' => false//不显示highCharts版权信息
+                                                            ],
+                                                            'plotOptions' => [
+                                                                'column' => [
+                                                                    'stacking' => 'normal',
+                                                                    'dataLabels' => [
+                                                                        'enabled' => FALSE,
+                                                                        'color' => 'black',
+                                                                    ],
+                                                                ],
+                                                            ],
+                                                            'legend' => [
+                                                                'verticalAlign' => "top",
+                                                                'floating' => true,
+                                                                'y' => 20,
+                                                            ],
+                                                            'series' => [$error5Nums['in_country']['series']]
+                                                        ]
+                                                    ]);
+                                                endif;
+                                                ?>
+                                            </td>
+                                            <td>
+                                                <?php
+                                                #获得五个错误最多的错误信息
+                                                $errorLines = SqlHightchartService::findAllLine();
+                                                if (!empty($errorLines)):
+                                                    ?>
+                                                    <?=
+                                                    Highcharts::widget([
+                                                        'options' => [
+                                                            'chart' => [
+                                                                'type' => 'spline',
+                                                                'plotShadow' => true, //设置阴影
+                                                                'height' => 350,
+                                                            ],
+                                                            'title' => [
+                                                                'text' => '慢日志最近五天趋势'
+                                                            ],
+                                                            'xAxis' => [
+                                                                'categories' => $errorLines['categories'],
+                                                            ],
+                                                            'yAxis' => [
+                                                                'min' => 0,
+                                                                'stackLabels' => [
+                                                                    'enabled' => true,
+                                                                ]
+                                                            ],
+                                                            'credits' => [
+                                                                'enabled' => false//不显示highCharts版权信息
+                                                            ],
+                                                            'plotOptions' => [
+                                                                'spline' => [
+                                                                    'dataLabels' => [
+                                                                        'enabled' => FALSE,
+                                                                        'color' => 'black',
+                                                                    ],
+                                                                ],
+                                                            ],
+                                                            'series' => $errorLines['series']
+                                                        ]
+                                                    ]);
+                                                endif;
+                                                ?>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <table class="table table-bordered table-striped table-condensed">
+                                    <tbody>
+                                        <tr>
+                                            <td><h5>网络统计</h5></td>
+                                        </tr>
+                                        <tr>
+                                            <td>这一天的数据没有记录</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-lg-6">
+                                <table class="table table-bordered table-striped table-condensed">
+                                    <tbody>
+                                        <tr>
+                                            <td><h5>页面统计</h5></td>
+                                        </tr>
+                                        <tr>
+                                            <td>这一天的数据没有记录</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<script type="text/javascript">
-</script>

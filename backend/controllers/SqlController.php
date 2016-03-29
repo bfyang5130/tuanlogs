@@ -124,6 +124,13 @@ class SqlController extends Controller {
     }
 
     /**
+     * 慢日志查询
+     */
+    public function actionLongtimesql() {
+        return $this->render('longtimesql');
+    }
+
+    /**
      * 首页信息
      * @return type
      */
@@ -156,7 +163,7 @@ class SqlController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['index', 'sqlgraph', 'addstatistics', 'database'],
+                        'actions' => ['index', 'sqlgraph', 'addstatistics', 'database', 'longtimesql'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],

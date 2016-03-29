@@ -4,6 +4,7 @@ use yii\widgets\Breadcrumbs;
 use backend\services\ErrorHightchartService;
 use miloschuman\highcharts\Highcharts;
 use backend\services\SqlHightchartService;
+use yii\helpers\Url;
 ?>
 <div class="site-index">
     <?php
@@ -138,7 +139,7 @@ use backend\services\SqlHightchartService;
                                 <table class="table table-bordered table-striped table-condensed">
                                     <tbody>
                                         <tr>
-                                            <td colspan="2"><h5>SQL统计</h5></td>
+                                            <td colspan="2"><h5>SQL统计<a class="pull-right" target="_blank" href="<?= Url::toRoute('/sql/longtimesql') ?>">查看慢日志</a></h5></td>
                                         </tr>
                                         <tr>
                                             <td width="50%">

@@ -25,7 +25,8 @@
         "nirvana-msu/yii2-showloading": "1.0.*@dev",
         "miloschuman/yii2-highcharts-widget": "^4.2",
         "2amigos/yii2-date-time-picker-widget": "~1.0",
-        "mootensai/yii2-jsblock": "^1.0"
+        "mootensai/yii2-jsblock": "^1.0",
+        "linslin/yii2-curl": "*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

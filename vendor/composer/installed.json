@@ -1795,5 +1795,50 @@
             "javascript",
             "yii2"
         ]
+    },
+    {
+        "name": "linslin/yii2-curl",
+        "version": "1.0.7",
+        "version_normalized": "1.0.7.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/linslin/Yii2-Curl.git",
+            "reference": "04ef29b920825795699ea95ab6592fa01cff5a4d"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/linslin/Yii2-Curl/zipball/04ef29b920825795699ea95ab6592fa01cff5a4d",
+            "reference": "04ef29b920825795699ea95ab6592fa01cff5a4d",
+            "shasum": ""
+        },
+        "require": {
+            "ext-curl": "*",
+            "yiisoft/yii2": "*"
+        },
+        "time": "2015-12-21 12:24:16",
+        "type": "yii2-extension",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "linslin\\yii2\\curl\\": ""
+            }
+        },
+        "notification-url": "http://packagist.cn/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Nils Gajsek",
+                "email": "info@linslin.org"
+            }
+        ],
+        "description": "Easy and nice cURL extension with RESTful support for Yii2",
+        "keywords": [
+            " curl",
+            "extension",
+            "restful",
+            "yii2"
+        ]
     }
 ]

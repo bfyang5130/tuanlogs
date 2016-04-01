@@ -56,14 +56,14 @@ class LogdealController extends Controller {
                 $isCdn = ToolService::isCdn($short_name);
 
                 $cur_date = $fitdata;
-                $deal_date = Yii::$app->cache->get($source."deal_date".$entry);
+                $deal_date = Yii::$app->cache->get($source . "deal_date" . $entry);
 
                 //日期不一致时,删除上次读到的最后一行,
                 //为隔天时,可以从第一行读取
-                $end_num_cache_name = $source."end_num" . $entry;
+                $end_num_cache_name = $source . "end_num" . $entry;
                 if ($deal_date != $cur_date) {
                     Yii::$app->cache->delete($end_num_cache_name);
-                    Yii::$app->cache->set($source."deal_date".$entry, $cur_date);
+                    Yii::$app->cache->set($source . "deal_date" . $entry, $cur_date);
                 }
                 echo $end_num_cache_name;
                 echo "\n";
@@ -98,7 +98,7 @@ class LogdealController extends Controller {
                         $st_check_t = $save_rs['str_check_time'];
                         $preA = $save_rs['leaveDate'];
                     }
-                    $save_rs = AccessLogService::analyForNginx($content_arr, $isCdn, $short_name, $source, $endDateNumFit, $st_check_t, $preA, $start_num, $end_num_cache_name,$step);
+                    $save_rs = AccessLogService::analyForNginx($content_arr, $isCdn, $short_name, $source, $endDateNumFit, $st_check_t, $preA, $start_num, $end_num_cache_name, $step);
                     $start_num = $fit_endNum;
                 }
                 unset($content_arr);
@@ -106,7 +106,7 @@ class LogdealController extends Controller {
                 //记录读到的最后一行
                 Yii::$app->cache->set($end_num_cache_name, $total_line);
                 //记录日期
-                Yii::$app->cache->set($source."deal_date".$entry, $cur_date);
+                Yii::$app->cache->set($source . "deal_date" . $entry, $cur_date);
 
                 if (empty($save_rs)) {
                     //处理完后删除文件,防范重复入库
@@ -160,6 +160,13 @@ class LogdealController extends Controller {
             unset($content_arr);
         }
         DistributeLogService::updateToDb($id);
+    }
+
+    /**
+     * iamatest
+     */
+    public function actionShit() {
+        echo 11;
     }
 
 }

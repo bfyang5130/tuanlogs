@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "81af4ffc0cd887dd24c2e8b404161903",
-    "content-hash": "fec450d3e4e495dabc2613a88a4f4ace",
+    "hash": "79a3fb681b476e50c6b6669ce3766cc0",
+    "content-hash": "290ec103a71cfa5d4bc6e299bef80253",
     "packages": [
         {
             "name": "2amigos/yii2-date-picker-widget",
@@ -859,6 +859,49 @@
             ],
             "description": "desc",
             "time": "2015-02-06 02:01:30"
+        },
+        {
+            "name": "linslin/yii2-curl",
+            "version": "1.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/linslin/Yii2-Curl.git",
+                "reference": "04ef29b920825795699ea95ab6592fa01cff5a4d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/linslin/Yii2-Curl/zipball/04ef29b920825795699ea95ab6592fa01cff5a4d",
+                "reference": "04ef29b920825795699ea95ab6592fa01cff5a4d",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "yiisoft/yii2": "*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "linslin\\yii2\\curl\\": ""
+                }
+            },
+            "notification-url": "http://packagist.cn/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nils Gajsek",
+                    "email": "info@linslin.org"
+                }
+            ],
+            "description": "Easy and nice cURL extension with RESTful support for Yii2",
+            "keywords": [
+                " curl",
+                "extension",
+                "restful",
+                "yii2"
+            ],
+            "time": "2015-12-21 12:24:16"
         },
         {
             "name": "miloschuman/yii2-highcharts-widget",

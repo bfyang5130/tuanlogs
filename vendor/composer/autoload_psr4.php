@@ -20,6 +20,7 @@ return array(
     'nirvana\\showloading\\' => array($vendorDir . '/nirvana-msu/yii2-showloading'),
     'mootensai\\components\\' => array($vendorDir . '/mootensai/yii2-jsblock'),
     'miloschuman\\highcharts\\' => array($vendorDir . '/miloschuman/yii2-highcharts-widget/src'),
+    'linslin\\yii2\\curl\\' => array($vendorDir . '/linslin/yii2-curl'),
     'kucha\\ueditor\\' => array($vendorDir . '/kucha/ueditor'),
     'dosamigos\\gallery\\' => array($vendorDir . '/2amigos/yii2-gallery-widget/src'),
     'dosamigos\\fileupload\\' => array($vendorDir . '/2amigos/yii2-file-upload-widget/src'),

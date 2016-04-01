@@ -34,6 +34,7 @@ AppAsset::register($this);
                 ],
             ]);
             $menuItems = [
+                ['label' => '服务器监控', 'url' => ['/server/index']],
                 ['label' => '错误跟踪日志', 'url' => ['/errors/index']],
                 ['label' => '数据库日志', 'url' => ['/sql/index']],
                 ['label' => '访问日志', 'url' => ['/visit/index']],

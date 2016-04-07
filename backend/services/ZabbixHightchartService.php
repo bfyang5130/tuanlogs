@@ -23,7 +23,7 @@ class ZabbixHightchartService {
      */
     public static function find5Column() {
         //获得五个监控项的信息
-        $monitorItems = Monitor::find()->limit(5)->orderBy("id desc")->all();
+        $monitorItems = Monitor::find()->where('is_index=1')->limit(5)->orderBy("id desc")->all();
         if (empty($monitorItems)) {
             return [];
         }
@@ -89,7 +89,7 @@ class ZabbixHightchartService {
     public static function findSelectColumn($id, $stime, $etime) {
         $oneItem = Monitor::find()->where("id=:id", [':id' => $id])->one();
         if (!$oneItem) {
-            return [];
+            return [[],0];
         }
         //配置数据并向ZABBIX获得数据
         //配置请求参数
@@ -112,13 +112,14 @@ class ZabbixHightchartService {
         $reposeData = ZabbixCurlService::curlPostResult($postData, FALSE);
         //没有找到对应数据时处理异常
         if ($reposeData['status'] === false) {
-            return [];
+            return [[],0];
         }
+        
         $otherCountry = [];
         $otherCountry['texttitle'] = $oneItem->monitor_name;
         $otherCountry['server'] = $oneItem->monitor_host;
         if(empty($reposeData['info']->result)){
-            return [];
+            return [[],0];
         }
         foreach ($reposeData['info']->result as $oneDate) {
             $otherCountry['categories'][] = date('H:i:s', $oneDate->clock);
@@ -132,7 +133,7 @@ class ZabbixHightchartService {
             $otherCountry['series']['name'] = '数量';
             $otherCountry['series']['color'] = 'red';
         }
-        return $otherCountry;
+        return [$otherCountry,$oneItem->is_index];
     }
 
     public static function getSelectId() {

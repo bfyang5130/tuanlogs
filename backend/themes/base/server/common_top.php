@@ -12,12 +12,14 @@ $postSelect = \Yii::$app->request->post();
 if (!isset($postSelect['MonitorSelectForm'])) {
     $stime = Date('Y-m-d 00:00:00');
     $etime = Date('Y-m-d 00:00:00');
+    $selectid=1;
 } else {
     $stime = $postSelect['MonitorSelectForm']['stime'];
     $etime = $postSelect['MonitorSelectForm']['etime'];
+    $selectid=$postSelect['MonitorSelectForm']['selectid'];
 }
 $selectFrom = new MonitorSelectForm();
-$selectFrom->setAttributes(['stime' => $stime, 'etime' => $etime]);
+$selectFrom->setAttributes(['stime' => $stime, 'etime' => $etime,'selectid'=>$selectid]);
 ?>
 <div class="panel-heading">
     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">

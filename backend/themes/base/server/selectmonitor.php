@@ -5,6 +5,7 @@ use yii\widgets\Breadcrumbs;
 use miloschuman\highcharts\Highcharts;
 use backend\services\ZabbixHightchartService;
 use yii\helpers\Url;
+use yii\bootstrap\Modal;
 
 $this->title = '监控查询';
 
@@ -34,15 +35,30 @@ if (empty($search_date)) {
                         <?php
                         //默认获得5个监控荐项进行近三个钟头的展示（这里可扩展为选择项）
                         //获得要选择的数据
-                        List($id,$stime,$etime)=  ZabbixHightchartService::getSelectId();
+                        List($id, $stime, $etime) = ZabbixHightchartService::getSelectId();
                         //通过接口获得图形显示的信息
-                        $showLists5 = ZabbixHightchartService::findSelectColumn($id, $stime, $etime);
+                        List($showLists5,$isindex) = ZabbixHightchartService::findSelectColumn($id, $stime, $etime);
                         if (!empty($showLists5)):
                             ?>
                             <table class="table table-bordered table-striped table-condensed">
                                 <tbody>
                                     <tr>
-                                        <td><h5><?= $showLists5['texttitle'] ?><span style="margin-left: 10px;" class="pull-right"><?= $showLists5['server'] ?></span><a class="pull-right" href="<?= Url::to ?>">首页显示</a></h5></td>
+                                        <td><h5><?= $showLists5['texttitle'] ?><span style="margin-left: 10px;" class="pull-right"><?= $showLists5['server'] ?></span>
+
+                                                <?=
+                                                Modal::widget([
+                                                    'id' => 'contact-modal',
+                                                    'toggleButton' => [
+                                                        'label' => '更改首页显示',
+                                                        'tag' => 'a',
+                                                        'class' => 'pull-right',
+                                                        'data-target' => '#contact-modal',
+                                                        'href' => Url::toRoute('/server/setindex') . '?id=' . $id.'&isindex='.$isindex,
+                                                    ],
+                                                    'clientOptions' => false,
+                                                ]);
+                                                ?>
+                                            </h5></td>
                                     </tr>
                                     <tr>
                                         <td>

@@ -20,6 +20,7 @@ class MonitorForm extends Model {
         $databaseType->monitor_name = $this->monitor_name;
         $databaseType->monitor_host = $this->monitor_host;
         $databaseType->monitor_item = $this->monitor_item;
+        $databaseType->is_index=0;
         return $databaseType->save();
     }
 

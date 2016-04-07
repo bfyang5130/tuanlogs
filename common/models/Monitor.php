@@ -11,6 +11,7 @@ use Yii;
  * @property string $monitor_name
  * @property string $monitor_host
  * @property integer $monitor_item
+ * @property integer $is_index
  */
 class Monitor extends \yii\db\ActiveRecord
 {
@@ -28,7 +29,7 @@ class Monitor extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['monitor_item'], 'integer'],
+            [['monitor_item', 'is_index'], 'integer'],
             [['monitor_name', 'monitor_host'], 'string', 'max' => 255]
         ];
     }
@@ -43,6 +44,7 @@ class Monitor extends \yii\db\ActiveRecord
             'monitor_name' => '监控名称',
             'monitor_host' => '监控的主要地址',
             'monitor_item' => '监控的项目ID',
+            'is_index' => '是否首页显示',
         ];
     }
 }

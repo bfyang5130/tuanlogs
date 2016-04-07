@@ -7,6 +7,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use backend\models\forms\MonitorForm;
 use \Yii;
+use common\models\Monitor;
 
 /**
  * Site controller
@@ -26,7 +27,7 @@ class ServerController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => [ 'index', 'addmonitor','selectmonitor'],
+                        'actions' => [ 'index', 'addmonitor', 'selectmonitor', 'setindex'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -88,6 +89,29 @@ class ServerController extends Controller {
      */
     public function actionSelectmonitor() {
         return $this->render('selectmonitor');
+    }
+
+    /**
+     * 处理为首页显示
+     */
+    public function actionSetindex() {
+        $get = \Yii::$app->request->get();
+        $result = FALSE;
+        if (isset($get['isindex']) && $get['isindex']) {
+            $is_indx = 0;
+        } else {
+            $is_indx = 1;
+        }
+        if (isset($get['id'])) {
+            $result = Monitor::updateAll(['is_index' => $is_indx], 'id=:id', [':id' => $get['id']]);
+        }
+
+        if ($result) {
+            $upstatus = TRUE;
+        } else {
+            $upstatus = FALSE;
+        }
+        return $this->renderAjax('setindex', ['upstatus' => $upstatus]);
     }
 
 }

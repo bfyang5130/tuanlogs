@@ -26,7 +26,7 @@ class ServerController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => [ 'index', 'addmonitor'],
+                        'actions' => [ 'index', 'addmonitor','selectmonitor'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -63,10 +63,10 @@ class ServerController extends Controller {
      * 添加监控
      */
     public function actionAddmonitor() {
-        
+
         $monitorForm = new MonitorForm();
         $fitForm = Yii::$app->request->post();
-        $databaseFit=0;
+        $databaseFit = 0;
         if (isset($fitForm['MonitorForm'])) {
             $monitorForm->load(Yii::$app->request->post());
 
@@ -81,6 +81,13 @@ class ServerController extends Controller {
                     'databaseFit' => $databaseFit,
                         ]
         );
+    }
+
+    /**
+     * 增加对应的接口信息 
+     */
+    public function actionSelectmonitor() {
+        return $this->render('selectmonitor');
     }
 
 }

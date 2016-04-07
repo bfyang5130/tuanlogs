@@ -4,23 +4,27 @@ use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 use backend\models\forms\MonitorForm;
+use backend\models\forms\MonitorSelectForm;
+use dosamigos\datetimepicker\DateTimePicker;
 
 $id = \Yii::$app->controller->action->id;
-$search_date = Yii::$app->request->get("search_date");
-if (empty($url)) {
-    $url = '/visit/index';
+$postSelect = \Yii::$app->request->post();
+if (!isset($postSelect['MonitorSelectForm'])) {
+    $stime = Date('Y-m-d 00:00:00');
+    $etime = Date('Y-m-d 00:00:00');
+} else {
+    $stime = $postSelect['MonitorSelectForm']['stime'];
+    $etime = $postSelect['MonitorSelectForm']['etime'];
 }
-$ip = Yii::$app->request->get("ip");
-if (empty($ip)) {
-    $ip = '192.168.8.190';
-}
-$toUrl = Url::toRoute($url) . '?ip=' . $ip;
+$selectFrom = new MonitorSelectForm();
+$selectFrom->setAttributes(['stime' => $stime, 'etime' => $etime]);
 ?>
 <div class="panel-heading">
     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
         <div class="btn-group" role="group" aria-label="First group">
             <a href="<?= Url::toRoute('/server/index') ?>" class="btn btn-default<?= ($id == 'index') ? ' btn-primary' : '' ?>">常用监控</a>
             <a href="<?= Url::toRoute('/server/addmonitor') ?>" class="btn btn-default<?= ($id == 'addmonitor') ? ' btn-primary' : '' ?>">添加监控</a>
+            <a href="<?= Url::toRoute('/server/selectmonitor') ?>" class="btn btn-default<?= ($id == 'selectmonitor') ? ' btn-primary' : '' ?>">监控查询</a>
         </div>
         <div class="btn-group pull-right">
             <?php
@@ -30,42 +34,32 @@ $toUrl = Url::toRoute($url) . '?ip=' . $ip;
                         'options' => ['class' => 'form-inline']
             ]);
             ?>
-            <?= Html::dropDownList("id", null, MonitorForm::findItems(), ['class' => 'form-control']) ?>
+            <?= $form->field($selectFrom, 'selectid')->dropDownList(MonitorForm::findItems(), ['class' => 'form-control']); ?>
             <?=
-            \yii\jui\DatePicker::widget([
-                'options' => ['class' => 'form-control datepicker', 'readonly' => true],
-                'attribute' => 'start_date',
+            DateTimePicker::widget([
                 'language' => 'zh-CN',
-                'dateFormat' => 'yyyy-MM-dd',
-                'value' => empty($ssearch_date) ? date('Y-m-d') : $ssearch_date,
+                'model' => $selectFrom,
+                'attribute' => 'stime',
+                'pickButtonIcon' => 'glyphicon glyphicon-time',
+                'template' => '{input}{button}',
                 'clientOptions' => [
-                    'minDate' => '2015-01-01',
-                    'maxDate' => date("Y-m-d"),
-                    'onSelect' => new \yii\web\JsExpression(
-                            "function (dateText, inst) {
-                                            var url = '$toUrl&ssearch_date='+ dateText;
-                                            location.href = url;
-                                        }"
-                    ),
+                    'autoclose' => true,
+                    'format' => 'yyyy-mm-dd hh:ii:ss',
+                    'todayBtn' => true,
                 ],
             ]);
             ?>
             <?=
-            \yii\jui\DatePicker::widget([
-                'options' => ['class' => 'form-control datepicker', 'readonly' => true],
-                'attribute' => 'start_date',
+            DateTimePicker::widget([
                 'language' => 'zh-CN',
-                'dateFormat' => 'yyyy-MM-dd',
-                'value' => empty($esearch_date) ? date('Y-m-d') : $esearch_date,
+                'model' => $selectFrom,
+                'attribute' => 'etime',
+                'pickButtonIcon' => 'glyphicon glyphicon-time',
+                'template' => '{input}{button}',
                 'clientOptions' => [
-                    'minDate' => '2015-01-01',
-                    'maxDate' => date("Y-m-d"),
-                    'onSelect' => new \yii\web\JsExpression(
-                            "function (dateText, inst) {
-                                            var url = '$toUrl&esearch_date='+ dateText;
-                                            location.href = url;
-                                        }"
-                    ),
+                    'autoclose' => true,
+                    'format' => 'yyyy-mm-dd hh:ii:ss',
+                    'todayBtn' => true,
                 ],
             ]);
             ?>

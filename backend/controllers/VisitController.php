@@ -28,7 +28,7 @@ class VisitController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => [ 'index', 'servicestatus'],
+                        'actions' => [ 'index', 'servicestatus','city'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -68,5 +68,10 @@ class VisitController extends Controller {
     public function actionServicestatus() {
         return $this->render('servicestatus');
     }
-
+/**
+     * 显示服务器状态
+     */
+    public function actionCity() {
+        return $this->render('city');
+    }
 }

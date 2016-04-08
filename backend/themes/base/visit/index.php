@@ -338,46 +338,43 @@ if (empty($search_date)) {
                                                     <h4>国内来源</h4>
                                                     <?php
                                                     //获得访问来源
-                                                    $pieComeFrom1 = NginxHightchartService::getPieHightChart($search_date, "TopType=:topT", [':topT' => 'user_ip_1'], 'DetailType1', NginxHightchartService::AccessStatisticOne, TRUE);
+                                                    $pieComeFrom = NginxHightchartService::getPieHightChart($search_date, "TopType=:topT", [':topT' => 'user_ip_1'], 'DetailType1', NginxHightchartService::AccessStatisticOne, TRUE);
+                                                    $data = [];
+                                                    $cityMap = \Yii::$app->params['cityMap'];
+                                                    foreach ($pieComeFrom['in_country']['series']['data'] as $key => $dataValue) {
+                                                        $data[] = ['hc-key' => $cityMap[$dataValue['name']], 'value' => $dataValue['y']];
+                                                    }
                                                     ?>
                                                     <?=
-                                                    Highcharts::widget([
+                                                    Highmaps::widget([
                                                         'options' => [
-                                                            'chart' => [
-                                                                'type' => 'pie',
-                                                                'plotShadow' => true, //设置阴影
-                                                                'height' => 450,
+                                                            'chart' => ['height' => 500],
+                                                            'mapNavigation' => ['enabled' => true],
+                                                            'title' => ['text' => '全国访问量'],
+                                                            'colorAxis' => [
+                                                                'min' => 0,
+                                                                'minColor' => '#E6E7E8',
+                                                                'maxColor' => '#FF0000'
                                                             ],
-                                                            'title' => [
-                                                                'text' => '国内访问来源'
-                                                            ],
+                                                            'subtitle' => ['text' => '中国', 'floating' => TRUE, 'align' => 'right', 'y' => 50,],
+                                                            'series' => [[
+                                                            'name' => '省份',
+                                                            'mapData' => new JsExpression('Highcharts.maps["countries/cn/custom/cn-all-sar-taiwan"]'),
+                                                            'joinBy' => 'hc-key',
+                                                            'data' => $data,
+                                                            'dataLabels' => [
+                                                                'enabled' => true,
+                                                                'crop' => false,
+                                                                'overflow' => 'none',
+                                                                'format' => '{point.properties.cn-name}'
+                                                            ]
+                                                                ]],
                                                             'credits' => [
-                                                                'enabled' => false//不显示highCharts版权信息
-                                                            ],
-                                                            'plotOptions' => [
-                                                                'pie' => [
-                                                                    'allowPointSelect' => true,
-                                                                    'cursor' => 'pointer',
-                                                                    'dataLabels' => [
-                                                                        'enabled' => false
-                                                                    ],
-                                                                    'showInLegend' => true
-                                                                ],
-                                                                'series' => [
-                                                                    'cursor' => 'pointer',
-                                                                    'point' => [
-                                                                        'events' => [
-                                                                            'click' => new \yii\web\JsExpression('function(){window.open(this.options.url);}')
-                                                                        ]
-                                                                    ],
-                                                                ]
-                                                            ],
-                                                            'legend' => [
-                                                                'verticalAlign' => "bottom",
-                                                            ],
-                                                            'series' => [$pieComeFrom1['in_country']['series']]
+                                                                'text' => '访问信息'
+                                                            ]
                                                         ]
-                                                    ]);
+                                                            ]
+                                                    );
                                                     ?>
                                                 </td>
                                             </tr>

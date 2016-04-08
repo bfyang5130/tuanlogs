@@ -408,7 +408,7 @@ if (empty($search_date)) {
                                                             'legend' => [
                                                                 'verticalAlign' => "bottom",
                                                             ],
-                                                            'series' => [$pieComeFrom1['out_country']['series']]
+                                                            'series' => [$pieComeFrom['out_country']['series']]
                                                         ]
                                                     ]);
                                                     ?>

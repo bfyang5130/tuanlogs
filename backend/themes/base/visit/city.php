@@ -37,7 +37,7 @@ if (empty($ip)) {
     $data = [];
     $cityMap = \Yii::$app->params['cityMap'];
     foreach ($pieComeFrom['in_country']['series']['data'] as $key => $dataValue) {
-        $data[] = ['hc-key' => $cityMap[$dataValue['name']], 'value' => $dataValue['y']];
+        $data[] = ['hc-key' => $cityMap[$dataValue['name']], 'value' => $dataValue['y'], ['url' => $dataValue['url']]];
     }
     ?>
     <div class="body-content">
@@ -49,7 +49,7 @@ if (empty($ip)) {
                         <?=
                         Highmaps::widget([
                             'options' => [
-                                'chart'=>['height'=>500],
+                                'chart' => ['height' => 500],
                                 'mapNavigation' => ['enabled' => true],
                                 'title' => ['text' => '全国访问量'],
                                 'colorAxis' => [
@@ -69,7 +69,8 @@ if (empty($ip)) {
                                     'overflow' => 'none',
                                     'format' => '{point.properties.cn-name}'
                                 ]
-                                    ]],
+                                    ],
+                                ],
                                 'credits' => [
                                     'text' => '大学霸',
                                     'href' => 'http://daxueba.net'

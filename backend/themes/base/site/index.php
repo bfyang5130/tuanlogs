@@ -409,7 +409,7 @@ $this->title = '服务器数据总览';
                                             <td>
                                                 <?php
                                                 #获得五个错误最多的错误信息
-                                                $errorLines = SqlHightchartService::findAllLine();
+                                                $errorLines = NginxHightchartService::findAllLine();
                                                 if (!empty($errorLines)):
                                                     ?>
                                                     <?=
@@ -421,7 +421,7 @@ $this->title = '服务器数据总览';
                                                                 'height' => 350,
                                                             ],
                                                             'title' => [
-                                                                'text' => '慢日志最近五天趋势'
+                                                                'text' => '错误页面显示'
                                                             ],
                                                             'xAxis' => [
                                                                 'categories' => $errorLines['categories'],

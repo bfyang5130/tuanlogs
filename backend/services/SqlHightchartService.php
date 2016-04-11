@@ -4,6 +4,7 @@ namespace backend\services;
 
 use common\models\SqlTraceLongSqlDay;
 use yii\db\Query;
+use yii\helpers\Url;
 
 /**
  * Description of AccessLogService
@@ -29,7 +30,8 @@ class SqlHightchartService {
         $otherCountry = [];
         foreach ($dateString as $oneDate) {
             $otherCountry['categories'][] = $oneDate['databasetype'];
-            $otherCountry['series']['data'][] = floatval($oneDate['nums']);
+            
+            $otherCountry['series']['data'][] = ['url'=>Url::toRoute('/sql/longtimesql').'?LongtimesqlSearch%5Bdatabasetype%5D='.$oneDate['databasetype'],'name'=>$oneDate['databasetype'],'y'=>floatval($oneDate['nums'])];
             $otherCountry['series']['name'] = '数量';
             $otherCountry['series']['color'] = 'red';
         }

@@ -126,10 +126,10 @@ class NginxHightchartService {
         }
         $otherCountry = [];
         $otherCountry['categories'][] = '注入';
-        $otherCountry['series']['data'][] = floatval($sqlattack);
+        $otherCountry['series']['data'][] = ['url'=>Url::toRoute('/nginx/sqlattack'),'name'=>'注入','y'=>floatval($sqlattack)];
         foreach ($dateString as $oneDate) {
             $otherCountry['categories'][] = $oneDate['error_status'];
-            $otherCountry['series']['data'][] = floatval($oneDate['nums']);
+            $otherCountry['series']['data'][] = ['url'=>Url::toRoute('/nginx/errorstatus').'?AccessLogErrorStatusSearch%5Berror_status%5D='.$oneDate['error_status'],'name'=>$oneDate['error_status'],'y'=>floatval($oneDate['nums'])];
             $otherCountry['series']['name'] = '数量';
             $otherCountry['series']['color'] = 'red';
         }

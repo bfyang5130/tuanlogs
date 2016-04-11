@@ -327,7 +327,7 @@ $this->title = '服务器数据总览';
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td>
-            <?= $value['error'] ?>
+                                                                                        <?= $value['error'] ?>
                                                                                     </td>
                                                                                 </tr>
                                                                             </tbody>
@@ -394,9 +394,15 @@ $this->title = '服务器数据总览';
                                                                         'color' => 'black',
                                                                     ],
                                                                 ],
+                                                                'series' => [
+                                                                    'cursor' => 'pointer',
+                                                                    'events' => [
+                                                                        'click' => new yii\web\JsExpression('function(e){ window.open(e.point.url);}')
+                                                                    ],
+                                                                ]
                                                             ],
                                                             'legend' => [
-                                                                'verticalAlign' => "top",
+                                                                'verticalAlign' => 'top',
                                                                 'floating' => true,
                                                                 'y' => 20,
                                                             ],

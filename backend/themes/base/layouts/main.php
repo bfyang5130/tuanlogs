@@ -27,8 +27,9 @@ AppAsset::register($this);
         <div class="wrap">
             <?php
             NavBar::begin([
-                'brandLabel' => '日志信息',
+                'brandLabel' => '<img src="/images/logo.png" alt="">',
                 'brandUrl' => Yii::$app->homeUrl,
+                'brandOptions'=>['style'=>'padding:0px;'],
                 'options' => [
                     'class' => 'navbar-inverse navbar-fixed-top',
                 ],

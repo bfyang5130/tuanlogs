@@ -12,7 +12,9 @@ use yii\web\JsExpression;
 $this->registerJsFile('/base/js/cn-all-sar-taiwan.js', [
     'depends' => 'miloschuman\highcharts\HighchartsAsset'
 ]);
-
+$this->registerJsFile('/base/js/drilldown.js', [
+    'depends' => 'miloschuman\highcharts\HighchartsAsset'
+]);
 $this->title = 'nginx访问统计';
 
 $search_date = Yii::$app->request->get("search_date");
@@ -89,6 +91,15 @@ if (empty($search_date)) {
                                                                 'minColor' => '#E6E7E8',
                                                                 'maxColor' => '#FF0000'
                                                             ],
+                                                            'plotOptions' => [
+                                                                'series' => [
+                                                                    'point' => [
+                                                                        'events' => [
+                                                                            'click' => new JsExpression("function(e){window.open('/nginx/city.html?pinyin='+this.name+'&table=1&date=" . $search_date . "')}"),
+                                                                        ]
+                                                                    ]
+                                                                ]
+                                                            ],
                                                             'subtitle' => ['text' => '中国', 'floating' => TRUE, 'align' => 'right', 'y' => 50,],
                                                             'series' => [[
                                                             'name' => '省份',
@@ -100,7 +111,7 @@ if (empty($search_date)) {
                                                                 'crop' => false,
                                                                 'overflow' => 'none',
                                                                 'format' => '{point.properties.cn-name}'
-                                                            ]
+                                                            ],
                                                                 ]],
                                                             'credits' => [
                                                                 'text' => '访问信息'
@@ -355,6 +366,15 @@ if (empty($search_date)) {
                                                                 'min' => 0,
                                                                 'minColor' => '#E6E7E8',
                                                                 'maxColor' => '#FF0000'
+                                                            ],
+                                                            'plotOptions' => [
+                                                                'series' => [
+                                                                    'point' => [
+                                                                        'events' => [
+                                                                            'click' => new JsExpression("function(e){window.open('/nginx/city.html?pinyin='+this.name+'&table=2&date=" . $search_date . "')}"),
+                                                                        ]
+                                                                    ]
+                                                                ]
                                                             ],
                                                             'subtitle' => ['text' => '中国', 'floating' => TRUE, 'align' => 'right', 'y' => 50,],
                                                             'series' => [[

@@ -5,8 +5,12 @@ use yii\widgets\Breadcrumbs;
 use miloschuman\highcharts\Highmaps;
 use backend\services\NginxHightchartService;
 use yii\web\JsExpression;
+use yii\helpers\Url;
 
 $this->registerJsFile('/base/js/cn-all-sar-taiwan.js', [
+    'depends' => 'miloschuman\highcharts\HighchartsAsset'
+]);
+$this->registerJsFile('/base/js/drilldown.js', [
     'depends' => 'miloschuman\highcharts\HighchartsAsset'
 ]);
 $this->title = '服务器状态信息';
@@ -33,6 +37,7 @@ if (empty($ip)) {
     ?>
     <?php
     //获得访问来源
+    $search_date='2016-02-26';
     $pieComeFrom = NginxHightchartService::getPieHightChart('2016-02-26', "TopType=:topT", [':topT' => 'user_ip_1'], 'DetailType1', NginxHightchartService::AccessStatisticOne, true);
     $data = [];
     $cityMap = \Yii::$app->params['cityMap'];
@@ -49,13 +54,24 @@ if (empty($ip)) {
                         <?=
                         Highmaps::widget([
                             'options' => [
-                                'chart' => ['height' => 500],
+                                'chart' => [
+                                    'height' => 500,
+                                ],
                                 'mapNavigation' => ['enabled' => true],
                                 'title' => ['text' => '全国访问量'],
                                 'colorAxis' => [
                                     'min' => 0,
                                     'minColor' => '#E6E7E8',
                                     'maxColor' => '#FF0000'
+                                ],
+                                'plotOptions' => [
+                                    'series' => [
+                                        'point' => [
+                                            'events' => [
+                                                'click' => new JsExpression("function(e){window.open('/nginx/city.html?pinyin='+this.name+'&date=".$search_date."')}"),
+                                            ]
+                                        ]
+                                    ]
                                 ],
                                 'subtitle' => ['text' => '中国', 'floating' => TRUE, 'align' => 'right', 'y' => 50,],
                                 'series' => [[

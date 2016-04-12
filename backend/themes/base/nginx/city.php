@@ -22,8 +22,16 @@ if ($table == 1) {
     $table = NginxHightchartService::AccessStatisticOne;
 }
 $cityname = Yii::$app->request->get("cityname");
-if (empty($cityname)) {
+$pinyinname = Yii::$app->request->get("pinyin");
+if (empty($cityname) && empty($pinyinname)) {
     $cityname = '广东';
+} elseif (!empty($pinyinname)) {
+    $pinyincity = \Yii::$app->params['pinyincity'];
+    if (isset($pinyincity[$pinyinname])) {
+        $cityname = $pinyincity[$pinyinname];
+    } else {
+        $cityname = '广东';
+    }
 } else {
     $cityname = urldecode($cityname);
 }
@@ -59,37 +67,40 @@ if (empty($cityname)) {
                                                 <?php
                                                 //获得访问来源
                                                 $pieflat_form = NginxHightchartService::getPiePlatHightChart($search_date, "DetailType1=:topT", [':topT' => $cityname], 'DetailType2', $table, '访问来源');
-                                                ?>
-                                                <?=
-                                                Highcharts::widget([
-                                                    'options' => [
-                                                        'chart' => [
-                                                            'type' => 'pie',
-                                                            'plotShadow' => true, //设置阴影
-                                                            'height' => 450,
-                                                        ],
-                                                        'title' => [
-                                                            'text' => '城市访问情况'
-                                                        ],
-                                                        'credits' => [
-                                                            'enabled' => false//不显示highCharts版权信息
-                                                        ],
-                                                        'plotOptions' => [
-                                                            'pie' => [
-                                                                'allowPointSelect' => true,
-                                                                'cursor' => 'pointer',
-                                                                'dataLabels' => [
-                                                                    'enabled' => false
-                                                                ],
-                                                                'showInLegend' => true
+                                                if ($pieflat_form):
+                                                    ?>
+
+                                                    <?=
+                                                    Highcharts::widget([
+                                                        'options' => [
+                                                            'chart' => [
+                                                                'type' => 'pie',
+                                                                'plotShadow' => true, //设置阴影
+                                                                'height' => 450,
                                                             ],
-                                                        ],
-                                                        'legend' => [
-                                                            'verticalAlign' => "bottom",
-                                                        ],
-                                                        'series' => [$pieflat_form['in_country']['series']]
-                                                    ]
-                                                ]);
+                                                            'title' => [
+                                                                'text' => '城市访问情况'
+                                                            ],
+                                                            'credits' => [
+                                                                'enabled' => false//不显示highCharts版权信息
+                                                            ],
+                                                            'plotOptions' => [
+                                                                'pie' => [
+                                                                    'allowPointSelect' => true,
+                                                                    'cursor' => 'pointer',
+                                                                    'dataLabels' => [
+                                                                        'enabled' => false
+                                                                    ],
+                                                                    'showInLegend' => true
+                                                                ],
+                                                            ],
+                                                            'legend' => [
+                                                                'verticalAlign' => "bottom",
+                                                            ],
+                                                            'series' => [$pieflat_form['in_country']['series']]
+                                                        ]
+                                                    ]);
+                                                endif;
                                                 ?>
                                             </td>
                                         </tr>
@@ -108,47 +119,49 @@ if (empty($cityname)) {
                                                 <?php
                                                 //获得访问来源
                                                 $pieflat_form = NginxHightchartService::getSplinePlatHightChart($search_date, "DetailType1=:topT", [':topT' => $cityname], 'CheckTime', $table, '访问来源');
-                                                ?>
-                                                <?=
-                                                Highcharts::widget([
-                                                    'options' => [
-                                                        'chart' => [
-                                                            'type' => 'spline',
-                                                            'plotShadow' => true, //设置阴影
-                                                            'height' => 450,
-                                                        ],
-                                                        'title' => [
-                                                            'text' => '24小时城市访问情况'
-                                                        ],
-                                                        'xAxis' => [
-                                                            'categories' => $pieflat_form['in_country']['categories'],
-                                                            'title' => array('text' => null),
-                                                        ],
-                                                        'yAxis' => [
-                                                            'min' => 0,
-                                                            'title' => array('text' => ''),
-                                                            'align' => 'high',
-                                                            'labels' => array("overflow" => "justify")
-                                                        ],
-                                                        'credits' => [
-                                                            'enabled' => false//不显示highCharts版权信息
-                                                        ],
-                                                        'plotOptions' => [
-                                                            'spline' => [
-                                                                'allowPointSelect' => true,
-                                                                'cursor' => 'pointer',
-                                                                'dataLabels' => [
-                                                                    'enabled' => TRUE
-                                                                ],
-                                                                'showInLegend' => true
+                                                if ($pieflat_form):
+                                                    ?>
+                                                    <?=
+                                                    Highcharts::widget([
+                                                        'options' => [
+                                                            'chart' => [
+                                                                'type' => 'spline',
+                                                                'plotShadow' => true, //设置阴影
+                                                                'height' => 450,
                                                             ],
-                                                        ],
-                                                        'legend' => [
-                                                            'verticalAlign' => "bottom",
-                                                        ],
-                                                        'series' => [$pieflat_form['in_country']['series']]
-                                                    ]
-                                                ]);
+                                                            'title' => [
+                                                                'text' => '24小时城市访问情况'
+                                                            ],
+                                                            'xAxis' => [
+                                                                'categories' => $pieflat_form['in_country']['categories'],
+                                                                'title' => array('text' => null),
+                                                            ],
+                                                            'yAxis' => [
+                                                                'min' => 0,
+                                                                'title' => array('text' => ''),
+                                                                'align' => 'high',
+                                                                'labels' => array("overflow" => "justify")
+                                                            ],
+                                                            'credits' => [
+                                                                'enabled' => false//不显示highCharts版权信息
+                                                            ],
+                                                            'plotOptions' => [
+                                                                'spline' => [
+                                                                    'allowPointSelect' => true,
+                                                                    'cursor' => 'pointer',
+                                                                    'dataLabels' => [
+                                                                        'enabled' => TRUE
+                                                                    ],
+                                                                    'showInLegend' => true
+                                                                ],
+                                                            ],
+                                                            'legend' => [
+                                                                'verticalAlign' => "bottom",
+                                                            ],
+                                                            'series' => [$pieflat_form['in_country']['series']]
+                                                        ]
+                                                    ]);
+                                                endif;
                                                 ?>
                                             </td>
                                         </tr>

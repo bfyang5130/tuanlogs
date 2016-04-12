@@ -203,7 +203,7 @@ class NginxHightchartService {
             //因为上面已经做了判断，所以今天的数据肯定会存在
             //获得今天最新的数据
             $errorstatusLists = \common\models\AccessLogErrorStatus::find()->select("count(*) nums,error_status")->where('request_time>:sd AND request_time<=:ed', [':sd' => $fitDate, ':ed' => $after1Date])->groupBy('error_status')->indexBy('error_status')->asArray()->all();
-            //print_r($errorstatusLists);exit;
+
             //对上面的数组进行处理
             foreach ($outCharts['series'] as $key => $oneVaue) {
                 //把最近一个元素推出
@@ -213,7 +213,7 @@ class NginxHightchartService {
                 if (!isset($errorstatusLists[$oneVaue['name']]['nums'])) {
                     array_push($outCharts['series'][$key]['data'], 0);
                 } else {
-                    array_push($outCharts['series'][$key]['data'], $errorstatusLists[$oneVaue['name']]['nums']);
+                    array_push($outCharts['series'][$key]['data'], floatval($errorstatusLists[$oneVaue['name']]['nums']));
                 }
             }
         }

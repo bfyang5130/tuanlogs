@@ -126,10 +126,10 @@ class NginxHightchartService {
         }
         $otherCountry = [];
         $otherCountry['categories'][] = '注入';
-        $otherCountry['series']['data'][] = ['url'=>Url::toRoute('/nginx/sqlattack'),'name'=>'注入','y'=>floatval($sqlattack)];
+        $otherCountry['series']['data'][] = ['url' => Url::toRoute('/nginx/sqlattack'), 'name' => '注入', 'y' => floatval($sqlattack)];
         foreach ($dateString as $oneDate) {
             $otherCountry['categories'][] = $oneDate['error_status'];
-            $otherCountry['series']['data'][] = ['url'=>Url::toRoute('/nginx/errorstatus').'?AccessLogErrorStatusSearch%5Berror_status%5D='.$oneDate['error_status'],'name'=>$oneDate['error_status'],'y'=>floatval($oneDate['nums'])];
+            $otherCountry['series']['data'][] = ['url' => Url::toRoute('/nginx/errorstatus') . '?AccessLogErrorStatusSearch%5Berror_status%5D=' . $oneDate['error_status'], 'name' => $oneDate['error_status'], 'y' => floatval($oneDate['nums'])];
             $otherCountry['series']['name'] = '数量';
             $otherCountry['series']['color'] = 'red';
         }
@@ -148,6 +148,8 @@ class NginxHightchartService {
         $after5Date = date('Y-m-d 00:00:00', strtotime('-5 day', strtotime($fitDate)));
         $fiveDateLists = AccessLogErrorStatusDay::find()->Where('StatisticDate>:sd AND StatisticDate<=:ed', [':sd' => $after5Date, ':ed' => $fitDate])->asArray()->orderBy("StatisticDate desc")->All();
         //如果为空，就取最后一个时间，以最后一个时间点为准
+        //标记是否为最新的数据
+        $isToday = true;
         if (empty($fiveDateLists)) {
             $lastDay = AccessLogErrorStatusDay::find()->orderBy("Id desc")->one();
             if (empty($lastDay)) {
@@ -160,6 +162,7 @@ class NginxHightchartService {
             if (empty($fiveDateLists)) {
                 return [];
             }
+            $isToday = false;
         }
         #//开始处理这五天的数据
         $fitdates = [];
@@ -192,6 +195,28 @@ class NginxHightchartService {
             ];
         }
         $outCharts['categories'] = array_reverse($outCharts['categories']);
+        //标记是否为今天的数据，如果是今天的数据,那么对今天的数据进行实时统计处理
+        if ($isToday) {
+            $fitDate = date('Y-m-d 00:00:00');
+
+            $after1Date = date('Y-m-d 00:00:00', strtotime('+1 day', strtotime($fitDate)));
+            //因为上面已经做了判断，所以今天的数据肯定会存在
+            //获得今天最新的数据
+            $errorstatusLists = \common\models\AccessLogErrorStatus::find()->select("count(*) nums,error_status")->where('request_time>:sd AND request_time<=:ed', [':sd' => $fitDate, ':ed' => $after1Date])->groupBy('error_status')->indexBy('error_status')->asArray()->all();
+            //print_r($errorstatusLists);exit;
+            //对上面的数组进行处理
+            foreach ($outCharts['series'] as $key => $oneVaue) {
+                //把最近一个元素推出
+                array_pop($outCharts['series'][$key]['data']);
+                //推入一个新元素
+                //如果没有这个数组就推入一个0的数据
+                if (!isset($errorstatusLists[$oneVaue['name']]['nums'])) {
+                    array_push($outCharts['series'][$key]['data'], 0);
+                } else {
+                    array_push($outCharts['series'][$key]['data'], $errorstatusLists[$oneVaue['name']]['nums']);
+                }
+            }
+        }
         return $outCharts;
     }
 

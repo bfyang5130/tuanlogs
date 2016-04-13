@@ -35,7 +35,7 @@ $this->title = '服务器数据总览';
                                 <table class="table table-bordered table-striped table-condensed">
                                     <tbody>
                                         <tr>
-                                            <td colspan="2"><h5>程序统计</h5></td>
+                                            <td colspan="2"><h5>程序统计<a class="pull-right" target="_blank" href="<?= Url::toRoute('/errors/longtimesql') ?>">查看错误日志</a></h5></td>
                                         </tr>
                                         <tr>
                                             <td width="50%">
@@ -75,6 +75,12 @@ $this->title = '服务器数据总览';
                                                                         'color' => 'black',
                                                                     ],
                                                                 ],
+                                                                'series' => [
+                                                                    'cursor' => 'pointer',
+                                                                    'events' => [
+                                                                        'click' => new yii\web\JsExpression('function(e){ window.open(e.point.url);}')
+                                                                    ],
+                                                                ]
                                                             ],
                                                             'legend' => [
                                                                 'verticalAlign' => "top",

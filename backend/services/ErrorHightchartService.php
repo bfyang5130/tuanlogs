@@ -3,6 +3,7 @@
 namespace backend\services;
 
 use backend\services\AppcationNameService;
+use yii\helpers\Url;
 
 /**
  * Description of AccessLogService
@@ -25,9 +26,11 @@ class ErrorHightchartService {
             return [];
         }
         $otherCountry = [];
+        $starttime=  date('Y-m-01 00:00:00');
+        $endtime= date('Y-m-01 00:00:00', strtotime('+1 month', strtotime($starttime)));
         foreach ($dateString as $oneDate) {
             $otherCountry['categories'][] = $oneDate['appname'];
-            $otherCountry['series']['data'][] = floatval($oneDate['logtotal']);
+            $otherCountry['series']['data'][] = ['url' => Url::toRoute('/errors/index') . '?ErrorLogSearch%5BApplicationId%5D=' . $oneDate['appname']. '&ErrorLogSearch%5Bstart_date%5D=' . $starttime. '&ErrorLogSearch%5Bend_date%5D=' . $endtime, 'name' => $oneDate['appname'], 'y' => floatval($oneDate['logtotal'])];
             $otherCountry['series']['name'] = '数量';
             $otherCountry['series']['color'] = 'red';
         }

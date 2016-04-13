@@ -47,6 +47,8 @@ class ErrorHightchartService {
         $after5Date = date('Y-m-d 00:00:00', strtotime('-5 day', strtotime($fitDate)));
         $fiveDateLists = \common\models\ErrorLogDay::find()->where(["ApplicationId" => $fitAllErrorsType])->andWhere('Date>:sd AND Date<=:ed', [':sd' => $after5Date, ':ed' => $fitDate])->asArray()->orderBy("Date desc")->All();
         //如果为空，就取最后一个时间，以最后一个时间点为准
+        //标记是否为最新的数据
+        $isToday = true;
         if (empty($fiveDateLists)) {
             $lastDay = \common\models\ErrorLogDay::find()->orderBy("Id desc")->one();
             if (empty($lastDay)) {
@@ -59,6 +61,7 @@ class ErrorHightchartService {
             if (empty($fiveDateLists)) {
                 return [];
             }
+            $isToday = false;
         }
         #//开始处理这五天的数据
         $fitdates = [];
@@ -91,6 +94,28 @@ class ErrorHightchartService {
             ];
         }
         $outCharts['categories'] = array_reverse($outCharts['categories']);
+        //标记是否为今天的数据，如果是今天的数据,那么对今天的数据进行实时统计处理
+        if ($isToday) {
+            $fitDate = date('Y-m-d 00:00:00');
+
+            $after1Date = date('Y-m-d 00:00:00', strtotime('+1 day', strtotime($fitDate)));
+            //因为上面已经做了判断，所以今天的数据肯定会存在
+            //获得今天最新的数据
+            $errorstatusLists = \common\models\ErrorLog::find()->select("count(*) nums,ApplicationId")->where('AddDate>:sd AND AddDate<=:ed', [':sd' => $fitDate, ':ed' => $after1Date])->groupBy('ApplicationId')->indexBy('ApplicationId')->asArray()->all();
+
+            //对上面的数组进行处理
+            foreach ($outCharts['series'] as $key => $oneVaue) {
+                //把最近一个元素推出
+                array_pop($outCharts['series'][$key]['data']);
+                //推入一个新元素
+                //如果没有这个数组就推入一个0的数据
+                if (!isset($errorstatusLists[$oneVaue['name']]['nums'])) {
+                    array_push($outCharts['series'][$key]['data'], 0);
+                } else {
+                    array_push($outCharts['series'][$key]['data'], floatval($errorstatusLists[$oneVaue['name']]['nums']));
+                }
+            }
+        }
         return $outCharts;
     }
 

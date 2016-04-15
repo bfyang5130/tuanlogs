@@ -626,7 +626,7 @@ class AccessLogService {
         }
 
         $parm_url = empty($mat[1])?"":$mat[1] ;
-        $match_rs = preg_match("/\+|%20|\/bin\/|Match1:|\'|\/\*|\*|\.\.\/|\.\/|union|into|load_file|outfile/i", $parm_url) ;
+        $match_rs = preg_match("/\+|%20|\/bin\/|Match1:|webscan\.|\'|\/\*|\*|\.\.\/|\.\/|union|into|load_file|outfile/i", $parm_url) ;
         if($match_rs==false){
             return ;
         }

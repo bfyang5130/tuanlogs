@@ -41,7 +41,7 @@ class LogdealController extends Controller {
         }
         $dir.='/' . $fitdata;
         //test data
-        $dir = \Yii::$app->params['proxytest'];
+        //$dir = \Yii::$app->params['proxytest'];
         $handle = dir($dir);
 
         $fitFileArray = \Yii::$app->params['nginxfitfile'];

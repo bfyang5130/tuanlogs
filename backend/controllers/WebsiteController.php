@@ -64,8 +64,8 @@ class WebsiteController extends Controller {
     public function actionProduct() {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $id = \Yii::$app->request->get('id');
-        $sDate = date('2016-04-18 00:00:00');
-        $eDate = date('2016-04-19 00:00:00');
+        $sDate = date('Y-m-d 00:00:00');
+        $eDate = date('Y-m-d 00:00:00', strtotime("+1 day", strtotime($sDate)));
 
         if ($id) {
             //获得指定的数据

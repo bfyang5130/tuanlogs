@@ -35,9 +35,11 @@ AppAsset::register($this);
                 ],
             ]);
             $menuItems = [
+                ['label' => '首页', 'url' => ['/site/index']],
                 ['label' => '服务器监控', 'url' => ['/server/index']],
                 ['label' => '错误跟踪日志', 'url' => ['/errors/index']],
                 ['label' => '数据库日志', 'url' => ['/sql/index']],
+                ['label' => '网站访问图', 'url' => ['/website/index']],
                 ['label' => '访问日志', 'url' => ['/visit/index']],
             ];
             if (Yii::$app->user->isGuest) {

@@ -8,6 +8,8 @@ use common\models\AccessLogSqlInject;
 use common\models\AccessStatistic;
 use common\models\AccessStatisticOne;
 use common\models\IisAccessLog;
+use console\services\AnalysisService;
+use common\models\TargetSourceUrl;
 
 /**
  * Description of AccessLogService
@@ -24,7 +26,7 @@ class AccessLogService {
      * @param string $source
      * @return array
      */
-    public static function analyForNginx($content_arr, $cdn_tag = false, $short_name = '', $source = '', $endDateNumFit = false, $str_check_time = 0, $preArray = array(), $writeLine = 0, $end_num_cache_name = '', $step = true) {
+    public static function analyForNginx($content_arr, $cdn_tag = false, $short_name = '', $source = '', $endDateNumFit = false, $str_check_time = 0, $preArray = array(), $writeLine = 0, $end_num_cache_name = '', $step = true,$li_short_name='') {
 
         //如果存在上一次处理留下来的数据，那么数据继续跑跑跑。
         if (!empty($preArray)) {
@@ -59,7 +61,8 @@ class AccessLogService {
         $content_arr_count = 1;
         foreach ($content_arr as $c_val) {
             $parse_rs = ToolService::parseNginxAccessLog($c_val, $cdn_tag);
-
+            //处理用户访问流程图
+            $fitFlowResult = AnalysisService::userVisitFlow($parse_rs,$li_short_name);
             $mat = $parse_rs['mat'];
 
             $china_cache_rs = $parse_rs['china_cache_rs'];
@@ -101,8 +104,10 @@ class AccessLogService {
                 //todoing..............something这里有一个坑，如果没有数据的时候，做一下判断
                 //每10分入库
                 $end_format_time = date("Y-m-d H:i:s", $str_check_time);
+                //处理用户的访问流程信息
+                self::toInserUserTarFro($end_format_time, $writeLine, $end_num_cache_name);
                 //统计总访问量,入库
-                self::countRequest($request_type_arr,$source,$short_name) ;
+                self::countRequest($request_type_arr, $source, $short_name);
                 $access_statistic_arr = self::arrDeal($request_type_arr, $status_arr, $protocol_arr, $plat_form_arr, $mobile_arr, $browser_arr, $user_ip1_province_arr, $user_ip1_city_arr, $total_content_size, $total_take_time, $end_format_time, $short_name);
                 if ($source == '21') {
                     self::batchSaveAccessStatistic($access_statistic_arr, $writeLine, $end_num_cache_name, $end_format_time);
@@ -123,12 +128,12 @@ class AccessLogService {
             $content_size = empty($mat[5][0]) ? 0 : $mat[5][0];
 
 
-            $repeat_rs =self::checkRepeat($preArray,$num) ;
-            if($repeat_rs==true){
+            $repeat_rs = self::checkRepeat($preArray, $num);
+            if ($repeat_rs == true) {
                 //状态400 500记录到日志中
-                self::addErrorStatusLog($status,$access_address,$user_ip1,$source,$short_name,$request_time) ;
+                self::addErrorStatusLog($status, $access_address, $user_ip1, $source, $short_name, $request_time);
                 //检查是否有sql注入,有的话记日志
-                self::addSqlInjectLog($c_val,$source,$short_name,$access_address,$request_time,$user_ip1);
+                self::addSqlInjectLog($c_val, $source, $short_name, $access_address, $request_time, $user_ip1);
             }
 
             if ($china_cache_rs == false) {
@@ -237,7 +242,9 @@ class AccessLogService {
             //最近的数据
             if (!empty($total_content_size) && !empty($total_take_time)) {
                 $end_format_time = date("Y-m-d H:i:s", $str_check_time);
-                self::countRequest($request_type_arr,$source,$short_name) ;
+                //处理用户的访问流程信息
+                self::toInserUserTarFro($end_format_time, $writeLine, $end_num_cache_name);
+                self::countRequest($request_type_arr, $source, $short_name);
                 $access_statistic_arr = self::arrDeal($request_type_arr, $status_arr, $protocol_arr, $plat_form_arr, $mobile_arr, $browser_arr, $user_ip1_province_arr, $user_ip1_city_arr, $total_content_size, $total_take_time, $end_format_time, $short_name);
                 if ($source == '21') {
                     self::batchSaveAccessStatistic($access_statistic_arr, $writeLine, $end_num_cache_name, $end_format_time);
@@ -552,114 +559,157 @@ class AccessLogService {
     /**
      * 统计一天的总的访问量
      */
-    public static function countRequest($request_type_arr,$source,$log_type){
-        $total_request = 0 ;
-        foreach($request_type_arr as $val){
-            $total_request = $total_request+$val ;
+    public static function countRequest($request_type_arr, $source, $log_type) {
+        $total_request = 0;
+        foreach ($request_type_arr as $val) {
+            $total_request = $total_request + $val;
         }
 
-        $cur_date = date("Y-m-d 00:00:00") ;
+        $cur_date = date("Y-m-d 00:00:00");
 
-        if($source=='21'){
+        if ($source == '21') {
             $access_statistic = AccessStatistic::find()
-                ->where(["CheckTime"=>$cur_date,"TopType"=>"total_access","LogType"=>$log_type])
-                ->one() ;
+                    ->where(["CheckTime" => $cur_date, "TopType" => "total_access", "LogType" => $log_type])
+                    ->one();
 
-            if(empty($access_statistic)){
+            if (empty($access_statistic)) {
                 //插入
-                $access_statistic = new AccessStatistic() ;
-                $access_statistic->CheckTime = $cur_date ;
-                $access_statistic->TopType = "total_access" ;
-                $access_statistic->Amount = $total_request ;
-                $access_statistic->LogType = $log_type ;
-                $access_statistic->save() ;
-            }else{
+                $access_statistic = new AccessStatistic();
+                $access_statistic->CheckTime = $cur_date;
+                $access_statistic->TopType = "total_access";
+                $access_statistic->Amount = $total_request;
+                $access_statistic->LogType = $log_type;
+                $access_statistic->save();
+            } else {
                 //更新
-                $access_statistic->Amount = $access_statistic->Amount + $total_request ;
-                $access_statistic->save() ;
+                $access_statistic->Amount = $access_statistic->Amount + $total_request;
+                $access_statistic->save();
             }
-
-        }elseif($source=='17'){
+        } elseif ($source == '17') {
             $access_statistic_one = AccessStatisticOne::find()
-                ->where(["CheckTime"=>$cur_date,"TopType"=>"total_access","LogType"=>$log_type])
-                ->one() ;
+                    ->where(["CheckTime" => $cur_date, "TopType" => "total_access", "LogType" => $log_type])
+                    ->one();
 
-            if(empty($access_statistic_one)){
+            if (empty($access_statistic_one)) {
                 //插入
-                $access_statistic_one = new AccessStatisticOne() ;
-                $access_statistic_one->CheckTime = $cur_date ;
-                $access_statistic_one->TopType = "total_access" ;
-                $access_statistic_one->Amount = $total_request ;
-                $access_statistic_one->LogType = $log_type ;
-                $access_statistic_one->save() ;
-            }else{
+                $access_statistic_one = new AccessStatisticOne();
+                $access_statistic_one->CheckTime = $cur_date;
+                $access_statistic_one->TopType = "total_access";
+                $access_statistic_one->Amount = $total_request;
+                $access_statistic_one->LogType = $log_type;
+                $access_statistic_one->save();
+            } else {
                 //更新
-                $access_statistic_one->Amount = $access_statistic_one->Amount + $total_request ;
-                $access_statistic_one->save() ;
+                $access_statistic_one->Amount = $access_statistic_one->Amount + $total_request;
+                $access_statistic_one->save();
             }
         }
-
     }
 
     //400 500状态记录到日志
-    public static function addErrorStatusLog($status,$access_address,$user_ip1,$source,$short_name,$request_time){
-        if($status<400){
-            return ;
+    public static function addErrorStatusLog($status, $access_address, $user_ip1, $source, $short_name, $request_time) {
+        if ($status < 400) {
+            return;
         }
-        $as = new AccessLogErrorStatus() ;
-        $as->error_status = $status ;
-        $as->request_url = $access_address ;
-        $as->user_ip = $user_ip1 ;
-        $as->source = strval($source) ;
-        $as->log_type = $short_name ;
-        $as->request_time = $request_time ;
-        $as->add_time = date("Y-m-d H:i:s") ;
-        $as->save() ;
+        $as = new AccessLogErrorStatus();
+        $as->error_status = $status;
+        $as->request_url = $access_address;
+        $as->user_ip = $user_ip1;
+        $as->source = strval($source);
+        $as->log_type = $short_name;
+        $as->request_time = $request_time;
+        $as->add_time = date("Y-m-d H:i:s");
+        $as->save();
     }
 
     //检查是否有sql的关键字,有的话记录
-    public static function addSqlInjectLog($access_str,$source,$short_name,$request_url,$request_time,$user_ip1){
-        $url_preg = preg_match("/.*?[\?](.*?)$/",$request_url,$mat) ;
+    public static function addSqlInjectLog($access_str, $source, $short_name, $request_url, $request_time, $user_ip1) {
+        $url_preg = preg_match("/.*?[\?](.*?)$/", $request_url, $mat);
         //没有参数直接返回
-        if($url_preg==false){
-            return ;
+        if ($url_preg == false) {
+            return;
         }
 
-        $parm_url = empty($mat[1])?"":$mat[1] ;
-        $match_rs = preg_match("/\+|%20|\/bin\/|Match1:|webscan\.|\'|\/\*|\.\.\/|\.\/|union|into|load_file|outfile/i", $parm_url) ;
-        if($match_rs==false){
-            return ;
+        $parm_url = empty($mat[1]) ? "" : $mat[1];
+        $match_rs = preg_match("/\+|%20|\/bin\/|Match1:|webscan\.|\'|\/\*|\.\.\/|\.\/|union|into|load_file|outfile/i", $parm_url);
+        if ($match_rs == false) {
+            return;
         }
-        $ai = new AccessLogSqlInject() ;
-        $ai->access_str = $access_str ;
-        $ai->user_ip=$user_ip1;
-        $ai->source = strval($source) ;
-        $ai->log_type = $short_name ;
-        $ai->request_time = $request_time ;
-        $ai->save() ;
-
+        $ai = new AccessLogSqlInject();
+        $ai->access_str = $access_str;
+        $ai->user_ip = $user_ip1;
+        $ai->source = strval($source);
+        $ai->log_type = $short_name;
+        $ai->request_time = $request_time;
+        $ai->save();
     }
 
-    public static function checkRepeat($pre_arr,$cur_num){
+    public static function checkRepeat($pre_arr, $cur_num) {
         //没有10分钟前的记录,表示为新的记录,可以入库
-        if(empty($pre_arr)){
-            return true ;
+        if (empty($pre_arr)) {
+            return true;
         }
 
-        $protocol_arr = $pre_arr['protocol_arr'] ;
+        $protocol_arr = $pre_arr['protocol_arr'];
         //有10分钟的记录,检查当前行数是否大于上次未满10分钟的记录总和,小于上次总和,不入库,反之入库
-        $last_total_count = 0 ;
-        foreach($protocol_arr as $val){
-            $last_total_count = $last_total_count + $val ;
+        $last_total_count = 0;
+        foreach ($protocol_arr as $val) {
+            $last_total_count = $last_total_count + $val;
         }
 
-        if($cur_num<=$last_total_count){
-            return false ;
+        if ($cur_num <= $last_total_count) {
+            return false;
         }
 
-        return true ;
+        return true;
+    }
+
+    /**
+     * 处理用户的访问行为并入库
+     * @param type $end_time
+     * @param type $writeLine
+     * @param type $end_num_cache_name
+     */
+    public static function toInserUserTarFro($end_time, $writeLine, $end_num_cache_name) {
+        //获得存储的文件缓冲数据
+        $inserArray = \Yii::$app->cache->get('target');
+        //循环处理数据入库
 
 
+        if ($inserArray) {
+            $targetsourceurlarr = [];
+            $i = 0;
+            foreach ($inserArray as $key => $value) {
+                foreach ($value as $key2 => $twovalue) {
+                    $targetsourceurlarr[$i]['target_url'] = $key;
+                    $targetsourceurlarr[$i]['from_url'] = $key2;
+                    $targetsourceurlarr[$i]['nums'] = $twovalue;
+                    $targetsourceurlarr[$i]['vist_time'] = $end_time;
+                }
+                $i++;
+            }
+            try {
+                $command = \Yii::$app->db->createCommand();
+                $command->batchInsert(
+                        TargetSourceUrl::tableName(), ['target_url', 'from_url', 'nums', 'vist_time'], $targetsourceurlarr);
+                $abc = $command->execute();
+                \Yii::$app->cache->set($end_num_cache_name, $writeLine);
+                echo "当前处理到";
+                echo "\n";
+                echo $writeLine;
+                echo "\n";
+                echo $end_time;
+                echo "\n";
+                echo $abc;
+                echo "\n";
+            } catch (yii\db\Exception $e) {
+                //记录读到的最后一行,没有处理的行会被后退
+                print_r($e);
+                exit;
+            }
+        }
+        //重置数据为空
+        \Yii::$app->cache->set('target', FALSE);
     }
 
 }

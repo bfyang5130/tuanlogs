@@ -40,6 +40,8 @@ class LogdealController extends Controller {
             $source = "21";
         }
         $dir.='/' . $fitdata;
+        //test data
+        $dir = \Yii::$app->params['proxytest'];
         $handle = dir($dir);
 
         $fitFileArray = \Yii::$app->params['nginxfitfile'];
@@ -49,6 +51,13 @@ class LogdealController extends Controller {
                 $file_url = $dir . "/" . $entry;
                 //获取文件名22
                 $short_name = ToolService::parseFileName($entry);
+                //一个用来处理来源的简化字符串
+                $li_short_name = '';
+                if (strpos($short_name, ".") === false) {
+                    $li_short_name = $short_name;
+                } else {
+                    $li_short_name = substr($short_name, 0, strpos($short_name, ".") + 1);
+                }
                 if (!in_array($short_name, $fitFileArray)) {
                     continue;
                 }
@@ -98,7 +107,7 @@ class LogdealController extends Controller {
                         $st_check_t = $save_rs['str_check_time'];
                         $preA = $save_rs['leaveDate'];
                     }
-                    $save_rs = AccessLogService::analyForNginx($content_arr, $isCdn, $short_name, $source, $endDateNumFit, $st_check_t, $preA, $start_num, $end_num_cache_name, $step);
+                    $save_rs = AccessLogService::analyForNginx($content_arr, $isCdn, $short_name, $source, $endDateNumFit, $st_check_t, $preA, $start_num, $end_num_cache_name, $step,$li_short_name);
                     $start_num = $fit_endNum;
                 }
                 unset($content_arr);

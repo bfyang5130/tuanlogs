@@ -56,7 +56,7 @@ class LogdealController extends Controller {
                 if (strpos($short_name, ".") === false) {
                     $li_short_name = $short_name;
                 } else {
-                    $li_short_name = substr($short_name, 0, strpos($short_name, ".") + 1);
+                    $li_short_name = substr($short_name, 0, strpos($short_name, "."));
                 }
                 if (!in_array($short_name, $fitFileArray)) {
                     continue;

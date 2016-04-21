@@ -72,7 +72,7 @@ class AnalysisService {
      */
     public static function trimURL($string, $li_short_name) {
         //只处理.aspx页面
-        $resutl = preg_match('/|\.aspx|\.ashx|/i', $string);
+        $resutl = preg_match('/(\.aspx|\.ashx)/i', $string);
         if (!$resutl) {
             return false;
         }

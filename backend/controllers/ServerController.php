@@ -27,7 +27,7 @@ class ServerController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => [ 'index', 'addmonitor', 'selectmonitor', 'setindex'],
+                        'actions' => [ 'index', 'addmonitor', 'selectmonitor', 'setindex', 'status'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -112,6 +112,14 @@ class ServerController extends Controller {
             $upstatus = FALSE;
         }
         return $this->renderAjax('setindex', ['upstatus' => $upstatus]);
+    }
+
+    /**
+     * 定时给系统检测nginx的状态
+     */
+    public function actionStatus() {
+        echo 11;
+        \Yii::$app->end();
     }
 
 }

@@ -184,6 +184,24 @@ class SqlTraceService {
         ];
     }
 
+    /**
+     * 处理最近十分钟的TOP50最慢的SQL不重复
+     */
+    public static function tofitTop50near10minute() {
+        $sql = "insert into SqlTrace_top50(executedate,sqltext_md5,sqlusedtime,sqltext,databasetype,update_time)
+select s.executedate,m.sqltext_md5,s.sqlusedtime,s.sqltext,s.databasetype,now()
+from SqlTrace s 
+inner join 
+(select sqltext_md5,sqlusedtime,id from 
+	(SELECT md5(sqltext) as sqltext_md5,sqlusedtime,id 
+	 FROM SqlTrace   where executedate  between date_sub(now(),interval 10 minute) and now()  
+	 order by sqlusedtime desc
+     ) sql_tmp 
+     group by sqltext_md5  order by sqlusedtime desc limit 50
+) m on s.id=m.id;";
+        \Yii::$app->db->createCommand($sql)->execute();
+    }
+
 }
 
 ?>

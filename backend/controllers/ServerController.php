@@ -113,13 +113,4 @@ class ServerController extends Controller {
         }
         return $this->renderAjax('setindex', ['upstatus' => $upstatus]);
     }
-
-    /**
-     * 定时给系统检测nginx的状态
-     */
-    public function actionStatus() {
-        echo 11;
-        \Yii::$app->end();
-    }
-
 }

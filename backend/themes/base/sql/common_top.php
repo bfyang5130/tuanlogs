@@ -9,6 +9,7 @@ $id = \Yii::$app->controller->action->id;
         <div class="btn-group pull-right" role="group" aria-label="First group">
             <a href="<?= Url::toRoute('/sql/index') ?>" class="btn btn-default<?= ($id == 'index') ? ' btn-primary' : '' ?>">列表</a>
             <a href="<?= Url::toRoute('/sql/longtimesql') ?>" class="btn btn-default<?= ($id == 'longtimesql') ? ' btn-primary' : '' ?>">慢日志查询</a>
+            <a href="<?= Url::toRoute('/sql/sql50') ?>" class="btn btn-default<?= ($id == 'sql50') ? ' btn-primary' : '' ?>">50数据执行</a>
             <a href="<?= Url::toRoute('/sql/sqlgraph') ?>" class="btn btn-default<?= ($id == 'sqlgraph') ? ' btn-primary' : '' ?>">图形统计</a>
             <a href="<?= Url::toRoute('/sql/addstatistics') ?>" class="btn btn-default<?= ($id == 'addstatistics') ? ' btn-primary' : '' ?>">添加统计</a>
         </div>

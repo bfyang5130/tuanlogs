@@ -188,7 +188,14 @@ class SqlTraceService {
      * 处理最近十分钟的TOP50最慢的SQL不重复
      */
     public static function tofitTop50near10minute() {
-        $sql = "insert into SqlTrace_top50(executedate,sqltext_md5,sqlusedtime,sqltext,databasetype,update_time)
+        //处理一个太频繁的数据
+        $marktime = \Yii::$app->cache->get('top50time');
+        $time = time();
+        //如果在30秒内的操作不做新的统计
+        if ($marktime && $time < ($marktime + 30)) {
+            
+        } else {
+            $sql = "insert into SqlTrace_top50(executedate,sqltext_md5,sqlusedtime,sqltext,databasetype,update_time)
 select s.executedate,m.sqltext_md5,s.sqlusedtime,s.sqltext,s.databasetype,now()
 from SqlTrace s 
 inner join 
@@ -199,7 +206,8 @@ inner join
      ) sql_tmp 
      group by sqltext_md5  order by sqlusedtime desc limit 50
 ) m on s.id=m.id;";
-        \Yii::$app->db->createCommand($sql)->execute();
+            \Yii::$app->db->createCommand($sql)->execute();
+        }
     }
 
 }

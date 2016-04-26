@@ -25,6 +25,9 @@ class AnalysisService {
         $accPage = $mat[3][0];
         $newInfo = ToolService::parseRequestInfo($accPage);
         //获得正常的表达式
+        if(!isset($newInfo[2][0])){
+            return FALSE;
+        }
         $realUrl = self::trimURl($newInfo[2][0], $li_short_name);
         //如果请求连接有问题那么直接返回错误
         if ($realUrl === FALSE) {

@@ -34,7 +34,7 @@ class ZabbixHightchartService {
             //配置请求参数
             $endtime = time();
             //获得近三个钟头的信息
-            $starttime = strtotime("-1 hour", $endtime);
+            $starttime = strtotime("-30 minute", $endtime);
             $postData = [
                 'jsonrpc' => '2.0',
                 'method' => 'history.get',

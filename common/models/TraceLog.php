@@ -17,12 +17,13 @@ use Yii;
  */
 class TraceLog extends \yii\db\ActiveRecord
 {
+    public static $tablename='TraceLog';
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'TraceLog';
+        return self::$tablename;
     }
 
     /**

@@ -42,20 +42,27 @@ class TraceLogSearch extends TraceLog {
     /**
      * @inheritdoc
      */
-    public function scenarios() {
-        // bypass scenarios() implementation in the parent class
-        return Model::scenarios();
-    }
-
+    //public function scenarios() {
+    // bypass scenarios() implementation in the parent class
+    //    return Model::scenarios();
+    //}
     //put your code here
     public function search($params) {
+
+        $this->load($params);
+        if (isset($params['TraceLogSearch']['start_date']) && !empty($params['TraceLogSearch']['start_date'])) {
+            $data = date("Ym", strtotime($params['TraceLogSearch']['start_date']));
+            $nowdata = date("Ym");
+            if ($data < $nowdata&&$data>'201601') {
+                TraceLog::$tablename = 'TraceLog_' . $data;
+            }
+        }
         $query = TraceLog::find();
         //$values = $params['TraceLogSearch'];
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-        $this->load($params);
         if (!$this->validate()) {
             return $dataProvider;
         }

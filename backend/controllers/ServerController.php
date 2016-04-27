@@ -27,7 +27,7 @@ class ServerController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => [ 'index', 'addmonitor', 'selectmonitor', 'setindex', 'status'],
+                        'actions' => [ 'index', 'addmonitor', 'selectmonitor', 'setindex', 'status', 'demo', 'api'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -58,6 +58,13 @@ class ServerController extends Controller {
      */
     public function actionIndex() {
         return $this->render('index');
+    }
+
+    /**
+     * 测试案例
+     */
+    public function actionDemo() {
+        return $this->render('demo');
     }
 
     /**
@@ -113,4 +120,26 @@ class ServerController extends Controller {
         }
         return $this->renderAjax('setindex', ['upstatus' => $upstatus]);
     }
+
+    public function actionApi() {
+
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $id = \Yii::$app->request->get('id');
+        if (empty($id)) {
+            return [];
+        }
+        //配置选择的时间
+        $date = \Yii::$app->request->get('date');
+        if (empty($date)) {
+            $sDate = date('Y-m-d 00:00:00');
+            $eDate = date('Y-m-d H:i:s');
+        } else {
+            $sDate = date('Y-m-d 00:00:00', strtotime($date));
+            $eDate = date('Y-m-d 00:00:00', strtotime("+1 day", strtotime($date)));
+        }
+//获得相应数据
+        $datlists = \backend\services\ZabbixHightchartService::findSelectColumnFit($id, $sDate, $eDate);
+        return $datlists;
+    }
+
 }

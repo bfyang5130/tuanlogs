@@ -14,12 +14,14 @@ class MonitorForm extends Model {
     public $monitor_name;
     public $monitor_host;
     public $monitor_item;
+    public $monitor_times;
 
     public function save() {
         $databaseType = new Monitor();
         $databaseType->monitor_name = $this->monitor_name;
         $databaseType->monitor_host = $this->monitor_host;
         $databaseType->monitor_item = $this->monitor_item;
+        $databaseType->monitor_times = $this->$monitor_times;
         $databaseType->is_index=0;
         return $databaseType->save();
     }
@@ -29,8 +31,8 @@ class MonitorForm extends Model {
      */
     public function rules() {
         return [
-            [['monitor_name', 'monitor_host', 'monitor_item'], 'filter', 'filter' => 'trim'],
-            [['monitor_name', 'monitor_host', 'monitor_item'], 'required', 'message' => '{attribute}不能空'],
+            [['monitor_name', 'monitor_host', 'monitor_item','monitor_times'], 'filter', 'filter' => 'trim'],
+            [['monitor_name', 'monitor_host', 'monitor_item','monitor_times'], 'required', 'message' => '{attribute}不能空'],
         ];
     }
 
@@ -42,6 +44,7 @@ class MonitorForm extends Model {
             'monitor_name' => '监控名称',
             'monitor_host' => '监控主机',
             'monitor_item' => '监控ID',
+            'monitor_times'=>'时间间隔',
         ];
     }
 

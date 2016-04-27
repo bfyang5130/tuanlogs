@@ -27,6 +27,7 @@ $selectFrom->setAttributes(['stime' => $stime, 'etime' => $etime,'selectid'=>$se
             <a href="<?= Url::toRoute('/server/index') ?>" class="btn btn-default<?= ($id == 'index') ? ' btn-primary' : '' ?>">常用监控</a>
             <a href="<?= Url::toRoute('/server/addmonitor') ?>" class="btn btn-default<?= ($id == 'addmonitor') ? ' btn-primary' : '' ?>">添加监控</a>
             <a href="<?= Url::toRoute('/server/selectmonitor') ?>" class="btn btn-default<?= ($id == 'selectmonitor') ? ' btn-primary' : '' ?>">监控查询</a>
+            <a href="<?= Url::toRoute('/server/demo') ?>" class="btn btn-default<?= ($id == 'demo') ? ' btn-primary' : '' ?>">测试案例</a>
         </div>
         <div class="btn-group pull-right">
             <?php

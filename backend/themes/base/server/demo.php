@@ -40,7 +40,7 @@ if (empty($search_date)) {
                                 <script type="text/javascript">
                                     var myChart = echarts.init(document.getElementById('main'));
                                     myChart.showLoading();
-                                    $.get('/server/api.html?id=1&monitor_item=23779&date=2016-04-27', function(data) {
+                                    $.get('/server/api.html?id=1&monitor_item=23779&date=2016-04-28', function(data) {
                                         myChart.hideLoading();
 
                                         myChart.setOption(option = {

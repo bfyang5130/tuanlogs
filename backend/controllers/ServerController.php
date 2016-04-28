@@ -130,12 +130,16 @@ class ServerController extends Controller {
         }
         //配置选择的时间
         $date = \Yii::$app->request->get('date');
+        
         if (empty($date)) {
             $sDate = date('Y-m-d 00:00:00');
             $eDate = date('Y-m-d H:i:s');
         } else {
             $sDate = date('Y-m-d 00:00:00', strtotime($date));
             $eDate = date('Y-m-d 00:00:00', strtotime("+1 day", strtotime($date)));
+        }
+        if(strtotime($eDate)>  time()){
+            $eDate=date('Y-m-d H:i:s');
         }
 //获得相应数据
         $datlists = \backend\services\ZabbixHightchartService::findSelectColumnFit($id, $sDate, $eDate);

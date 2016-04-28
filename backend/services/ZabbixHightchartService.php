@@ -81,6 +81,7 @@ class ZabbixHightchartService {
         }
         return $chart5object;
     }
+
     /**
      * 获得对应选择的一个监控数据进行查询
      * @return string
@@ -113,11 +114,11 @@ class ZabbixHightchartService {
         if ($reposeData['status'] === false) {
             return [];
         }
-        
+
         $otherCountry = [];
         $otherCountry['title']['text'] = $oneItem->monitor_name;
         $otherCountry['server'] = $oneItem->monitor_host;
-        if(empty($reposeData['info']->result)){
+        if (empty($reposeData['info']->result)) {
             return [];
         }
         foreach ($reposeData['info']->result as $oneDate) {
@@ -132,12 +133,13 @@ class ZabbixHightchartService {
             $otherCountry['series']['name'] = '使用量';
         }
         //获得总共多少个数据
-        $nums=  count($reposeData['info']->result);
+        $nums = count($reposeData['info']->result);
         //处理显示的比例
-        $showlimit=round(6000/$nums,2);
-        $otherCountry['showlimit']=100-$showlimit;
+        $showlimit = round(6000 / $nums, 2);
+        $otherCountry['showlimit'] = 100 - $showlimit;
         return $otherCountry;
     }
+
     /**
      * 获得对应选择的一个监控数据进行查询
      * @return string
@@ -145,7 +147,7 @@ class ZabbixHightchartService {
     public static function findSelectColumn($id, $stime, $etime) {
         $oneItem = Monitor::find()->where("id=:id", [':id' => $id])->one();
         if (!$oneItem) {
-            return [[],0];
+            return [[], 0];
         }
         //配置数据并向ZABBIX获得数据
         //配置请求参数
@@ -168,14 +170,14 @@ class ZabbixHightchartService {
         $reposeData = ZabbixCurlService::curlPostResult($postData, FALSE);
         //没有找到对应数据时处理异常
         if ($reposeData['status'] === false) {
-            return [[],0];
+            return [[], 0];
         }
-        
+
         $otherCountry = [];
         $otherCountry['texttitle'] = $oneItem->monitor_name;
         $otherCountry['server'] = $oneItem->monitor_host;
-        if(empty($reposeData['info']->result)){
-            return [[],0];
+        if (empty($reposeData['info']->result)) {
+            return [[], 0];
         }
         foreach ($reposeData['info']->result as $oneDate) {
             $otherCountry['categories'][] = date('H:i:s', $oneDate->clock);
@@ -189,7 +191,7 @@ class ZabbixHightchartService {
             $otherCountry['series']['name'] = '数量';
             $otherCountry['series']['color'] = 'red';
         }
-        return [$otherCountry,$oneItem->is_index];
+        return [$otherCountry, $oneItem->is_index];
     }
 
     public static function getSelectId() {
@@ -202,6 +204,9 @@ class ZabbixHightchartService {
             $id = $postSelect['MonitorSelectForm']['selectid'];
             $stime = $postSelect['MonitorSelectForm']['stime'];
             $etime = $postSelect['MonitorSelectForm']['etime'];
+            if (strtotime($stime) == strtotime($etime)) {
+                $etime = date("Y-m-d H:is", strtotime("+1 hour", strtotime($stime)));
+            }
         }
         return [$id, $stime, $etime];
     }

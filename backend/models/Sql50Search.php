@@ -45,7 +45,7 @@ class Sql50Search extends SqlTraceTop50 {
         $dataProvider = new ActiveDataProvider([
             'query' => $query->from(SqlTraceTop50::tableName()),
         ]);
-        $query->orderBy("executedate desc,sqlusedtime desc");
+        $query->where('1=1 order by DATE_FORMAT(executedate,"%Y-%m-%d") desc,sqlusedtime desc');
         $this->load($params);
 
         if (!$this->validate()) {

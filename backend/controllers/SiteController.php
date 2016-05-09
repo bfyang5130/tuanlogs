@@ -58,7 +58,7 @@ class SiteController extends Controller {
         ];
     }
     public function actionIndex() {
-        echo ToolService::convertip_tiny('121.13.249.210','K:/web/tuanlogs/common/data/tinyipdata.dat');exit;
+        //echo ToolService::convertip_tiny('121.13.249.210','K:/web/tuanlogs/common/data/tinyipdata.dat');exit;
         return $this->render('index');
     }
 

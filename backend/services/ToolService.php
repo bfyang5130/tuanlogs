@@ -288,9 +288,9 @@ class ToolService {
         static $fp = NULL, $offset = array(), $index = NULL;
 
         $ipdot = explode('.', $ip);
-        print_r(ip2long($ip));exit;
+        //print_r(ip2long($ip));exit;
         $ip = pack('N', ip2long($ip));
-        print_r($ip);exit;
+        //print_r($ip);exit;
         $ipdot[0] = (int) $ipdot[0];
         $ipdot[1] = (int) $ipdot[1];
 
@@ -307,8 +307,8 @@ class ToolService {
        
 
         for ($start = $start['len'] * 8 + 1024; $start < $length; $start += 8) {
-            print_r($ip);
-              print_r($index{$start} . $index{$start + 1} . $index{$start + 2} . $index{$start + 3});exit;
+            //print_r($ip);
+              //print_r($index{$start} . $index{$start + 1} . $index{$start + 2} . $index{$start + 3});exit;
             if ($index{$start} . $index{$start + 1} . $index{$start + 2} . $index{$start + 3} >= $ip) {
                 $index_offset = @unpack('Vlen', $index{$start + 4} . $index{$start + 5} . $index{$start + 6} . "\x0");
                 $index_length = @unpack('Clen', $index{$start + 7});

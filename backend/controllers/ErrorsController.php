@@ -101,7 +101,7 @@ class ErrorsController extends Controller {
             ],
             'defaultOrder' => ['AddDate' => SORT_DESC]
         ]);
-        $locals = ToolService::getPagedRows($query, ['orderBy' => $sort->orders, 'pageSize' => 10]);
+        $locals = ToolService::getPagedRows($query,$tablename='ErrorLog', $params,['orderBy' => $sort->orders, 'pageSize' => 10]);
         $locals['searchModel'] = $searchModel;
 
         $application_item = ErrorLogService::getApplicationNameItem(1);

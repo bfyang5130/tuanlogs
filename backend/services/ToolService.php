@@ -41,12 +41,12 @@ class ToolService {
         return $minuteString;
     }
 
-    public static function getPagedRows($query, $params, $config = []) {
+    public static function getPagedRows($query, $tablename, $params, $config = []) {
         $countQuery = clone $query;
-        if(!isset($params['SqlLogSearch'])) {
-            $rownums = Yii::$app->db->createCommand("select TABLE_ROWS nums from information_schema.TABLES where TABLE_SCHEMA='Tuandai_Log' and TABLE_NAME='SqlTrace'")->queryOne();
-        } else {
+        if (isset($params['SqlLogSearch']) || isset($params['ErrorLogSearch'])) {
             $rownums['nums'] = $countQuery->count();
+        } else {
+            $rownums = Yii::$app->db->createCommand("select TABLE_ROWS nums from information_schema.TABLES where TABLE_SCHEMA='Tuandai_Log' and TABLE_NAME='" . $tablename . "'")->queryOne();
         }
         $pages = new Pagination([
             'totalCount' => $rownums['nums']

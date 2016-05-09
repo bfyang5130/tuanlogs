@@ -64,7 +64,8 @@ class TraceLogSearch extends TraceLog {
                 ],
             ]);
         } else {
-            $rownums['nums'] = \Yii::$app->db->createCommand("select TABLE_ROWS nums from information_schema.TABLES where TABLE_SCHEMA='Tuandai_Log' and TABLE_NAME='TraceLog'")->queryOne();
+            $rownums = \Yii::$app->db->createCommand("select TABLE_ROWS nums from information_schema.TABLES where TABLE_SCHEMA='Tuandai_Log' and TABLE_NAME='TraceLog'")->queryOne();
+           
             $dataProvider = new ActiveDataProvider([
                 'query' => $query,
                 'totalCount' => (int) $rownums['nums'],

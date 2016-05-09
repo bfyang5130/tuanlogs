@@ -43,11 +43,9 @@ class ToolService {
 
     public static function getPagedRows($query, $config = []) {
         $countQuery = clone $query;
-        $maxid=$countQuery->select("max(id) id")->one();
-        $minid=$countQuery->select("min(id) id")->one();
-        
+        $rownums=Yii::$app->db->createCommand("select TABLE_ROWS nums from information_schema.TABLES where TABLE_SCHEMA='Tuandai_Log' and TABLE_NAME='SqlTrace'")->queryOne();
         $pages = new Pagination([
-            'totalCount' => $maxid['id']-$minid['id']
+            'totalCount' => $rownums['nums']
         ]);
         if (isset($config['pageSize'])) {
             $pages->setPageSize($config['pageSize'], true);

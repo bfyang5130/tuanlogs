@@ -50,19 +50,33 @@ class TraceLogSearch extends TraceLog {
     public function search($params) {
 
         $this->load($params);
+        $query = TraceLog::find();
         if (isset($params['TraceLogSearch']['start_date']) && !empty($params['TraceLogSearch']['start_date'])) {
             $data = date("Ym", strtotime($params['TraceLogSearch']['start_date']));
             $nowdata = date("Ym");
-            if ($data < $nowdata&&$data>'201601') {
+            if ($data < $nowdata && $data > '201601') {
                 TraceLog::$tablename = 'TraceLog_' . $data;
             }
+            $dataProvider = new ActiveDataProvider([
+                'query' => $query,
+                'pagination' => [
+                    'pageSize' => 20,
+                ],
+            ]);
+        } else {
+            $rownums['nums'] = \Yii::$app->db->createCommand("select TABLE_ROWS nums from information_schema.TABLES where TABLE_SCHEMA='Tuandai_Log' and TABLE_NAME='TraceLog'")->queryOne();
+            $dataProvider = new ActiveDataProvider([
+                'query' => $query,
+                'totalCount' => (int) $rownums['nums'],
+                'pagination' => [
+                    'pageSize' => 20,
+                ],
+            ]);
         }
-        $query = TraceLog::find();
+        //print_r($rownums['nums']);exit;
         //$values = $params['TraceLogSearch'];
 
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
+
         if (!$this->validate()) {
             return $dataProvider;
         }

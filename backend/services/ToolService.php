@@ -288,13 +288,15 @@ class ToolService {
         static $fp = NULL, $offset = array(), $index = NULL;
 
         $ipdot = explode('.', $ip);
+        print_r(ip2long($ip));exit;
         $ip = pack('N', ip2long($ip));
-
+        print_r($ip);exit;
         $ipdot[0] = (int) $ipdot[0];
         $ipdot[1] = (int) $ipdot[1];
 
         if ($fp === NULL && $fp = @fopen($ipdatafile, 'rb')) {
             $offset = @unpack('Nlen', @fread($fp, 4));
+            
             $index = @fread($fp, $offset['len'] - 4);
         } elseif ($fp == FALSE) {
             return 'Invalid IP data file';
@@ -302,9 +304,11 @@ class ToolService {
 
         $length = $offset['len'] - 1028;
         $start = @unpack('Vlen', $index[$ipdot[0] * 4] . $index[$ipdot[0] * 4 + 1] . $index[$ipdot[0] * 4 + 2] . $index[$ipdot[0] * 4 + 3]);
+       
 
         for ($start = $start['len'] * 8 + 1024; $start < $length; $start += 8) {
-
+            print_r($ip);
+              print_r($index{$start} . $index{$start + 1} . $index{$start + 2} . $index{$start + 3});exit;
             if ($index{$start} . $index{$start + 1} . $index{$start + 2} . $index{$start + 3} >= $ip) {
                 $index_offset = @unpack('Vlen', $index{$start + 4} . $index{$start + 5} . $index{$start + 6} . "\x0");
                 $index_length = @unpack('Clen', $index{$start + 7});

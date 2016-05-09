@@ -339,7 +339,7 @@ $this->title = '服务器数据总览';
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td>
-                                                                                        <?= $value['error'] ?>
+                                                                                        无法得到数据
                                                                                     </td>
                                                                                 </tr>
                                                                             </tbody>

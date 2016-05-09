@@ -43,8 +43,11 @@ class ToolService {
 
     public static function getPagedRows($query, $config = []) {
         $countQuery = clone $query;
+        $maxid=$countQuery->select("max(id) id")->one();
+        $minid=$countQuery->select("min(id) id")->one();
+        
         $pages = new Pagination([
-            'totalCount' => $countQuery->count()
+            'totalCount' => $maxid['id']-$minid['id']
         ]);
         if (isset($config['pageSize'])) {
             $pages->setPageSize($config['pageSize'], true);

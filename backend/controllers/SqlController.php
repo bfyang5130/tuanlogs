@@ -19,6 +19,9 @@ use common\models\DatabaseType;
  */
 class SqlController extends Controller {
 
+    public function actionSqlnums(){
+        return $this->render("sqlnums");
+    }
     /**
      * 查询某个数据库的统计
      * @return type
@@ -168,7 +171,7 @@ class SqlController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['index', 'sqlgraph', 'addstatistics', 'database', 'longtimesql','sql50'],
+                        'actions' => ['index', 'sqlgraph', 'addstatistics', 'database', 'longtimesql','sql50','sqlnums'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],

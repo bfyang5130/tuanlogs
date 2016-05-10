@@ -12,10 +12,14 @@ $this->title = '慢日志查询';
 $params = \Yii::$app->request->get();
 $search_date = Yii::$app->request->get("executedate");
 //处理时间
-if (!empty($search_date)) {
-    $params['LongtimesqlSearch']['executedate'] = date('Y-m-d 00:00:00', strtotime($search_date));
-}
 $accLogErr = new LongtimesqlSearch();
+if (!empty($params['LongtimesqlSearch']['executedate'])) {
+    $accLogErr->executedate=$params['LongtimesqlSearch']['executedate'];
+}else{
+    $params['LongtimesqlSearch']['executedate'] = date('Y-m-d 00:00:00');
+    $accLogErr->executedate=date("Y-m-d 00:00:00");
+}
+
 
 
 $thisDayErrorsLists = $accLogErr->search($params);
@@ -67,18 +71,17 @@ if ($begin > $end) {
                                                             <?= Html::activeDropDownList($accLogErr, 'databasetype', \backend\services\SqlTraceService::getSqlTraceDbType(), ['class' => 'form-control']) ?>
 
                                                             <label for="exampleInputEmail2">执行时间：</label>
-                                                            <?=
-                                                            DateTimePicker::widget([
-                                                                'language' => 'zh-CN',
+                                                             <?=
+                                                            \yii\jui\DatePicker::widget([
+                                                                'options' => ['class' => 'form-control datepicker', 'readonly' => true],
                                                                 'model' => $accLogErr,
+                                                                'language' => 'zh-CN',
                                                                 'attribute' => 'executedate',
-                                                                'pickButtonIcon' => 'glyphicon glyphicon-time',
-                                                                'template' => '{input}{button}',
+                                                                'value' => date('Y-m-d'),
+                                                                'dateFormat' => 'php:Y-m-d',
                                                                 'clientOptions' => [
                                                                     'autoclose' => true,
-                                                                    'format' => 'yyyy-mm-dd',
-                                                                    'todayBtn' => true,
-                                                                ],
+                                                                ]
                                                             ]);
                                                             ?>
                                                             <button type="submit" class="btn btn-default btn-primary btn-sm">查询</button>

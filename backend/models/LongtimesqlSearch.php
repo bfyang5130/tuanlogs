@@ -46,7 +46,7 @@ class LongtimesqlSearch extends SqlTraceLong {
             'query' => $query,
             'sort' => [
                 'defaultOrder' => [
-                    'executedate' => SORT_DESC,
+                    'sqlusedtime' => SORT_DESC,
                 ],
             ],
         ]);

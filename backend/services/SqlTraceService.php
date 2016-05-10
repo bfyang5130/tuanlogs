@@ -52,28 +52,22 @@ class SqlTraceService {
         //$search_date = date("2016-1-4");
         #定义每秒访问的数据，如果是当前查询，就当前的数据为准,否则为86400
         $secend = 86400;
-        #如果是今天的数据，进行实时查询
+        //获得数据之前，先做一次统计
+        try {
+            \Yii::$app->db->createCommand("call p_SqlTrace_day")->execute();
+        } catch (\yii\console\Exception $e) {
+            
+        }
+        #如果是今天的数据，设定统计的一些数据做改变
         if (strtotime($search_date) === strtotime(date("Y-m-d"))) {
             $secend = time() - strtotime(date("Y-m-d"));
-            #查询实时数据
-            $application_list = \Yii::$app->db->createCommand('select databasetype,count(0) Number,date_format(executedate,"%Y-%m-%d %H:00:00") Date,now() Updatetime,sum(sqlusedtime) totoltime
-                                              from SqlTrace where executedate between :exdate and :exdate1 group by databasetype, date_format(executedate,"%Y-%m-%d %H:00:00")
-                                              ', [':exdate' => $search_date, ':exdate1' => date('Y-m-d', strtotime("$search_date +1 day"))])->queryAll();
-        } else {
-            #从已经有的数据里取出数据
-            $application_query = new Query();
-            $application_query->select("*")
-                    ->from("SqlTrace_day")
-                    ->where("`Date` between :exdate and :exdate1", [':exdate' => $search_date, ':exdate1' => date('Y-m-d', strtotime("$search_date +1 day"))]);
-            $application_list = $application_query->all();
-            if (empty($application_list)) {
-                \Yii::$app->db->createCommand('insert into `SqlTrace_day`(`databasetype`,`Number`,`Date`,Updatetime,`totoltime`) select databasetype,count(0),date_format(executedate,"%Y-%m-%d %H:00:00") Date,now(),sum(sqlusedtime)
-                                              from SqlTrace where executedate between :exdate and :exdate1 group by databasetype, date_format(executedate,"%Y-%m-%d %H:00:00")  having databasetype is not null order by null
-                                              ', [':exdate' => $search_date, ':exdate1' => date('Y-m-d', strtotime("$search_date +1 day"))])->execute();
-
-                $application_list = $application_query->all();
-            }
         }
+        #从已经有的数据里取出数据
+        $application_query = new Query();
+        $application_query->select("*")
+                ->from("SqlTrace_day")
+                ->where("`Date` between :exdate and :exdate1", [':exdate' => $search_date, ':exdate1' => date('Y-m-d', strtotime("$search_date +1 day"))]);
+        $application_list = $application_query->all();
         if (empty($application_list)) {
             return [];
         }

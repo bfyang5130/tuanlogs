@@ -11,15 +11,16 @@ use dosamigos\datetimepicker\DateTimePicker;
 
 $this->title = '慢日志查询';
 $params = \Yii::$app->request->get();
-$search_date = Yii::$app->request->get("executedate");
 //为了保证实时数据，先统计一下当前最近10分钟的top50数据因为只有10分钟，所以统计会少很多时间
 SqlTraceService::tofitTop50near10minute();
 //处理时间
-if (!empty($search_date)) {
-    $params['Sql50Search']['executedate'] = date('Y-m-d 00:00:00', strtotime($search_date));
-}
 $accLogErr = new Sql50Search();
-
+if (!empty($params['Sql50Search']['executedate'])) {
+    $accLogErr->executedate=$params['Sql50Search']['executedate'];
+}else{
+    $params['Sql50Search']['executedate'] = date('Y-m-d 00:00:00');
+    $accLogErr->executedate=date("Y-m-d 00:00:00");
+}
 
 $thisDayErrorsLists = $accLogErr->search($params);
 $pager = $thisDayErrorsLists->getPagination();
@@ -71,24 +72,23 @@ if ($begin > $end) {
 
                                                             <label for="exampleInputEmail2">执行时间：</label>
                                                             <?=
-                                                            DateTimePicker::widget([
-                                                                'language' => 'zh-CN',
+                                                            \yii\jui\DatePicker::widget([
+                                                                'options' => ['class' => 'form-control datepicker', 'readonly' => true],
                                                                 'model' => $accLogErr,
+                                                                'language' => 'zh-CN',
                                                                 'attribute' => 'executedate',
-                                                                'pickButtonIcon' => 'glyphicon glyphicon-time',
-                                                                'template' => '{input}{button}',
+                                                                'value' => date('Y-m-d'),
+                                                                'dateFormat' => 'php:Y-m-d',
                                                                 'clientOptions' => [
                                                                     'autoclose' => true,
-                                                                    'format' => 'yyyy-mm-dd',
-                                                                    'todayBtn' => true,
-                                                                ],
+                                                                ]
                                                             ]);
                                                             ?>
                                                             <button type="submit" class="btn btn-default btn-primary btn-sm">查询</button>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <?php ActiveForm::end(); ?>
+<?php ActiveForm::end(); ?>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -102,17 +102,17 @@ if ($begin > $end) {
                                             <th>数据库</th>
                                             <th>执行时间</th>
                                         </tr>
-                                        <?php foreach ($datas as $oneErrorValue): ?>
+<?php foreach ($datas as $oneErrorValue): ?>
                                             <tr>
                                                 <td class="center"><code><?= Html::encode($oneErrorValue['sqltext']) ?></code></td>
                                                 <td class="center"><?= Html::encode($oneErrorValue['sqlusedtime']) ?></td>
                                                 <td class="center"><?= Html::encode($oneErrorValue['databasetype']) ?></td>
                                                 <td class="center"><?= Html::encode($oneErrorValue['executedate']) ?></td>
                                             </tr>
-                                        <?php endforeach; ?>
+                                                <?php endforeach; ?>
                                         <tr>
                                             <td colspan="6" class="text-center">
-                                                <?= LinkPager::widget(['pagination' => $pager]); ?>
+<?= LinkPager::widget(['pagination' => $pager]); ?>
                                             </td>
                                         </tr>
                                     </tbody>

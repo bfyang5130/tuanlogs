@@ -16,7 +16,8 @@ $toUrl = Url::toRoute($url) . '?ip=' . $ip;
 <div class="panel-heading">
     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
         <div class="btn-group" role="group" aria-label="First group">
-            <a href="<?= Url::toRoute('/visit/index') ?>" class="btn btn-default<?= ($id == 'index') ? ' btn-primary' : '' ?>">Nginx日志</a>
+            <a href="<?= Url::toRoute('/visit/index') ?>" class="btn btn-default<?= ($id == 'index') ? ' btn-primary' : '' ?>">访问IP统计</a>
+            <a href="<?= Url::toRoute('/visit/showtotal') ?>" class="btn btn-default<?= ($id == 'showtotal') ? ' btn-primary' : '' ?>">Nginx日志</a>
             <a href="<?= Url::toRoute('/visit/servicestatus') ?>" class="btn btn-default<?= ($id == 'servicestatus') ? ' btn-primary' : '' ?>">服务器状态</a>
             <a href="<?= Url::toRoute('/visit/iis') ?>" class="btn btn-default<?= ($id == 'iis') ? ' btn-primary' : '' ?>">IIS日志</a>
         </div>

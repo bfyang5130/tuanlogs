@@ -9,7 +9,7 @@ use yii\helpers\Html;
 use backend\services\SqlTraceService;
 use dosamigos\datetimepicker\DateTimePicker;
 
-$this->title = '慢日志查询';
+$this->title = 'IP重复访问最多数据';
 $params = \Yii::$app->request->get();
 //为了保证实时数据，先统计一下当前最近10分钟的top50数据因为只有10分钟，所以统计会少很多时间
 //处理时间
@@ -17,8 +17,8 @@ $accLogErr = new AccessLogMostSearch();
 if (!empty($params['AccessLogMostSearch']['Date_time'])) {
     $accLogErr->Date_time = $params['AccessLogMostSearch']['Date_time'];
 } else {
-    $params['AccessLogMostSearch']['Date_time'] = date('Y-m-d 00:00:00', strtotime('+1 day', strtotime($this->start_date)));
-    $accLogErr->Date_time = date('Y-m-d 00:00:00', strtotime('+1 day', strtotime($this->start_date)));
+    $params['AccessLogMostSearch']['Date_time'] = date('Y-m-d 00:00:00', strtotime('-1 day', time()));
+    $accLogErr->Date_time = date('Y-m-d 00:00:00', strtotime('-1 day', time()));
 }
 
 $thisDayErrorsLists = $accLogErr->search($params);

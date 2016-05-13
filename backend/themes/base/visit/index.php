@@ -17,8 +17,8 @@ $accLogErr = new AccessLogMostSearch();
 if (!empty($params['AccessLogMostSearch']['Date_time'])) {
     $accLogErr->Date_time = $params['AccessLogMostSearch']['Date_time'];
 } else {
-    $params['AccessLogMostSearch']['Date_time'] = date('Y-m-d 00:00:00');
-    $accLogErr->Date_time = date("Y-m-d 00:00:00");
+    $params['AccessLogMostSearch']['Date_time'] = date('Y-m-d 00:00:00', strtotime('+1 day', strtotime($this->start_date)));
+    $accLogErr->Date_time = date('Y-m-d 00:00:00', strtotime('+1 day', strtotime($this->start_date)));
 }
 
 $thisDayErrorsLists = $accLogErr->search($params);

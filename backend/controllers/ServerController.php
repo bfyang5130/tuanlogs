@@ -27,7 +27,7 @@ class ServerController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => [ 'index', 'addmonitor', 'selectmonitor', 'setindex', 'status', 'demo', 'api'],
+                        'actions' => [ 'index', 'addmonitor', 'selectmonitor', 'setindex', 'status', 'demo', 'strdemo', 'api'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -65,6 +65,13 @@ class ServerController extends Controller {
      */
     public function actionDemo() {
         return $this->render('demo');
+    }
+
+    /**
+     * 测试案例
+     */
+    public function actionStrdemo() {
+        return $this->render('strdemo');
     }
 
     /**
@@ -124,13 +131,23 @@ class ServerController extends Controller {
     public function actionApi() {
 
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        //获得调用的方法
+        $fc = \Yii::$app->request->get('fc');
+        if (!empty($fc)) {
+            switch ($fc) {
+                case 'twodayfit':
+                    $dataLists = \backend\services\ZabbixHightchartService::fitTwoDay();
+                    return $dataLists;
+                default :
+            }
+        }
         $id = \Yii::$app->request->get('id');
         if (empty($id)) {
             return [];
         }
         //配置选择的时间
         $date = \Yii::$app->request->get('date');
-        
+
         if (empty($date)) {
             $sDate = date('Y-m-d 00:00:00');
             $eDate = date('Y-m-d H:i:s');
@@ -138,8 +155,8 @@ class ServerController extends Controller {
             $sDate = date('Y-m-d 00:00:00', strtotime($date));
             $eDate = date('Y-m-d 00:00:00', strtotime("+1 day", strtotime($date)));
         }
-        if(strtotime($eDate)>  time()){
-            $eDate=date('Y-m-d H:i:s');
+        if (strtotime($eDate) > time()) {
+            $eDate = date('Y-m-d H:i:s');
         }
 //获得相应数据
         $datlists = \backend\services\ZabbixHightchartService::findSelectColumnFit($id, $sDate, $eDate);

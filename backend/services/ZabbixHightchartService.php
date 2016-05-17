@@ -211,6 +211,13 @@ class ZabbixHightchartService {
         return [$id, $stime, $etime];
     }
 
+    /**
+     * 处理两天的对比数据
+     */
+    public static function fitTwoDay() {
+        
+    }
+
 }
 
 ?>

@@ -26,8 +26,7 @@ class AutoZabbixService {
         $timemark = strtotime($fitdate);
         $starttime = strtotime($date);
         $endtime = strtotime(date("Y-m-d H:00:00"));
-        $fitIdLists = MonitorLog::find()->asArray()->distinct("monitor_id")->where("log_date!=:lastDate", [':lastDate' => $date])->all();
-        
+        $fitIdLists = MonitorLog::find()->asArray()->distinct("monitor_id")->where("log_date=:lastDate", [':lastDate' => $date])->all();
         if (empty($fitIdLists)) {
             //为空时处理所有的ID
             $fitArrayLists = Monitor::find()->orderBy("id asc")->limit(360)->all();

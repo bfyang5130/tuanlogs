@@ -55,7 +55,8 @@ class ZabbixCurlService {
         //Init curl
         $curl = new Curl();
         $options = [
-            CURLOPT_HTTPHEADER => self::$header
+            CURLOPT_HTTPHEADER => self::$header,
+            CURLOPT_TIMEOUT => 60
         ];
         if (!empty($postData) && is_array($postData)) {
             $jsonString = json_encode($postData);

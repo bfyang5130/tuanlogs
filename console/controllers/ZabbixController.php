@@ -4,6 +4,7 @@ namespace console\controllers;
 
 use yii\console\Controller;
 use backend\services\ZabbixCurlService;
+use console\services\AutoZabbixService;
 
 /**
  * 日志处理后台程序
@@ -12,6 +13,17 @@ class ZabbixController extends Controller {
 
     public static $header = ['Content-type: application/json;charset="utf-8"', 'Accept: application/json'];
     public static $hashString = null;
+
+    /**
+     * 自动获得昨天的几台服务器的数组并进行处理成48条柱子显示的数据
+     */
+    public function actionAutoserver(){
+        //获得数组库中配有的参数
+        AutoZabbixService::fitZabbixYestoday();
+    }
+
+
+
 
     private static function hashString() {
         if (ZabbixController::$hashString === NULL) {
@@ -80,125 +92,5 @@ class ZabbixController extends Controller {
         }
         print_r($reposeData['info']);
     }
-
-//
-//    /**
-//     * Yii action controller
-//     */
-//    public function actions() {
-//        return [
-//            'error' => [
-//                'class' => 'yii\web\ErrorAction',
-//            ],
-//        ];
-//    }
-//
-//    /**
-//     * cURL GET example
-//     */
-//    public function actionGetExample() {
-//        //Init curl
-//        $curl = new curl\Curl();
-//
-//        //get http://example.com/
-//        $response = $curl->get('http://example.com/');
-//    }
-//
-//    /**
-//     * cURL POST example with post body params.
-//     */
-//    public function actionPostExample() {
-//        //Init curl
-//        $curl = new curl\Curl();
-//
-//        //post http://example.com/
-//        $response = $curl->setOption(
-//                        CURLOPT_POSTFIELDS, http_build_query(array(
-//                    'myPostField' => 'value'
-//                                )
-//                ))
-//                ->post('http://example.com/');
-//    }
-//
-//    /**
-//     * cURL multiple POST example one after one
-//     */
-//    public function actionMultipleRequest() {
-//        //Init curl
-//        $curl = new curl\Curl();
-//
-//
-//        //post http://example.com/
-//        $response = $curl->setOption(
-//                        CURLOPT_POSTFIELDS, http_build_query(array(
-//                    'myPostField' => 'value'
-//                                )
-//                ))
-//                ->post('http://example.com/');
-//
-//
-//        //post http://example.com/, reset request before
-//        $response = $curl->reset()
-//                ->setOption(
-//                        CURLOPT_POSTFIELDS, http_build_query(array(
-//                    'myPostField' => 'value'
-//                                )
-//                ))
-//                ->post('http://example.com/');
-//    }
-//
-//    /**
-//     * cURL advanced GET example with HTTP status codes
-//     */
-//    public function actionGetAdvancedExample() {
-//        //Init curl
-//        $curl = new curl\Curl();
-//
-//        //get http://example.com/
-//        $response = $curl->post('http://www.baidu.com/');
-//
-//        // List of status codes here http://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-//        switch ($curl->responseCode) {
-//
-//            case 'timeout':
-//                //timeout error logic here
-//                break;
-//
-//            case 200:
-//                //success logic here
-//                break;
-//
-//            case 404:
-//                //404 Error logic here
-//                break;
-//        }
-//    }
-//
-//    /**
-//     * cURL timeout chaining/handling
-//     */
-//    public function actionHandleTimeoutExample() {
-//        //Init curl
-//        $curl = new curl\Curl();
-//
-//        //get http://www.google.com:81/ -> timeout
-//        $response = $curl->post('http://www.google.com:81/');
-//
-//        // List of status codes here http://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-//        switch ($curl->responseCode) {
-//
-//            case 'timeout':
-//                //timeout error logic here
-//                break;
-//
-//            case 200:
-//                //success logic here
-//                break;
-//
-//            case 404:
-//                //404 Error logic here
-//                break;
-//        }
-//    }
 }
 

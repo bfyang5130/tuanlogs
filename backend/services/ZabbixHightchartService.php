@@ -267,25 +267,11 @@ class ZabbixHightchartService {
             [
                 'name' => $legend['data'][0],
                 'type' => 'bar',
-                'label' => [
-                    'normal' => [
-                        'show' => true,
-                        'position' => 'top',
-                        'formatter' => '{c} %'
-                    ]
-                ],
                 'data' => array_values($arrone)
             ],
             [
                 'name' => $legend['data'][1],
                 'type' => 'bar',
-                'label' => [
-                    'normal' => [
-                        'show' => true,
-                        'position' => 'top',
-                        'formatter' => '{c} %'
-                    ]
-                ],
                 'data' => array_values($arrtwo)
             ]
         ];

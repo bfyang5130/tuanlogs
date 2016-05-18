@@ -41,7 +41,7 @@ if (empty($search_date)) {
                                     var myChart = echarts.init(document.getElementById('main'));
                                     myChart.showLoading();
 
-                                    $.get('/server/api.html?fc=twodayfit&monitor_id=1&date=2016-05-17', function(data) {
+                                    $.get('/server/api.html?fc=twodayfit&monitor_id=1&date=2016-05-18', function(data) {
                                         myChart.hideLoading();
                                         myChart.setOption(option = {
                                             tooltip: {

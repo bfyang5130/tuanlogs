@@ -276,7 +276,7 @@ $this->registerJsFile('/base/js/echarts-all-3.js', [
                                             foreach ($showLists5 as $oneShowItem):
                                                 ?>
                                         <tr>
-                                            <td><?= $oneShowItem->monitor_name ?></td>
+                                            <td><span class="pull-left"><?= $oneShowItem->monitor_name ?></span><span class="pull-right"><?= $oneShowItem->monitor_host ?></span></td>
                                         </tr>
                                                 <tr>
                                                     <td>

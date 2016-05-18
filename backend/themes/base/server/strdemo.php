@@ -40,67 +40,48 @@ if (empty($search_date)) {
                                 <script type="text/javascript">
                                     var myChart = echarts.init(document.getElementById('main'));
                                     myChart.showLoading();
-                                    myChart.hideLoading();
 
-                                    myChart.setOption(option = {
-                                        tooltip: {
-                                            trigger: 'axis',
-                                            axisPointer: {// 坐标轴指示器，坐标轴触发有效
-                                                type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                                            }
-                                        },
-                                        legend: {
-                                            data: ['2016-05-16', '2016-05-17'],
-                                            show: true
-                                        },
-                                        grid: {
-                                            left: '3%',
-                                            right: '4%',
-                                            bottom: '3%',
-                                            containLabel: true
-                                        },
-                                        xAxis: [
-                                            {
-                                                type: 'category',
-                                                data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
-                                            }
-                                        ],
-                                        yAxis: [
-                                            {
-                                                type: 'value',
-                                                axisLabel: {
-                                                    show: true,
-                                                    interval: 'auto',
-                                                    formatter: '{value} %'
+                                    $.get('/server/api.html?fc=twodayfit&monitor_id=1&date=2016-05-17', function(data) {
+                                        myChart.hideLoading();
+                                        myChart.setOption(option = {
+                                            tooltip: {
+                                                trigger: 'axis',
+                                                axisPointer: {// 坐标轴指示器，坐标轴触发有效
+                                                    type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
                                                 }
-                                            }
-                                        ],
-                                        series: [
-                                            {
-                                                name: '2016-05-16',
-                                                type: 'bar',
-                                                label: {
-                                                    normal: {
-                                                        show: true,
-                                                        position: 'top',
-                                                        formatter: '{c} %'
-                                                    }
-                                                },
-                                                data: [320, 332, 301, 334, 390, 330, 320]
                                             },
-                                            {
-                                                name: '2016-05-17',
-                                                type: 'bar',
-                                                label: {
-                                                    normal: {
+                                            legend: {
+                                                data: data.legenddata,
+                                                show: true
+                                            },
+                                            grid: {
+                                                left: '3%',
+                                                right: '4%',
+                                                bottom: '3%',
+                                                containLabel: true
+                                            },
+                                            xAxis: [
+                                                {
+                                                    type: 'category',
+                                                    data: data.xAxisdata,
+                                                }
+                                            ],
+                                            yAxis: [
+                                                {
+                                                    type: 'value',
+                                                    max: 100,
+                                                    axisLabel: {
                                                         show: true,
-                                                        position: 'top',
-                                                        formatter: '{c} %'
+                                                        interval: 'auto',
+                                                        formatter: '{value} %'
                                                     }
-                                                },
-                                                data: [120, 132, 101, 134, 90, 230, 210]
-                                            }
-                                        ]
+                                                }
+                                            ],
+                                            series: data.series
+                                        });
+                                    });
+                                    myChart.on('click', function (parmas) {
+                                    alert(parmas.name);
                                     });
                                 </script>
                             </div>

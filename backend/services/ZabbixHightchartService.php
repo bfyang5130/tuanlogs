@@ -215,7 +215,86 @@ class ZabbixHightchartService {
      * 处理两天的对比数据
      */
     public static function fitTwoDay() {
-        
+        //获得ID，获得时间
+        $monitor_id = \Yii::$app->request->get('monitor_id');
+        $date = \Yii::$app->request->get('date');
+        //如果这两个都为空那么就直接出错吧
+        if (empty($monitor_id) || empty($date)) {
+            return [];
+        }
+
+        //获得昨天到现在的数据最多共96条数据
+        $startdate = date("Y-m-d 00:00:00", strtotime("-1 day", strtotime($date)));
+
+        $enddate = date("Y-m-d 00:00:00", strtotime("+1 day", strtotime($date)));
+        //获得区间数据
+        $selectidLists = \common\models\MonitorLog::find()->where(['between', 'log_date', $startdate, $enddate])->orderBy("log_date desc")->all();
+        if (empty($selectidLists)) {
+            return [];
+        }
+        //处理这些数据
+        //定义三个标记数据
+        $startdatestr = strtotime($startdate);
+        $middatestr = strtotime(date("Y-m-d 00:00:00", strtotime($date)));
+        //定义legend.data
+        $legend['data'] = [date('Y-m-d', $startdatestr), date('Y-m-d', $middatestr)];
+        //定义两个数组
+        $arrone = [];
+        $arrtwo = [];
+        //定义一个xaxis.data
+        $xaxis['data'] = [];
+        for ($i = 0; $i < 48; $i++) {
+            $key1 = date('Y-m-d H:i:s', $startdatestr);
+            $key2 = date('Y-m-d H:i:s', $middatestr);
+            $arrone[$key1] = 0;
+            $arrtwo[$key2] = 0;
+            $startdatestr+=1800;
+            $middatestr+=1800;
+            $xaxis['data'][] = date('H:i', $startdatestr);
+        }
+        foreach ($selectidLists as $onSelectItem) {
+            if (isset($arrone[$onSelectItem->log_date])) {
+                $arrone[$onSelectItem->log_date] = $onSelectItem->serize_string;
+            } else {
+                $arrtwo[$onSelectItem->log_date] = $onSelectItem->serize_string;
+            }
+        }
+        //已经处理好上面的两组数据现在要生成一个echarts能认得的数组数据
+        //json legend.data
+        //xAxis.data
+        //series
+        $series = [
+            [
+                'name' => $legend['data'][0],
+                'type' => 'bar',
+                'label' => [
+                    'normal' => [
+                        'show' => true,
+                        'position' => 'top',
+                        'formatter' => '{c} %'
+                    ]
+                ],
+                'data' => array_values($arrone)
+            ],
+            [
+                'name' => $legend['data'][1],
+                'type' => 'bar',
+                'label' => [
+                    'normal' => [
+                        'show' => true,
+                        'position' => 'top',
+                        'formatter' => '{c} %'
+                    ]
+                ],
+                'data' => array_values($arrtwo)
+            ]
+        ];
+        $returnArray = [
+            'legenddata' => $legend['data'],
+            'xAxisdata' => $xaxis['data'],
+            'series' => $series,
+        ];
+        return $returnArray;
     }
 
 }

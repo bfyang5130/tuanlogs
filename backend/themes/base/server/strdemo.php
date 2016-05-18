@@ -7,7 +7,7 @@ use yii\web\View;
 $this->registerJsFile('/base/js/echarts-all-3.js', [
     'position' => View::POS_HEAD
 ]);
-$this->title = '用户页面访问图';
+$this->title = '监制信息处理';
 $id = \Yii::$app->request->get('id');
 if (!$id) {
     $id = 0;
@@ -80,8 +80,31 @@ if (empty($search_date)) {
                                             series: data.series
                                         });
                                     });
-                                    myChart.on('click', function (parmas) {
-                                    alert(parmas.name);
+                                    myChart.on('click', function(parmas) {
+                                        //这里的parmas.name是一个时间数值，可以用来处理对应的时间段数据
+                                        //获得详细指定的时间段数据，并更改图形内的数据
+                                        var fitnametime = parmas.name;
+                                        if (fitnametime.length > 5) {
+                                         //返回直接跳转回当值页面就算了
+                                         if(confirm("确定返回上层数据吗？")){
+                                             location.reload();
+                                         }
+                                        } else {
+                                            alert("数据加载中...请稍侯");
+                                            $.get('/server/api.html?fc=detail&monitor_id=1&date=2016-05-18&detialtime=' + parmas.name, function(data) {
+
+                                                if (data.seriesdata1 == "undefined") {
+                                                    alert("无法获得这个时间点的数据");
+                                                } else {
+                                                    var newoption = myChart.getOption();
+                                                    newoption.series[0].data = data.seriesdata1;
+                                                    newoption.series[1].data = data.seriesdata2;
+                                                    newoption.xAxis[0].data = data.xAxisdata;
+                                                    newoption.dataZoom = data.dataZoom;
+                                                    myChart.setOption(newoption);
+                                                }
+                                            });
+                                        }
                                     });
                                 </script>
                             </div>

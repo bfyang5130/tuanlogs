@@ -27,7 +27,7 @@ class ServerController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => [ 'index', 'addmonitor', 'selectmonitor', 'setindex', 'status', 'demo', 'strdemo', 'api'],
+                        'actions' => [ 'index', 'addmonitor', 'selectmonitor', 'setindex', 'status', 'demo', 'strdemo', 'staticdemo', 'api'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -72,6 +72,14 @@ class ServerController extends Controller {
      */
     public function actionStrdemo() {
         return $this->render('strdemo');
+    }
+
+    /**
+     * 一个静矿态的测试例子
+     * @return type
+     */
+    public function actionStaticdemo() {
+        return $this->render("staticdemo");
     }
 
     /**
@@ -137,6 +145,9 @@ class ServerController extends Controller {
             switch ($fc) {
                 case 'twodayfit':
                     $dataLists = \backend\services\ZabbixHightchartService::fitTwoDay();
+                    return $dataLists;
+                case 'detail':
+                    $dataLists = \backend\services\ZabbixHightchartService::fitDetailData();
                     return $dataLists;
                 default :
             }

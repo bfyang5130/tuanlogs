@@ -283,6 +283,142 @@ class ZabbixHightchartService {
         return $returnArray;
     }
 
+    /**
+     * 取得一个钟头的数据，这个数据会跟频率有关，因为一个钟头的数据有600条
+     */
+    public static function fitDetailData() {
+        //获得ID，获得时间，详细时间
+        $monitor_id = \Yii::$app->request->get('monitor_id');
+        $date = \Yii::$app->request->get('date');
+        $detialtime = \Yii::$app->request->get('detialtime');
+        //如果这两个都为空那么就直接出错吧
+        if (empty($monitor_id) || empty($date) || empty($detialtime)) {
+            return [];
+        }
+        //获得指定数据的信息
+        $oneItem = Monitor::find()->where("id=:id", [':id' => $monitor_id])->one();
+        if (!$oneItem) {
+            return [];
+        }
+        $fitendtime = $date . date(" H:i:s", strtotime($detialtime));
+        $fitendtimestr = strtotime($fitendtime);
+        $fitstarttimestr = $fitendtimestr - 1800;
+        //先得到当前一排的数据
+        //配置数据并向ZABBIX获得数据
+        //配置请求参数
+        $postData = [
+            'jsonrpc' => '2.0',
+            'method' => 'history.get',
+            'params' => [
+                'history' => 0,
+                'itemids' => $oneItem->monitor_item,
+                'time_from' => $fitstarttimestr,
+                'time_till' => $fitendtimestr,
+                'output' => 'extend'
+            ],
+            'id' => 0,
+            'auth' => ''
+        ];
+        $reposeData1 = ZabbixCurlService::curlPostResult($postData, FALSE);
+        //没有找到对应数据时处理异常
+        if ($reposeData1['status'] === false) {
+            $reposeData1 = [];
+        }
+        if (empty($reposeData1['info']->result)) {
+            $reposeData1 = [];
+        }
+        //得到第二排的数据
+        $postData = [
+            'jsonrpc' => '2.0',
+            'method' => 'history.get',
+            'params' => [
+                'history' => 0,
+                'itemids' => $oneItem->monitor_item,
+                'time_from' => $fitstarttimestr - 86400,
+                'time_till' => $fitendtimestr - 86400,
+                'output' => 'extend'
+            ],
+            'id' => 0,
+            'auth' => ''
+        ];
+        $reposeData2 = ZabbixCurlService::curlPostResult($postData, FALSE);
+        //没有找到对应数据时处理异常
+        if ($reposeData2['status'] === false) {
+            $reposeData2 = [];
+        }
+        if (empty($reposeData2['info']->result)) {
+            $reposeData2 = [];
+        }
+        //如果全为空就返回没数据
+        if (empty($reposeData1) && empty($reposeData2)) {
+            return [];
+        }
+        //配置数据
+        //二级处理数据其实只需要处理series.data xAxis.data dataZoom这三组数据的设置
+        $seriesdata[1] = [];
+        $seriesdata[2] = [];
+        $xAxisdata = [];
+        $nums = 1;
+        if (!empty($reposeData1)) {
+            $nums = count($reposeData1['info']->result);
+            foreach ($reposeData1['info']->result as $oneDate) {
+                $xAxisdata[] = date('H:i:s', $oneDate->clock);
+                $ceilnum = $oneDate->value * 1000;
+                if ($ceilnum > 0) {
+                    $ceilnum+=10;
+                }
+                $ceilnum = ceil($ceilnum);
+                $ceilnum = $ceilnum / 1000;
+                $seriesdata[1][] = floatval(round($ceilnum, 2));
+                if (empty($reposeData2)) {
+                    $seriesdata[2][] = 0;
+                }
+            }
+        }
+        if (!empty($reposeData2)) {
+            $nums = count($reposeData2['info']->result);
+            foreach ($reposeData2['info']->result as $oneDate) {
+                $xAxisdata[] = date('H:i:s', $oneDate->clock);
+                $ceilnum = $oneDate->value * 1000;
+                if ($ceilnum > 0) {
+                    $ceilnum+=10;
+                }
+                $ceilnum = ceil($ceilnum);
+                $ceilnum = $ceilnum / 1000;
+                $seriesdata[2][] = floatval(round($ceilnum, 2));
+                if (empty($reposeData1)) {
+                    $seriesdata[1][] = 0;
+                }
+            }
+        }
+
+        //处理显示的比例,初始显示48条柱子，计算显示的比例
+        $showlimit = round(4800 / $nums, 2);
+        if ($showlimit > 100) {
+            $showlimit = 100;
+        }
+        $fitShowlimit = 100 - $showlimit;
+        //返回处理后的数组
+        $fitReturnArray = [
+            'seriesdata1' => $seriesdata[1],
+            'seriesdata2' => $seriesdata[2],
+            'xAxisdata' => $xAxisdata,
+            'dataZoom' => [
+                [
+                    'type' => 'slider',
+                    'start' => $fitShowlimit,
+                    'end' => 100
+                ],
+                [
+                    'type' => 'inside',
+                    'start' => $fitShowlimit,
+                    'end' => 100
+                ]
+            ],
+        ];
+        return $fitReturnArray;
+    }
+
 }
 
 ?>

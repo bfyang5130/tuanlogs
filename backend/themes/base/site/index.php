@@ -210,12 +210,6 @@ $endtime = date('Y-m-01 00:00:00', strtotime('+1 month', strtotime($starttime)))
                                                                 series: data.series
                                                             });
                                                         });
-
-                                                        myChartSqlTrend.on('click', function(parmas) {
-                                                            //这里的parmas.name是一个时间数值，可以用来处理对应的时间段数据
-                                                            //获得详细指定的时间段数据，并更改图形内的数据
-                                                            window.location.href = "<?= Url::toRoute('/errors/index') . '?ErrorLogSearch%5Bstart_date%5D=' . $starttime . '&ErrorLogSearch%5Bend_date%5D=' . $endtime . '&ErrorLogSearch%5BApplicationId%5D=' ?>" + parmas.name;
-                                                        });
                                                     </script>
                                                 </div>
                                             </td>

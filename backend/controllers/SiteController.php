@@ -32,7 +32,7 @@ class SiteController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index','tip'],
+                        'actions' => ['logout', 'index', 'tip', 'tongji'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -57,11 +57,16 @@ class SiteController extends Controller {
             ],
         ];
     }
+
     public function actionIndex() {
         //echo ToolService::convertip_tiny('121.13.249.210','K:/web/tuanlogs/common/data/tinyipdata.dat');exit;
         return $this->render('index');
     }
 
+    public function actionTongji() {
+        //echo ToolService::convertip_tiny('121.13.249.210','K:/web/tuanlogs/common/data/tinyipdata.dat');exit;
+        return $this->render('tongji');
+    }
 
     /**
      * 登录入口
@@ -87,7 +92,6 @@ class SiteController extends Controller {
 
         return $this->goHome();
     }
-
 
     //提示页面
     public function actionTip() {

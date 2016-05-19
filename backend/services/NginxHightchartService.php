@@ -307,12 +307,12 @@ class NginxHightchartService {
         }
         foreach ($fitdates as $key => $oneDate) {
             $outCharts['series'][] = [
-                'name' => $key,
+                'name' => ''.$key,
                 'type' => 'line',
                 'smooth' => true,
                 'data' => array_values($oneDate),
             ];
-            $outCharts['toptip'][]=$key;
+            $outCharts['toptip'][]=''.$key;
         }
         $outCharts['categories'] = array_reverse($outCharts['categories']);
         //标记是否为今天的数据，如果是今天的数据,那么对今天的数据进行实时统计处理

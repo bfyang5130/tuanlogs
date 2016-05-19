@@ -103,6 +103,7 @@ $endtime = date('Y-m-01 00:00:00', strtotime('+1 month', strtotime($starttime)))
                                                                 },
                                                                 legend: {
                                                                     data: data.toptip,
+                                                                    itemHeight:9,
                                                                 },
                                                                 xAxis: {
                                                                     type: 'category',
@@ -189,7 +190,7 @@ $endtime = date('Y-m-01 00:00:00', strtotime('+1 month', strtotime($starttime)))
                                                             myChartSqlTrend.hideLoading();
                                                             myChartSqlTrend.setOption({
                                                                 title: {
-                                                                    text: '最近五天错误趋势图',
+                                                                    text: '最近五天慢日志趋势图',
                                                                     y: 'bottom',
                                                                     left: 'center'
                                                                 },

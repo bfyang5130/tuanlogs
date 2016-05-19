@@ -19,9 +19,10 @@ use common\models\DatabaseType;
  */
 class SqlController extends Controller {
 
-    public function actionSqlnums(){
+    public function actionSqlnums() {
         return $this->render("sqlnums");
     }
+
     /**
      * 查询某个数据库的统计
      * @return type
@@ -132,12 +133,14 @@ class SqlController extends Controller {
     public function actionLongtimesql() {
         return $this->render('longtimesql');
     }
+
     /**
      * 50慢日志查询
      */
     public function actionSql50() {
         return $this->render('sql50');
     }
+
     /**
      * 首页信息
      * @return type
@@ -153,9 +156,33 @@ class SqlController extends Controller {
             ],
             'defaultOrder' => ['executedate' => SORT_DESC]
         ]);
-        $locals = ToolService::getPagedRows($query,$tablename='SqlTrace',$params, ['orderBy' => $sort->orders, 'pageSize' => 10]);
+        $locals = ToolService::getPagedRows($query, $tablename = 'SqlTrace', $params, ['orderBy' => $sort->orders, 'pageSize' => 10]);
         $locals['searchModel'] = $searchModel;
         return $this->render('sql', $locals);
+    }
+
+    /**
+     * echarts api数据接口
+     * @return type
+     */
+    public function actionApi() {
+
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        //获得调用的方法
+        $fc = \Yii::$app->request->get('fc');
+        if (!empty($fc)) {
+            switch ($fc) {
+                case 'fivecolumn':
+                    $dataLists = \backend\services\SqlHightchartService::find5ColumnEcharts('', [], 'databasetype');
+                    return $dataLists;
+                    case 'findAllLine':
+                    $dataLists = \backend\services\SqlHightchartService::findAllLineEcharts();
+                    return $dataLists;
+                default :
+                    return [];
+            }
+        }
+        return [];
     }
 
     /**
@@ -171,7 +198,7 @@ class SqlController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['index', 'sqlgraph', 'addstatistics', 'database', 'longtimesql','sql50','sqlnums'],
+                        'actions' => ['index', 'sqlgraph', 'addstatistics', 'database', 'longtimesql', 'sql50', 'sqlnums', 'api'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],

@@ -136,6 +136,10 @@ class ServerController extends Controller {
         return $this->renderAjax('setindex', ['upstatus' => $upstatus]);
     }
 
+    /**
+     * echarts api数据接口
+     * @return type
+     */
     public function actionApi() {
 
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;

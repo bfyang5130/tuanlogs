@@ -34,7 +34,7 @@ class ErrorsController extends Controller {
                     [
                         'actions' => ['logout', 'index', 'trace', 'sql', 'sqlgraph', 'errorgraph',
                             'getdata', 'doing', 'countday', 'countmonth', 'tracereport', 'tracedayreport', 'tracemonreport',
-                            'tip',
+                            'tip', 'api'
                         ],
                         'allow' => true,
                         'roles' => ['@'],
@@ -101,7 +101,7 @@ class ErrorsController extends Controller {
             ],
             'defaultOrder' => ['AddDate' => SORT_DESC]
         ]);
-        $locals = ToolService::getPagedRows($query,$tablename='ErrorLog', $params,['orderBy' => $sort->orders, 'pageSize' => 10]);
+        $locals = ToolService::getPagedRows($query, $tablename = 'ErrorLog', $params, ['orderBy' => $sort->orders, 'pageSize' => 10]);
         $locals['searchModel'] = $searchModel;
 
         $application_item = ErrorLogService::getApplicationNameItem(1);
@@ -292,6 +292,30 @@ class ErrorsController extends Controller {
     public function actionTip() {
         $message = empty(Yii::$app->getSession()->getFlash('message')) ? "" : Yii::$app->getSession()->getFlash('message');
         return $this->render('tip', ["message" => $message]);
+    }
+
+    /**
+     * echarts api数据接口
+     * @return type
+     */
+    public function actionApi() {
+
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        //获得调用的方法
+        $fc = \Yii::$app->request->get('fc');
+        if (!empty($fc)) {
+            switch ($fc) {
+                case 'fivecolumn':
+                    $dataLists = \backend\services\ErrorHightchartService::find5ColumnEcharts('logtype=0', [], 5, 'logtotal');
+                    return $dataLists;
+                case 'findAllLine':
+                    $dataLists = \backend\services\ErrorHightchartService::findAllLineEcharts();
+                    return $dataLists;
+                default :
+                    return [];
+            }
+        }
+        return [];
     }
 
 }

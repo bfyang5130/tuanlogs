@@ -1,11 +1,6 @@
 <?php
 
 use yii\widgets\Breadcrumbs;
-use backend\services\ErrorHightchartService;
-use miloschuman\highcharts\Highcharts;
-use backend\services\SqlHightchartService;
-use backend\services\ZabbixHightchartService;
-use backend\services\NginxHightchartService;
 use yii\helpers\Url;
 use yii\web\View;
 
@@ -13,6 +8,8 @@ $this->title = '服务器数据总览';
 $this->registerJsFile('/base/js/echarts-all-3.js', [
     'position' => View::POS_HEAD
 ]);
+$starttime = date('Y-m-01 00:00:00');
+$endtime = date('Y-m-01 00:00:00', strtotime('+1 month', strtotime($starttime)));
 ?>
 <div class="site-index">
     <?php
@@ -42,103 +39,84 @@ $this->registerJsFile('/base/js/echarts-all-3.js', [
                                             <td colspan="2"><h5>程序统计<a class="pull-right" target="_blank" href="<?= Url::toRoute('/errors/index') ?>">查看错误日志</a></h5></td>
                                         </tr>
                                         <tr>
-                                            <td width="50%">
-                                                <?php
-                                                #获得五个错误最多的错误信息
-                                                $error5Nums = ErrorHightchartService::find5Column('logtype=0', [], 5, 'logtotal');
-                                                if (!empty($error5Nums)):
-                                                    ?>
-                                                    <?=
-                                                    Highcharts::widget([
-                                                        'options' => [
-                                                            'chart' => [
-                                                                'type' => 'column',
-                                                                'plotShadow' => true, //设置阴影
-                                                                'height' => 350,
-                                                            ],
-                                                            'title' => [
-                                                                'text' => '最多错误的五个应用'
-                                                            ],
-                                                            'xAxis' => [
-                                                                'categories' => $error5Nums['in_country']['categories'],
-                                                            ],
-                                                            'yAxis' => [
-                                                                'min' => 0,
-                                                                'stackLabels' => [
-                                                                    'enabled' => true,
-                                                                ]
-                                                            ],
-                                                            'credits' => [
-                                                                'enabled' => false//不显示highCharts版权信息
-                                                            ],
-                                                            'plotOptions' => [
-                                                                'column' => [
-                                                                    'stacking' => 'normal',
-                                                                    'dataLabels' => [
-                                                                        'enabled' => FALSE,
-                                                                        'color' => 'black',
-                                                                    ],
+                                            <td width="50%" >
+                                                <div id="mainerr" style="width:605px;height:350px">
+                                                    <script type="text/javascript">
+                                                        // 基于准备好的dom，初始化echarts实例
+                                                        var myChartErr = echarts.init(document.getElementById('mainerr'));
+                                                        myChartErr.showLoading();
+
+                                                        $.get('/errors/api.html?fc=fivecolumn', function(data) {
+                                                            myChartErr.hideLoading();
+                                                            myChartErr.setOption({
+                                                                title: {
+                                                                    text: '最多错误的五个应用',
+                                                                    y: 'bottom',
+                                                                    left: 'center'
+                                                                },
+                                                                tooltip: {
+                                                                    trigger: 'axis',
+                                                                    axisPointer: {// 坐标轴指示器，坐标轴触发有效
+                                                                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                                                                    }
+                                                                },
+                                                                legend: {
+                                                                    data: [data.series.name],
+                                                                    show: true
+                                                                },
+                                                                xAxis: [
+                                                                    {
+                                                                        type: 'category',
+                                                                        data: data.categories,
+                                                                    }
                                                                 ],
-                                                                'series' => [
-                                                                    'cursor' => 'pointer',
-                                                                    'events' => [
-                                                                        'click' => new yii\web\JsExpression('function(e){ window.open(e.point.url);}')
-                                                                    ],
-                                                                ]
-                                                            ],
-                                                            'legend' => [
-                                                                'verticalAlign' => "top",
-                                                                'floating' => true,
-                                                                'y' => 20,
-                                                            ],
-                                                            'series' => [$error5Nums['in_country']['series']]
-                                                        ]
-                                                    ]);
-                                                endif;
-                                                ?>
+                                                                yAxis: {},
+                                                                series: [data.series]
+                                                            });
+                                                        });
+
+                                                        myChartErr.on('click', function(parmas) {
+                                                            //这里的parmas.name是一个时间数值，可以用来处理对应的时间段数据
+                                                            //获得详细指定的时间段数据，并更改图形内的数据
+                                                            window.location.href = "<?= Url::toRoute('/errors/index') . '?ErrorLogSearch%5Bstart_date%5D=' . $starttime . '&ErrorLogSearch%5Bend_date%5D=' . $endtime . '&ErrorLogSearch%5BApplicationId%5D=' ?>" + parmas.name;
+                                                        });
+                                                    </script>
+                                                </div>
                                             </td>
                                             <td>
-                                                <?php
-                                                #获得五个错误最多的错误信息
-                                                $errorLines = ErrorHightchartService::findAllLine('logtype=0', [], 5, 'logtotal');
-                                                if (!empty($errorLines)):
-                                                    ?>
-                                                    <?=
-                                                    Highcharts::widget([
-                                                        'options' => [
-                                                            'chart' => [
-                                                                'type' => 'spline',
-                                                                'plotShadow' => true, //设置阴影
-                                                                'height' => 350,
-                                                            ],
-                                                            'title' => [
-                                                                'text' => '最近五天错误趋势图'
-                                                            ],
-                                                            'xAxis' => [
-                                                                'categories' => $errorLines['categories'],
-                                                            ],
-                                                            'yAxis' => [
-                                                                'min' => 0,
-                                                                'stackLabels' => [
-                                                                    'enabled' => true,
-                                                                ]
-                                                            ],
-                                                            'credits' => [
-                                                                'enabled' => false//不显示highCharts版权信息
-                                                            ],
-                                                            'plotOptions' => [
-                                                                'spline' => [
-                                                                    'dataLabels' => [
-                                                                        'enabled' => FALSE,
-                                                                        'color' => 'black',
-                                                                    ],
-                                                                ],
-                                                            ],
-                                                            'series' => $errorLines['series']
-                                                        ]
-                                                    ]);
-                                                endif;
-                                                ?>
+                                                <div id="mainerrtrend" style="width:605px;height:350px">
+                                                    <script type="text/javascript">
+                                                        // 基于准备好的dom，初始化echarts实例
+                                                        var myChartErrTrend = echarts.init(document.getElementById('mainerrtrend'));
+                                                        myChartErrTrend.showLoading();
+
+                                                        $.get('/errors/api.html?fc=findAllLine', function(data) {
+                                                            myChartErrTrend.hideLoading();
+                                                            myChartErrTrend.setOption({
+                                                                title: {
+                                                                    text: '最近五天错误趋势图',
+                                                                    y: 'bottom',
+                                                                    left: 'center'
+                                                                },
+                                                                tooltip: {
+                                                                    trigger: 'axis'
+                                                                },
+                                                                legend: {
+                                                                    data: data.toptip,
+                                                                },
+                                                                xAxis: {
+                                                                    type: 'category',
+                                                                    boundaryGap: false,
+                                                                    data: data.categories
+                                                                },
+                                                                yAxis: {
+                                                                    type: 'value'
+                                                                },
+                                                                series: data.series
+                                                            });
+                                                        });
+                                                    </script>
+                                                </div>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -157,102 +135,89 @@ $this->registerJsFile('/base/js/echarts-all-3.js', [
                                         </tr>
                                         <tr>
                                             <td width="50%">
-                                                <?php
-                                                #获得五个错误最多的错误信息
-                                                $error5Nums = SqlHightchartService::find5Column('', [], 'databasetype');
-                                                if (!empty($error5Nums)):
-                                                    ?>
-                                                    <?=
-                                                    Highcharts::widget([
-                                                        'options' => [
-                                                            'chart' => [
-                                                                'type' => 'column',
-                                                                'plotShadow' => true, //设置阴影
-                                                                'height' => 350,
-                                                            ],
-                                                            'title' => [
-                                                                'text' => '超过800毫秒的查询'
-                                                            ],
-                                                            'xAxis' => [
-                                                                'categories' => $error5Nums['in_country']['categories'],
-                                                            ],
-                                                            'yAxis' => [
-                                                                'min' => 0,
-                                                                'stackLabels' => [
-                                                                    'enabled' => true,
-                                                                ]
-                                                            ],
-                                                            'credits' => [
-                                                                'enabled' => false//不显示highCharts版权信息
-                                                            ],
-                                                            'plotOptions' => [
-                                                                'column' => [
-                                                                    'stacking' => 'normal',
-                                                                    'dataLabels' => [
-                                                                        'enabled' => FALSE,
-                                                                        'color' => 'black',
-                                                                    ],
+                                                <div id="mainsql" style="width:605px;height:350px">
+                                                    <script type="text/javascript">
+                                                        // 基于准备好的dom，初始化echarts实例
+                                                        var myChartSql = echarts.init(document.getElementById('mainsql'));
+                                                        myChartSql.showLoading();
+
+                                                        $.get('/sql/api.html?fc=fivecolumn', function(data) {
+                                                            myChartSql.hideLoading();
+                                                            myChartSql.setOption({
+                                                                title: {
+                                                                    text: '起过800毫秒的查询',
+                                                                    y: 'bottom',
+                                                                    left: 'center'
+                                                                },
+                                                                tooltip: {
+                                                                    trigger: 'axis',
+                                                                    axisPointer: {// 坐标轴指示器，坐标轴触发有效
+                                                                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                                                                    }
+                                                                },
+                                                                legend: {
+                                                                    data: [data.series.name],
+                                                                    show: true
+                                                                },
+                                                                xAxis: [
+                                                                    {
+                                                                        type: 'category',
+                                                                        data: data.categories,
+                                                                    }
                                                                 ],
-                                                                'series' => [
-                                                                    'cursor' => 'pointer',
-                                                                    'events' => [
-                                                                        'click' => new yii\web\JsExpression('function(e){ window.open(e.point.url);}')
-                                                                    ],
-                                                                ]
-                                                            ],
-                                                            'legend' => [
-                                                                'verticalAlign' => "top",
-                                                                'floating' => true,
-                                                                'y' => 20,
-                                                            ],
-                                                            'series' => [$error5Nums['in_country']['series']]
-                                                        ]
-                                                    ]);
-                                                endif;
-                                                ?>
+                                                                yAxis: {},
+                                                                series: [data.series]
+                                                            });
+                                                        });
+
+                                                        myChartSql.on('click', function(parmas) {
+                                                            //这里的parmas.name是一个时间数值，可以用来处理对应的时间段数据
+                                                            //获得详细指定的时间段数据，并更改图形内的数据
+                                                            window.location.href = "<?= Url::toRoute('/sql/longtimesql') . '??LongtimesqlSearch%5Bdatabasetype%5D=' ?>" + parmas.name;
+                                                        });
+                                                    </script>
+                                                </div>
                                             </td>
                                             <td>
-                                                <?php
-                                                #获得五个错误最多的错误信息
-                                                $errorLines = SqlHightchartService::findAllLine();
-                                                if (!empty($errorLines)):
-                                                    ?>
-                                                    <?=
-                                                    Highcharts::widget([
-                                                        'options' => [
-                                                            'chart' => [
-                                                                'type' => 'spline',
-                                                                'plotShadow' => true, //设置阴影
-                                                                'height' => 350,
-                                                            ],
-                                                            'title' => [
-                                                                'text' => '慢日志最近五天趋势'
-                                                            ],
-                                                            'xAxis' => [
-                                                                'categories' => $errorLines['categories'],
-                                                            ],
-                                                            'yAxis' => [
-                                                                'min' => 0,
-                                                                'stackLabels' => [
-                                                                    'enabled' => true,
-                                                                ]
-                                                            ],
-                                                            'credits' => [
-                                                                'enabled' => false//不显示highCharts版权信息
-                                                            ],
-                                                            'plotOptions' => [
-                                                                'spline' => [
-                                                                    'dataLabels' => [
-                                                                        'enabled' => FALSE,
-                                                                        'color' => 'black',
-                                                                    ],
-                                                                ],
-                                                            ],
-                                                            'series' => $errorLines['series']
-                                                        ]
-                                                    ]);
-                                                endif;
-                                                ?>
+                                                <div id="mainsqltrend" style="width:605px;height:350px">
+                                                    <script type="text/javascript">
+                                                        // 基于准备好的dom，初始化echarts实例
+                                                        var myChartSqlTrend = echarts.init(document.getElementById('mainsqltrend'));
+                                                        myChartSqlTrend.showLoading();
+
+                                                        $.get('/sql/api.html?fc=findAllLine', function(data) {
+                                                            myChartSqlTrend.hideLoading();
+                                                            myChartSqlTrend.setOption({
+                                                                title: {
+                                                                    text: '最近五天错误趋势图',
+                                                                    y: 'bottom',
+                                                                    left: 'center'
+                                                                },
+                                                                tooltip: {
+                                                                    trigger: 'axis'
+                                                                },
+                                                                legend: {
+                                                                    data: data.toptip,
+                                                                },
+                                                                xAxis: {
+                                                                    type: 'category',
+                                                                    boundaryGap: false,
+                                                                    data: data.categories
+                                                                },
+                                                                yAxis: {
+                                                                    type: 'value'
+                                                                },
+                                                                series: data.series
+                                                            });
+                                                        });
+
+                                                        myChartSqlTrend.on('click', function(parmas) {
+                                                            //这里的parmas.name是一个时间数值，可以用来处理对应的时间段数据
+                                                            //获得详细指定的时间段数据，并更改图形内的数据
+                                                            window.location.href = "<?= Url::toRoute('/errors/index') . '?ErrorLogSearch%5Bstart_date%5D=' . $starttime . '&ErrorLogSearch%5Bend_date%5D=' . $endtime . '&ErrorLogSearch%5BApplicationId%5D=' ?>" + parmas.name;
+                                                        });
+                                                    </script>
+                                                </div>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -275,9 +240,9 @@ $this->registerJsFile('/base/js/echarts-all-3.js', [
                                             $showI = 1;
                                             foreach ($showLists5 as $oneShowItem):
                                                 ?>
-                                        <tr>
-                                            <td><span class="pull-left"><?= $oneShowItem->monitor_name ?></span><span class="pull-right"><?= $oneShowItem->monitor_host ?></span></td>
-                                        </tr>
+                                                <tr>
+                                                    <td><span class="pull-left"><?= $oneShowItem->monitor_name ?></span><span class="pull-right"><?= $oneShowItem->monitor_host ?></span></td>
+                                                </tr>
                                                 <tr>
                                                     <td>
                                                         <div class="panel-body">
@@ -285,14 +250,14 @@ $this->registerJsFile('/base/js/echarts-all-3.js', [
                                                                 <div class="tab-pane active" id="main<?= $showI ?>" style="height:250px;">
                                                                     <script type="text/javascript">
                                                                         $(document).ready(function() {
-                                                                            
-                                                                             
-                                                                            var <?= "myChart".$showI ?> = echarts.init(document.getElementById('main<?= $showI ?>'));
-                                                                            <?= "myChart".$showI ?>.showLoading();
+
+
+                                                                            var <?= "myChart" . $showI ?> = echarts.init(document.getElementById('main<?= $showI ?>'));
+        <?= "myChart" . $showI ?>.showLoading();
 
                                                                             $.get('/server/api.html?fc=twodayfit&monitor_id=<?= $oneShowItem->id ?>&date=<?= date("Y-m-d") ?>', function(data) {
-                                                                                <?= "myChart".$showI ?>.hideLoading();
-                                                                                <?= "myChart".$showI ?>.setOption(option = {
+        <?= "myChart" . $showI ?>.hideLoading();
+        <?= "myChart" . $showI ?>.setOption(option = {
                                                                                     tooltip: {
                                                                                         trigger: 'axis',
                                                                                         axisPointer: {// 坐标轴指示器，坐标轴触发有效
@@ -329,7 +294,7 @@ $this->registerJsFile('/base/js/echarts-all-3.js', [
                                                                                     series: data.series
                                                                                 });
                                                                             });
-                                                                            <?= "myChart".$showI ?>.on('click', function(parmas) {
+        <?= "myChart" . $showI ?>.on('click', function(parmas) {
                                                                                 //这里的parmas.name是一个时间数值，可以用来处理对应的时间段数据
                                                                                 //获得详细指定的时间段数据，并更改图形内的数据
                                                                                 var fitnametime = parmas.name;
@@ -345,12 +310,12 @@ $this->registerJsFile('/base/js/echarts-all-3.js', [
                                                                                         if (data.seriesdata1 == "undefined") {
                                                                                             alert("无法获得这个时间点的数据");
                                                                                         } else {
-                                                                                            var newoption = <?= "myChart".$showI ?>.getOption();
+                                                                                            var newoption = <?= "myChart" . $showI ?>.getOption();
                                                                                             newoption.series[0].data = data.seriesdata1;
                                                                                             newoption.series[1].data = data.seriesdata2;
                                                                                             newoption.xAxis[0].data = data.xAxisdata;
                                                                                             newoption.dataZoom = data.dataZoom;
-                                                                                            <?= "myChart".$showI ?>.setOption(newoption);
+        <?= "myChart" . $showI ?>.setOption(newoption);
                                                                                         }
                                                                                     });
                                                                                 }
@@ -383,102 +348,87 @@ $this->registerJsFile('/base/js/echarts-all-3.js', [
                                         </tr>
                                         <tr>
                                             <td width="50%">
-                                                <?php
-                                                #获得五个错误最多的错误信息
-                                                $error5Nums = NginxHightchartService::pageAttack();
-                                                if (!empty($error5Nums)):
-                                                    ?>
-                                                    <?=
-                                                    Highcharts::widget([
-                                                        'options' => [
-                                                            'chart' => [
-                                                                'type' => 'column',
-                                                                'plotShadow' => true, //设置阴影
-                                                                'height' => 350,
-                                                            ],
-                                                            'title' => [
-                                                                'text' => '访问出错信息'
-                                                            ],
-                                                            'xAxis' => [
-                                                                'categories' => $error5Nums['in_country']['categories'],
-                                                            ],
-                                                            'yAxis' => [
-                                                                'min' => 0,
-                                                                'stackLabels' => [
-                                                                    'enabled' => true,
-                                                                ]
-                                                            ],
-                                                            'credits' => [
-                                                                'enabled' => false//不显示highCharts版权信息
-                                                            ],
-                                                            'plotOptions' => [
-                                                                'column' => [
-                                                                    'stacking' => 'normal',
-                                                                    'dataLabels' => [
-                                                                        'enabled' => FALSE,
-                                                                        'color' => 'black',
-                                                                    ],
+                                                <div id="mainngix" style="width:605px;height:350px">
+                                                    <script type="text/javascript">
+                                                        // 基于准备好的dom，初始化echarts实例
+                                                        var myChartNgix = echarts.init(document.getElementById('mainngix'));
+                                                        myChartNgix.showLoading();
+
+                                                        $.get('/nginx/api.html?fc=pageattack', function(data) {
+                                                            myChartNgix.hideLoading();
+                                                            myChartNgix.setOption({
+                                                                title: {
+                                                                    text: '起过800毫秒的查询',
+                                                                    y: 'bottom',
+                                                                    left: 'center'
+                                                                },
+                                                                tooltip: {
+                                                                    trigger: 'axis',
+                                                                    axisPointer: {// 坐标轴指示器，坐标轴触发有效
+                                                                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                                                                    }
+                                                                },
+                                                                legend: {
+                                                                    data: [data.series.name],
+                                                                    show: true
+                                                                },
+                                                                xAxis: [
+                                                                    {
+                                                                        type: 'category',
+                                                                        data: data.categories,
+                                                                    }
                                                                 ],
-                                                                'series' => [
-                                                                    'cursor' => 'pointer',
-                                                                    'events' => [
-                                                                        'click' => new yii\web\JsExpression('function(e){ window.open(e.point.url);}')
-                                                                    ],
-                                                                ]
-                                                            ],
-                                                            'legend' => [
-                                                                'verticalAlign' => 'top',
-                                                                'floating' => true,
-                                                                'y' => 20,
-                                                            ],
-                                                            'series' => [$error5Nums['in_country']['series']]
-                                                        ]
-                                                    ]);
-                                                endif;
-                                                ?>
+                                                                yAxis: {},
+                                                                series: [data.series]
+                                                            });
+                                                        });
+
+                                                        myChartNgix.on('click', function(parmas) {
+                                                            //这里的parmas.name是一个时间数值，可以用来处理对应的时间段数据
+                                                            //获得详细指定的时间段数据，并更改图形内的数据
+                                                            if (parmas.name == "注入") {
+                                                                window.location.href = "<?= Url::toRoute('/nginx/sqlattack') ?>";
+                                                            } else {
+                                                                window.location.href = "<?= Url::toRoute('/nginx/errorstatus') . '?AccessLogErrorStatusSearch%5Berror_status%5D=' ?>" + parmas.name;
+                                                            }
+                                                        });
+                                                    </script>
+                                                </div>
                                             </td>
                                             <td>
-                                                <?php
-                                                #获得五个错误最多的错误信息
-                                                $errorLines = NginxHightchartService::findAllLine();
-                                                if (!empty($errorLines)):
-                                                    ?>
-                                                    <?=
-                                                    Highcharts::widget([
-                                                        'options' => [
-                                                            'chart' => [
-                                                                'type' => 'spline',
-                                                                'plotShadow' => true, //设置阴影
-                                                                'height' => 350,
-                                                            ],
-                                                            'title' => [
-                                                                'text' => '错误页面显示'
-                                                            ],
-                                                            'xAxis' => [
-                                                                'categories' => $errorLines['categories'],
-                                                            ],
-                                                            'yAxis' => [
-                                                                'min' => 0,
-                                                                'stackLabels' => [
-                                                                    'enabled' => true,
-                                                                ]
-                                                            ],
-                                                            'credits' => [
-                                                                'enabled' => false//不显示highCharts版权信息
-                                                            ],
-                                                            'plotOptions' => [
-                                                                'spline' => [
-                                                                    'dataLabels' => [
-                                                                        'enabled' => FALSE,
-                                                                        'color' => 'black',
-                                                                    ],
-                                                                ],
-                                                            ],
-                                                            'series' => $errorLines['series']
-                                                        ]
-                                                    ]);
-                                                endif;
-                                                ?>
+                                                <div id="mainngixtrend" style="width:605px;height:350px">
+                                                    <script type="text/javascript">
+                                                        // 基于准备好的dom，初始化echarts实例
+                                                        var myChartNgixTrend = echarts.init(document.getElementById('mainngixtrend'));
+                                                        myChartNgixTrend.showLoading();
+
+                                                        $.get('/nginx/api.html?fc=findAllLine', function(data) {
+                                                            myChartNgixTrend.hideLoading();
+                                                            myChartNgixTrend.setOption({
+                                                                title: {
+                                                                    text: '最近五天错误趋势图',
+                                                                    y: 'bottom',
+                                                                    left: 'center'
+                                                                },
+                                                                tooltip: {
+                                                                    trigger: 'axis'
+                                                                },
+                                                                legend: {
+                                                                    data: data.toptip,
+                                                                },
+                                                                xAxis: {
+                                                                    type: 'category',
+                                                                    boundaryGap: false,
+                                                                    data: data.categories
+                                                                },
+                                                                yAxis: {
+                                                                    type: 'value'
+                                                                },
+                                                                series: data.series
+                                                            });
+                                                        });
+                                                    </script>
+                                                </div>
                                             </td>
                                         </tr>
                                     </tbody>

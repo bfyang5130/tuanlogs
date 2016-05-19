@@ -12,6 +12,30 @@ use yii\filters\VerbFilter;
 class NginxController extends Controller {
 
     /**
+     * echarts api数据接口
+     * @return type
+     */
+    public function actionApi() {
+
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        //获得调用的方法
+        $fc = \Yii::$app->request->get('fc');
+        if (!empty($fc)) {
+            switch ($fc) {
+                case 'pageattack':
+                    $dataLists = \backend\services\NginxHightchartService::pageAttackEcharts('', [], 'databasetype');
+                    return $dataLists;
+                case 'findAllLine':
+                    $dataLists = \backend\services\NginxHightchartService::findAllLineEcharts();
+                    return $dataLists;
+                default :
+                    return [];
+            }
+        }
+        return [];
+    }
+
+    /**
      * @inheritdoc
      */
     public function behaviors() {
@@ -24,7 +48,7 @@ class NginxController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => [ 'index', 'city', 'errorstatus','sqlattack'],
+                        'actions' => [ 'index', 'city', 'errorstatus', 'sqlattack', 'api'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -68,6 +92,7 @@ class NginxController extends Controller {
     public function actionErrorstatus() {
         return $this->render('errorstatus');
     }
+
     /**
      * 查看sql攻击信息
      */

@@ -5,9 +5,12 @@ use yii\widgets\Breadcrumbs;
 use backend\models\MonitorSearch;
 use yii\widgets\LinkPager;
 use yii\helpers\Url;
+use yii\web\View;
 
 $this->title = '服务器监控列表';
-
+$this->registerJsFile('/base/js/echarts-all-3.js', [
+    'position' => View::POS_HEAD
+]);
 $search_date = Yii::$app->request->get("search_date");
 if (empty($search_date)) {
     $search_date = date('Y-m-d');

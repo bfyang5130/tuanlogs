@@ -227,6 +227,7 @@ class ZabbixHightchartService {
         $startdate = date("Y-m-d 00:00:00", strtotime("-1 day", strtotime($date)));
 
         $enddate = date("Y-m-d 00:00:00", strtotime("+1 day", strtotime($date)));
+        $oneMonitor=  Monitor::find()->where("id=:mid",[':mid'=>$monitor_id])->one();
         //获得区间数据
         $selectidLists = \common\models\MonitorLog::find()->where(['between', 'log_date', $startdate, $enddate])->orderBy("log_date desc")->all();
         if (empty($selectidLists)) {
@@ -263,7 +264,7 @@ class ZabbixHightchartService {
         //json legend.data
         //xAxis.data
         //series
-        if ($onSelectItem->monitor_times == 1) {
+        if ($oneMonitor->monitor_times == 1) {
             $format = '{value}%';
             $max = 100;
         } else {

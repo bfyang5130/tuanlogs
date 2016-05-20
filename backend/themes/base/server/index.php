@@ -100,11 +100,11 @@ if ($begin > $end) {
                                                                                 yAxis: [
                                                                                     {
                                                                                         type: 'value',
-                                                                                        max: 100,
+                                                                                        max: data.max,
                                                                                         axisLabel: {
                                                                                             show: true,
                                                                                             interval: 'auto',
-                                                                                            formatter: '{value} %'
+                                                                                            formatter: data.format,
                                                                                         }
                                                                                     }
                                                                                 ],

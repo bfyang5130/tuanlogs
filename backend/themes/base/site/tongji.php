@@ -278,11 +278,11 @@ $endtime = date('Y-m-01 00:00:00', strtotime('+1 month', strtotime($starttime)))
                                                                                     yAxis: [
                                                                                         {
                                                                                             type: 'value',
-                                                                                            max: 100,
+                                                                                            max: data.max,
                                                                                             axisLabel: {
                                                                                                 show: true,
                                                                                                 interval: 'auto',
-                                                                                                formatter: '{value} %'
+                                                                                                formatter: data.format,
                                                                                             }
                                                                                         }
                                                                                     ],

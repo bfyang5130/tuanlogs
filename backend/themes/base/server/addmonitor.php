@@ -50,7 +50,7 @@ $this->title = '添加监控项目';
                                                     <?= $form->field($monitorForm, 'monitor_name', [ 'template' => "{label}\n{input}\n{hint}\n<div style='height:30px;'>{error}</div>", 'labelOptions' => ['label' => '监控项目名称']]) ?>
                                                     <?= $form->field($monitorForm, 'monitor_host', [ 'template' => "{label}\n{input}\n{hint}\n<div style='height:30px;'>{error}</div>", 'labelOptions' => ['label' => '监控主机']]) ?>
                                                     <?= $form->field($monitorForm, 'monitor_item', [ 'template' => "{label}\n{input}\n{hint}\n<div style='height:30px;'>{error}</div>", 'labelOptions' => ['label' => '监控项目ID']]) ?>
-                                                    <?= $form->field($monitorForm, 'monitor_times', [ 'template' => "{label}\n{input}\n{hint}\n<div style='height:30px;'>{error}</div>", 'labelOptions' => ['label' => '多少秒取一次数据']]) ?>
+                                                    <?= $form->field($monitorForm, 'monitor_times', [ 'template' => "{label}\n{input}\n{hint}\n<div style='height:30px;'>{error}</div>", 'labelOptions' => ['label' => '显示选项']])->dropDownList(['0'=>'显示数据','1'=>'显示百分比']) ?>
                                                     <div class="form-group">
                                                         <?= Html::submitButton('提交', ['class' => 'btn btn-sm btn-warning', 'name' => 'dabase-button']) ?>
                                                         <div style="width:20px;height:40px;"></div>

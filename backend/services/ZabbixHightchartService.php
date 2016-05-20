@@ -263,6 +263,13 @@ class ZabbixHightchartService {
         //json legend.data
         //xAxis.data
         //series
+        if ($onSelectItem->monitor_times == 1) {
+            $format = '{value}%';
+            $max = 100;
+        } else {
+            $format = '{value}';
+            $max = null;
+        }
         $series = [
             [
                 'name' => $legend['data'][0],
@@ -275,10 +282,13 @@ class ZabbixHightchartService {
                 'data' => array_values($arrtwo)
             ]
         ];
+
         $returnArray = [
             'legenddata' => $legend['data'],
             'xAxisdata' => $xaxis['data'],
             'series' => $series,
+            'format' => $format,
+            'max' => $max,
         ];
         return $returnArray;
     }

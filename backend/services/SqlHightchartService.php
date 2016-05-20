@@ -127,28 +127,6 @@ class SqlHightchartService {
             ];
         }
         $outCharts['categories'] = array_reverse($outCharts['categories']);
-        //标记是否为今天的数据，如果是今天的数据,那么对今天的数据进行实时统计处理
-        if ($isToday) {
-            $fitDate = date('Y-m-d 00:00:00');
-
-            $after1Date = date('Y-m-d 00:00:00', strtotime('+1 day', strtotime($fitDate)));
-            //因为上面已经做了判断，所以今天的数据肯定会存在
-            //获得今天最新的数据
-            $errorstatusLists = \common\models\SqlTraceLong::find()->select("count(*) nums,databasetype")->where('executedate>:sd AND executedate<=:ed', [':sd' => $fitDate, ':ed' => $after1Date])->groupBy('databasetype')->indexBy('databasetype')->asArray()->all();
-
-            //对上面的数组进行处理
-            foreach ($outCharts['series'] as $key => $oneVaue) {
-                //把最近一个元素推出
-                array_pop($outCharts['series'][$key]['data']);
-                //推入一个新元素
-                //如果没有这个数组就推入一个0的数据
-                if (!isset($errorstatusLists[$oneVaue['name']]['nums'])) {
-                    array_push($outCharts['series'][$key]['data'], 0);
-                } else {
-                    array_push($outCharts['series'][$key]['data'], floatval($errorstatusLists[$oneVaue['name']]['nums']));
-                }
-            }
-        }
         return $outCharts;
     }
 

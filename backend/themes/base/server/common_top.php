@@ -22,7 +22,6 @@ $selectFrom->setAttributes(['stime' => $stime, 'etime' => $etime,'selectid'=>$se
         <div class="btn-group" role="group" aria-label="First group">
             <a href="<?= Url::toRoute('/server/index') ?>" class="btn btn-default<?= ($id == 'index') ? ' btn-primary' : '' ?>">常用监控</a>
             <a href="<?= Url::toRoute('/server/addmonitor') ?>" class="btn btn-default<?= ($id == 'addmonitor') ? ' btn-primary' : '' ?>">添加监控</a>
-            <a href="<?= Url::toRoute('/server/selectmonitor') ?>" class="btn btn-default<?= ($id == 'selectmonitor') ? ' btn-primary' : '' ?>">监控查询</a>
         </div>
     </div>
 </div>

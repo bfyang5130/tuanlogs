@@ -58,7 +58,7 @@ if ($begin > $end) {
                                         ?>
                                         <?php foreach ($datas as $oneErrorValue): ?>
                                             <tr>
-                                                <td><span class="pull-left"><?= $oneErrorValue['monitor_name'] ?></span><a class="pull-right" href="<?= Url::toRoute('/server/selectmonitor').'?monitor_id='.$oneErrorValue['id'].'&date='.date('Y-m-d') ?>">更多详情</a><span class="pull-right"><?= $oneErrorValue['monitor_host'] ?>&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
+                                                <td><span class="pull-left"><?= $oneErrorValue['monitor_name'] ?></span><a class="pull-right" target="_blank" href="<?= Url::toRoute('/server/selectmonitor').'?monitor_id='.$oneErrorValue['id'].'&date='.date('Y-m-d') ?>">更多详情</a><span class="pull-right"><?= $oneErrorValue['monitor_host'] ?>&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
                                             </tr>
                                             <tr>
                                                 <td>

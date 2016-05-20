@@ -110,6 +110,11 @@ class ServerController extends Controller {
      * 增加对应的接口信息 
      */
     public function actionSelectmonitor() {
+        $params = \Yii::$app->request->get();
+        if (empty($params['monitor_id']) || empty($params['date'])) {
+            $this->redirect('/server/index.html');
+            \Yii::$app->end();
+        }
         return $this->render('selectmonitor');
     }
 

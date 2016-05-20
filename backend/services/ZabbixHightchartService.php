@@ -229,7 +229,7 @@ class ZabbixHightchartService {
         $enddate = date("Y-m-d 00:00:00", strtotime("+1 day", strtotime($date)));
         $oneMonitor=  Monitor::find()->where("id=:mid",[':mid'=>$monitor_id])->one();
         //获得区间数据
-        $selectidLists = \common\models\MonitorLog::find()->where(['between', 'log_date', $startdate, $enddate])->orderBy("log_date desc")->all();
+        $selectidLists = \common\models\MonitorLog::find()->where(['between', 'log_date', $startdate, $enddate])->andWhere("monitor_id=:monitorid",[':monitorid'=>$monitor_id])->orderBy("log_date desc")->all();
         if (empty($selectidLists)) {
             return [];
         }

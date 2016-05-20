@@ -109,7 +109,9 @@ $params = \Yii::$app->request->get();
                                     } else {
                                         alert("数据加载中...请稍侯");
                                         $.get('/server/api.html?fc=detail&monitor_id=<?= $params['monitor_id'] ?>&date=<?= $params['date'] ?>&detialtime=' + parmas.name, function(data) {
-
+                                            if (data.legenddata == "undefined") {
+                                                return;
+                                            }
                                             if (data.seriesdata1 == "undefined") {
                                                 alert("无法获得这个时间点的数据");
                                             } else {

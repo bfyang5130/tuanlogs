@@ -103,7 +103,7 @@ $endtime = date('Y-m-01 00:00:00', strtotime('+1 month', strtotime($starttime)))
                                                                 },
                                                                 legend: {
                                                                     data: data.toptip,
-                                                                    itemHeight:9,
+                                                                    itemHeight: 9,
                                                                 },
                                                                 xAxis: {
                                                                     type: 'category',
@@ -251,6 +251,10 @@ $endtime = date('Y-m-01 00:00:00', strtotime('+1 month', strtotime($starttime)))
         <?= "myChart" . $showI ?>.showLoading();
 
                                                                             $.get('/server/api.html?fc=twodayfit&monitor_id=<?= $oneShowItem->id ?>&date=<?= date("Y-m-d") ?>', function(data) {
+
+                                                                                if (data.legenddata == "undefined") {
+                                                                                    return;
+                                                                                }
         <?= "myChart" . $showI ?>.hideLoading();
         <?= "myChart" . $showI ?>.setOption(option = {
                                                                                     tooltip: {

@@ -56,7 +56,7 @@ class SqlNumberSearch extends SqlTraceSqlNumber {
             $this->start_date = $this->update_time;
             $this->end_date = date('Y-m-d 00:00:00', strtotime('+1 day', strtotime($this->start_date)));
         }
-        $query->andFilterWhere(['databasetype' => $this->databasetype]);
+        
 
         if (!empty($this->databasetype)) {
             $query = new \yii\db\Query;
@@ -64,6 +64,7 @@ class SqlNumberSearch extends SqlTraceSqlNumber {
                 'query' => $query->from(SqlTraceSqlNumber::tableName()),
             ]);
         }
+        $query->andFilterWhere(['databasetype' => $this->databasetype]);
         $query->select("sqltext,databasetype,update_time,sum(Amount) as sAmount");
         $query->andFilterWhere(['>=', 'update_time', $this->start_date]);
         $query->andFilterWhere(['<', 'update_time', $this->end_date]);

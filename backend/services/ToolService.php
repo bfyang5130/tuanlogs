@@ -333,7 +333,7 @@ class ToolService {
         $ip_file = Yii::getAlias("@common") . "/data/tinyipdata.dat";
         $parse_ip = self::convertip_tiny($ip, $ip_file);
         //判断是否有中国两字
-        if(!strpos($parse_ip, "中国")){
+        if(strpos($parse_ip, "中国")===FALSE){
             return ["province" => $parse_ip, "city" => ''];
         }
         //去掉中国

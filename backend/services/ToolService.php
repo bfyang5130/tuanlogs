@@ -293,27 +293,25 @@ class ToolService {
         static $fp = NULL, $offset = array(), $index = NULL;
 
         $ipdot = explode('.', $ip);
-        //print_r(ip2long($ip));exit;
         $ip = pack('N', ip2long($ip));
-        //print_r($ip);exit;
         $ipdot[0] = (int) $ipdot[0];
         $ipdot[1] = (int) $ipdot[1];
 
         if ($fp === NULL && $fp = @fopen($ipdatafile, 'rb')) {
+            
             $offset = @unpack('Nlen', @fread($fp, 4));
 
             $index = @fread($fp, $offset['len'] - 4);
         } elseif ($fp == FALSE) {
             return 'Invalid IP data file';
         }
-
+        //tt
+        
         $length = $offset['len'] - 1028;
         $start = @unpack('Vlen', $index[$ipdot[0] * 4] . $index[$ipdot[0] * 4 + 1] . $index[$ipdot[0] * 4 + 2] . $index[$ipdot[0] * 4 + 3]);
-
+        
 
         for ($start = $start['len'] * 8 + 1024; $start < $length; $start += 8) {
-            //print_r($ip);
-            //print_r($index{$start} . $index{$start + 1} . $index{$start + 2} . $index{$start + 3});exit;
             if ($index{$start} . $index{$start + 1} . $index{$start + 2} . $index{$start + 3} >= $ip) {
                 $index_offset = @unpack('Vlen', $index{$start + 4} . $index{$start + 5} . $index{$start + 6} . "\x0");
                 $index_length = @unpack('Clen', $index{$start + 7});
@@ -334,46 +332,22 @@ class ToolService {
     public static function getIpAddress($ip) {
         $ip_file = Yii::getAlias("@common") . "/data/tinyipdata.dat";
         $parse_ip = self::convertip_tiny($ip, $ip_file);
+        //判断是否有中国两字
+        if(!strpos($parse_ip, "中国")){
+            return ["province" => $parse_ip, "city" => ''];
+        }
+        //去掉中国
         $parse_ip = str_replace("中国", "", $parse_ip);
-
-        $strlen = mb_strlen($parse_ip);
-
-        //三个字的省特殊处理
-        $three_preg_rs = preg_match("/(黑龙江)|(内蒙古)|(新加坡)|(菲律宾)|(西班牙)|(意大利)|(葡萄牙)|(新西兰)|(肯尼亚)|(俄罗斯)|(加拿大)|(乌克兰)|(以色列)|(伊拉克)|(土耳其)|(墨西哥)|(奥地利)|(阿根廷)/", $parse_ip);
-
-        $four_preg_rs = preg_match("/(马来西亚)|(澳大利亚)|(白俄罗斯)|(马尔代夫)/", $parse_ip);
-
-        if ($four_preg_rs) {
-            if ($strlen > 4) {
-                $province = mb_substr($parse_ip, 0, 4, 'utf-8');
-                $city = mb_substr($parse_ip, 4, $strlen, 'utf-8');
-            } else {
-                $province = mb_substr($parse_ip, 0, 4, 'utf-8');
-                $city = null;
-            }
-        } elseif ($three_preg_rs) {
-            if ($strlen > 3) {
-                $province = mb_substr($parse_ip, 0, 3, 'utf-8');
-                $city = mb_substr($parse_ip, 3, $strlen, 'utf-8');
-            } else {
-                $province = mb_substr($parse_ip, 0, 3, 'utf-8');
-                $city = null;
-            }
-        } else {
-            if ($strlen > 2) {
-                $province = mb_substr($parse_ip, 0, 2, 'utf-8');
-                $city = mb_substr($parse_ip, 2, $strlen, 'utf-8');
-            } else {
-                $province = mb_substr($parse_ip, 0, 2, 'utf-8');
-                $city = null;
-            }
-        }
-
-        if (empty($province) && empty($city)) {
-            $province = "其它";
-        }
-
-
+        //截取两个字符
+        $province = mb_substr($parse_ip, 0, 2, 'utf-8');
+         //如果这两上字符是黑龙和内蒙那么就截取三个字符
+         if($province=='黑龙'){
+             $province='黑龙江';
+         }elseif($province=='内蒙古'){
+             $province='内蒙古';
+         }
+         //去掉省份就是城市了
+         $city=str_replace($province, "", $parse_ip);    
         $loaction = ["province" => $province, "city" => $city];
         return $loaction;
     }

@@ -58,6 +58,8 @@ class WebsiteController extends Controller {
      * @return type
      */
     public function actionIndex() {
+        //ToolService::convertip_tiny('121.13.249.210','K:/web/tuanlogs/common/data/tinyipdata.dat');
+        //\Yii::$app->end();
         return $this->render('index');
     }
 

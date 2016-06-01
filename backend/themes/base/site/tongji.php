@@ -357,7 +357,7 @@ $endtime = date('Y-m-01 00:00:00', strtotime('+1 month', strtotime($starttime)))
                                                             myChartNgix.hideLoading();
                                                             myChartNgix.setOption({
                                                                 title: {
-                                                                    text: '起过800毫秒的查询',
+                                                                    text: '错误访问状态统计',
                                                                     y: 'bottom',
                                                                     left: 'center'
                                                                 },

@@ -18,11 +18,12 @@ class SqlTraceService {
      */
     public static function getSqlTraceDbType() {
         $query = new Query();
-        $query->select("databasetype")
-                ->from("SqlTrace")
+        $query->select("appname")
+                ->from("ApplicateName")
+                ->where('logtype=2')
                 ->distinct();
         $dbtypes = $query->all();
-        $dbtype_item = ArrayHelper::map($dbtypes, "databasetype", "databasetype");
+        $dbtype_item = ArrayHelper::map($dbtypes, "appname", "appname");
         return $dbtype_item;
     }
 

@@ -343,7 +343,7 @@ class ToolService {
          //如果这两上字符是黑龙和内蒙那么就截取三个字符
          if($province=='黑龙'){
              $province='黑龙江';
-         }elseif($province=='内蒙古'){
+         }elseif($province=='内蒙'){
              $province='内蒙古';
          }
          //去掉省份就是城市了

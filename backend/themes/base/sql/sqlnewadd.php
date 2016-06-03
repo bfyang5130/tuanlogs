@@ -2,15 +2,15 @@
 /* @var $this yii\web\View */
 
 use yii\widgets\Breadcrumbs;
-use backend\models\SqlTracePersqlSearch;
+use backend\models\SqlTracePersqlNewSearch;
 use yii\widgets\LinkPager;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
-$this->title = '每天语句查询量';
+$this->title = '新增查询语句列表';
 $params = \Yii::$app->request->get();
 //处理时间
-$accLogErr = new SqlTracePersqlSearch();
+$accLogErr = new SqlTracePersqlNewSearch();
 if (!empty($params['SqlTracePersqlSearch']['sqlquerytime'])) {
     $accLogErr->sqlquerytime = $params['SqlTracePersqlSearch']['sqlquerytime'];
 } else {

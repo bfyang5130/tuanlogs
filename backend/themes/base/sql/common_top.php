@@ -14,7 +14,8 @@ $id = \Yii::$app->controller->action->id;
             <a href="<?= Url::toRoute('/sql/sqlnums') ?>" class="btn btn-default<?= ($id == 'sqlnums') ? ' btn-primary' : '' ?>">查询排行表</a>
              */
             ?>
-            <a href="<?= Url::toRoute('/sql/persqlquery') ?>" class="btn btn-default<?= ($id == 'persqlquery') ? ' btn-primary' : '' ?>">每天语句查询量</a>            
+            <a href="<?= Url::toRoute('/sql/persqlquery') ?>" class="btn btn-default<?= ($id == 'persqlquery') ? ' btn-primary' : '' ?>">每天语句查询量</a>
+            <a href="<?= Url::toRoute('/sql/sqlnewadd') ?>" class="btn btn-default<?= ($id == 'sqlnewadd') ? ' btn-primary' : '' ?>">新增语句列表</a>
             <a href="<?= Url::toRoute('/sql/sqlgraph') ?>" class="btn btn-default<?= ($id == 'sqlgraph') ? ' btn-primary' : '' ?>">图形统计</a>
             <a href="<?= Url::toRoute('/sql/addstatistics') ?>" class="btn btn-default<?= ($id == 'addstatistics') ? ' btn-primary' : '' ?>">添加统计</a>
         </div>

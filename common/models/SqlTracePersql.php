@@ -13,6 +13,7 @@ use Yii;
  * @property string $amount
  * @property string $databasetype
  * @property string $sqlquerytime
+ * @property integer $is_new
  */
 class SqlTracePersql extends \yii\db\ActiveRecord
 {
@@ -31,7 +32,7 @@ class SqlTracePersql extends \yii\db\ActiveRecord
     {
         return [
             [['sqltext'], 'string'],
-            [['amount'], 'integer'],
+            [['amount', 'is_new'], 'integer'],
             [['sqlquerytime'], 'safe'],
             [['querymd5'], 'string', 'max' => 500],
             [['databasetype'], 'string', 'max' => 255]
@@ -50,6 +51,7 @@ class SqlTracePersql extends \yii\db\ActiveRecord
             'amount' => '查询次数',
             'databasetype' => '数据库类型',
             'sqlquerytime' => '查询时间',
+            'is_new' => '是否为新增数据',
         ];
     }
 }

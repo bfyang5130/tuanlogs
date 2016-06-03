@@ -20,11 +20,20 @@ use common\models\DatabaseType;
 class SqlController extends Controller {
 
     /**
+     * 新增语句查询列表
+     * 获得比上一天不同的语句
+     */
+    public function actionSqlnewadd() {
+        return $this->render('sqlnewadd');
+    }
+
+    /**
      * 每天每个sql查询量
      */
-    public function actionPersqlquery(){
+    public function actionPersqlquery() {
         return $this->render("persqlquery");
     }
+
     public function actionSqlnums() {
         return $this->render("sqlnums");
     }
@@ -181,7 +190,7 @@ class SqlController extends Controller {
                 case 'fivecolumn':
                     $dataLists = \backend\services\SqlHightchartService::find5ColumnEcharts('', [], 'databasetype');
                     return $dataLists;
-                    case 'findAllLine':
+                case 'findAllLine':
                     $dataLists = \backend\services\SqlHightchartService::findAllLineEcharts();
                     return $dataLists;
                 default :
@@ -190,6 +199,7 @@ class SqlController extends Controller {
         }
         return [];
     }
+
     /**
      * @inheritdoc
      */
@@ -203,7 +213,7 @@ class SqlController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['index', 'sqlgraph', 'addstatistics', 'database', 'longtimesql', 'sql50', 'sqlnums', 'api','persqlquery'],
+                        'actions' => ['index', 'sqlgraph', 'addstatistics', 'database', 'longtimesql', 'sql50', 'sqlnums', 'api', 'persqlquery', 'sqlnewadd'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],

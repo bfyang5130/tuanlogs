@@ -19,6 +19,12 @@ use common\models\DatabaseType;
  */
 class SqlController extends Controller {
 
+    /**
+     * 每天每个sql查询量
+     */
+    public function actionPersqlquery(){
+        return $this->render("persqlquery");
+    }
     public function actionSqlnums() {
         return $this->render("sqlnums");
     }
@@ -184,7 +190,6 @@ class SqlController extends Controller {
         }
         return [];
     }
-
     /**
      * @inheritdoc
      */
@@ -198,7 +203,7 @@ class SqlController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['index', 'sqlgraph', 'addstatistics', 'database', 'longtimesql', 'sql50', 'sqlnums', 'api'],
+                        'actions' => ['index', 'sqlgraph', 'addstatistics', 'database', 'longtimesql', 'sql50', 'sqlnums', 'api','persqlquery'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],

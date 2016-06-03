@@ -186,7 +186,7 @@ class SqlTraceService {
         //处理一个太频繁的数据
         $marktime = \Yii::$app->cache->get('top50time');
         $time = time();
-        //如果在30秒内的操作不做新的统计
+        //如果在30秒内的操作不做新的统计如果说看实时的，那只看最近1分钟就差不多了。10分钟卡太多时间了
         if ($marktime && $time < ($marktime + 30)) {
             
         } else {
@@ -196,7 +196,7 @@ from SqlTrace s
 inner join 
 (select sqltext_md5,sqlusedtime,id from 
 	(SELECT md5(sqltext) as sqltext_md5,sqlusedtime,id 
-	 FROM SqlTrace   where executedate  between date_sub(now(),interval 10 minute) and now()  
+	 FROM SqlTrace   where executedate  between date_sub(now(),interval 1 minute) and now()  
 	 order by sqlusedtime desc
      ) sql_tmp 
      group by sqltext_md5  order by sqlusedtime desc limit 50

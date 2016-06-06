@@ -2,7 +2,7 @@
 /* @var $this yii\web\View */
 
 use yii\widgets\Breadcrumbs;
-use backend\models\SqlTracePersqlSearch;
+use backend\models\SqlTracePersql50Search;
 use yii\widgets\LinkPager;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
@@ -10,7 +10,7 @@ use yii\helpers\Html;
 $this->title = '每天前50条查询最久统计';
 $params = \Yii::$app->request->get();
 //处理时间
-$accLogErr = new SqlTracePersqlSearch();
+$accLogErr = new SqlTracePersql50Search();
 if (!empty($params['SqlTracePersqlSearch']['sqlquerytime'])) {
     $accLogErr->sqlquerytime = $params['SqlTracePersqlSearch']['sqlquerytime'];
 } else {

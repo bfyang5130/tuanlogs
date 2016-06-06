@@ -43,7 +43,7 @@ class SqlTracePersql50Search extends SqlTracePersql {
         $query = new \yii\db\Query;
 
         $dataProvider = new ActiveDataProvider([
-            'query' => $query->from(SqlTracePersqlSearch::tableName()),
+            'query' => $query->from(SqlTracePersql50Search::tableName()),
             'pagination' => [
                 'pageSize' => 50,
             ],

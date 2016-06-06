@@ -2,22 +2,20 @@
 /* @var $this yii\web\View */
 
 use yii\widgets\Breadcrumbs;
-use backend\models\AccessLogMostSearch;
+use backend\models\AccessLogIismostSearch;
 use yii\widgets\LinkPager;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
-use backend\services\SqlTraceService;
-use dosamigos\datetimepicker\DateTimePicker;
 
 $this->title = 'IP重复访问最多数据';
 $params = \Yii::$app->request->get();
 //为了保证实时数据，先统计一下当前最近10分钟的top50数据因为只有10分钟，所以统计会少很多时间
 //处理时间
-$accLogErr = new AccessLogMostSearch();
-if (!empty($params['AccessLogMostSearch']['Date_time'])) {
-    $accLogErr->Date_time = $params['AccessLogMostSearch']['Date_time'];
+$accLogErr = new AccessLogIismostSearch();
+if (!empty($params['AccessLogIismostSearch']['Date_time'])) {
+    $accLogErr->Date_time = $params['AccessLogIismostSearch']['Date_time'];
 } else {
-    $params['AccessLogMostSearch']['Date_time'] = date('Y-m-d 00:00:00', strtotime('-1 day', time()));
+    $params['AccessLogIismostSearch']['Date_time'] = date('Y-m-d 00:00:00', strtotime('-1 day', time()));
     $accLogErr->Date_time = date('Y-m-d 00:00:00', strtotime('-1 day', time()));
 }
 
@@ -64,9 +62,9 @@ if ($begin > $end) {
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <label for="sqllogsearch-sqltext">站点：</label>
-                                                            <?= Html::activeDropDownList($accLogErr, 'Website', AccessLogMostSearch::getWebsite(), ['class' => 'form-control']) ?>
+                                                            <?= Html::activeDropDownList($accLogErr, 'Website', AccessLogIismostSearch::getWebsite(), ['class' => 'form-control']) ?>
                                                             <label for="sqllogsearch-sqltext">服务器：</label>
-                                                            <?= Html::activeDropDownList($accLogErr, 'server', AccessLogMostSearch::getServer(), ['class' => 'form-control']) ?>
+                                                            <?= Html::activeDropDownList($accLogErr, 'server', AccessLogIismostSearch::getServer(), ['class' => 'form-control']) ?>
                                                             <label for="exampleInputEmail2">访问日期：</label>
                                                             <?=
                                                             \yii\jui\DatePicker::widget([

@@ -11,10 +11,10 @@ $this->title = '每天前50条查询最久统计';
 $params = \Yii::$app->request->get();
 //处理时间
 $accLogErr = new SqlTracePersql50Search();
-if (!empty($params['SqlTracePersqlSearch']['sqlquerytime'])) {
-    $accLogErr->sqlquerytime = $params['SqlTracePersqlSearch']['sqlquerytime'];
+if (!empty($params['SqlTracePersql50Search']['sqlquerytime'])) {
+    $accLogErr->sqlquerytime = $params['SqlTracePersql50Search']['sqlquerytime'];
 } else {
-    $params['SqlTracePersqlSearch']['sqlquerytime'] = date('Y-m-d 00:00:00');
+    $params['SqlTracePersql50Search']['sqlquerytime'] = date('Y-m-d 00:00:00');
     $accLogErr->sqlquerytime = date("Y-m-d 00:00:00");
 }
 

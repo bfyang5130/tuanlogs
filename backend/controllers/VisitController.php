@@ -28,7 +28,7 @@ class VisitController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => [ 'index', 'servicestatus', 'city', 'showtotal', 'showmap', 'api'],
+                        'actions' => [ 'index', 'servicestatus', 'city', 'showtotal', 'showmap', 'api','iisvisit'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -58,10 +58,16 @@ class VisitController extends Controller {
      * 显示nginx访问首页
      * @return type
      */
+    public function actionIisvisit() {
+        return $this->render('iisvisit');
+    }
+    /**
+     * 显示nginx访问首页
+     * @return type
+     */
     public function actionIndex() {
         return $this->render('index');
     }
-
     /**
      * 显示nginx访问首页
      * @return type

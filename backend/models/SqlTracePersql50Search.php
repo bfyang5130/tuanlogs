@@ -61,7 +61,6 @@ class SqlTracePersql50Search extends SqlTracePersql {
         }
         $query->andFilterWhere(['databasetype' => $this->databasetype]);
         $query->andFilterWhere(['sqlquerytime' => $this->start_date]);
-        $query->orderBy('amount desc');
         return $dataProvider;
     }
 

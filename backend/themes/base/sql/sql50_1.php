@@ -2,20 +2,24 @@
 /* @var $this yii\web\View */
 
 use yii\widgets\Breadcrumbs;
-use backend\models\SqlTracePersqlSearch;
+use backend\models\Sql50Search;
 use yii\widgets\LinkPager;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
+use backend\services\SqlTraceService;
+use dosamigos\datetimepicker\DateTimePicker;
 
-$this->title = '每天前50条查询最久统计';
+$this->title = '慢日志查询';
 $params = \Yii::$app->request->get();
+//为了保证实时数据，先统计一下当前最近10分钟的top50数据因为只有10分钟，所以统计会少很多时间
+SqlTraceService::tofitTop50near10minute();
 //处理时间
-$accLogErr = new SqlTracePersqlSearch();
-if (!empty($params['SqlTracePersqlSearch']['sqlquerytime'])) {
-    $accLogErr->sqlquerytime = $params['SqlTracePersqlSearch']['sqlquerytime'];
-} else {
-    $params['SqlTracePersqlSearch']['sqlquerytime'] = date('Y-m-d 00:00:00');
-    $accLogErr->sqlquerytime = date("Y-m-d 00:00:00");
+$accLogErr = new Sql50Search();
+if (!empty($params['Sql50Search']['executedate'])) {
+    $accLogErr->executedate=$params['Sql50Search']['executedate'];
+}else{
+    $params['Sql50Search']['executedate'] = date('Y-m-d 00:00:00');
+    $accLogErr->executedate=date("Y-m-d 00:00:00");
 }
 
 $thisDayErrorsLists = $accLogErr->search($params);
@@ -51,26 +55,28 @@ if ($begin > $end) {
                                     <tbody>
                                         <tr>
                                             <td colspan="3">
-
+                                                <?php
+                                                $form = ActiveForm::begin([
+                                                            'action' => ['/sql/sql50'],
+                                                            'method' => 'get',
+                                                ]);
+                                                ?>
                                                 <div class="content form-inline">
                                                     <div class="row">
                                                         <div class="col-md-12">
-                                                            <?php
-                                                            $form = ActiveForm::begin([
-                                                                        'action' => ['/sql/sql50'],
-                                                                        'method' => 'get',
-                                                            ]);
-                                                            ?>
+                                                            <label for="sqllogsearch-sqltext">耗时：</label>
+                                                            <?= Html::activeTextInput($accLogErr, 'sqlusedtime', ['class' => 'form-control', 'style' => 'width:100px']) ?>
+
                                                             <label for="sqllogsearch-sqltext">数据库：</label>
                                                             <?= Html::activeDropDownList($accLogErr, 'databasetype', \backend\services\SqlTraceService::getSqlTraceDbType(), ['class' => 'form-control']) ?>
 
-                                                            <label for="exampleInputEmail2">时间：</label>
+                                                            <label for="exampleInputEmail2">执行时间：</label>
                                                             <?=
                                                             \yii\jui\DatePicker::widget([
                                                                 'options' => ['class' => 'form-control datepicker', 'readonly' => true],
                                                                 'model' => $accLogErr,
                                                                 'language' => 'zh-CN',
-                                                                'attribute' => 'sqlquerytime',
+                                                                'attribute' => 'executedate',
                                                                 'value' => date('Y-m-d'),
                                                                 'dateFormat' => 'php:Y-m-d',
                                                                 'clientOptions' => [
@@ -79,11 +85,10 @@ if ($begin > $end) {
                                                             ]);
                                                             ?>
                                                             <button type="submit" class="btn btn-default btn-primary btn-sm">查询</button>
-                                                            <?php ActiveForm::end(); ?>
                                                         </div>
                                                     </div>
                                                 </div>
-
+<?php ActiveForm::end(); ?>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -95,19 +100,19 @@ if ($begin > $end) {
                                             <th width="70%">查询语句</th>
                                             <th>耗时</th>
                                             <th>数据库</th>
-                                            <th>时间</th>
+                                            <th>执行时间</th>
                                         </tr>
-                                        <?php foreach ($datas as $oneErrorValue): ?>
+<?php foreach ($datas as $oneErrorValue): ?>
                                             <tr>
                                                 <td class="center"><code><?= Html::encode($oneErrorValue['sqltext']) ?></code></td>
-                                                <td class="center"><?= Html::encode($oneErrorValue['queryusemaxtime']) ?></td>
+                                                <td class="center"><?= Html::encode($oneErrorValue['sqlusedtime']) ?></td>
                                                 <td class="center"><?= Html::encode($oneErrorValue['databasetype']) ?></td>
-                                                <td class="center"><?= Html::encode($oneErrorValue['sqlquerytime']) ?></td>
+                                                <td class="center"><?= Html::encode($oneErrorValue['executedate']) ?></td>
                                             </tr>
-                                        <?php endforeach; ?>
+                                                <?php endforeach; ?>
                                         <tr>
                                             <td colspan="6" class="text-center">
-                                                <?= LinkPager::widget(['pagination' => $pager]); ?>
+<?= LinkPager::widget(['pagination' => $pager]); ?>
                                             </td>
                                         </tr>
                                     </tbody>

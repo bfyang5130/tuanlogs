@@ -57,7 +57,7 @@ if ($begin > $end) {
                                                         <div class="col-md-12">
                                                             <?php
                                                             $form = ActiveForm::begin([
-                                                                        'action' => ['/sql/sql50'],
+                                                                        'action' => ['/sql/persqlquery'],
                                                                         'method' => 'get',
                                                             ]);
                                                             ?>

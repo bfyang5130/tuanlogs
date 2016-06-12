@@ -17,10 +17,11 @@ $toUrl = Url::toRoute($url) . '?ip=' . $ip;
     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
         <div class="btn-group" role="group" aria-label="First group">
             <a href="<?= Url::toRoute('/visit/index') ?>" class="btn btn-default<?= ($id == 'index') ? ' btn-primary' : '' ?>">NGINX访问IP统计</a>
+            <a href="<?= Url::toRoute('/visit/nginxlist') ?>" class="btn btn-default<?= ($id == 'nginxlist') ? ' btn-primary' : '' ?>">Nginx访问列表</a>
+            <a href="<?= Url::toRoute('/visit/showtotal') ?>" class="btn btn-default<?= ($id == 'showtotal') ? ' btn-primary' : '' ?>">Nginx统计</a>
             <a href="<?= Url::toRoute('/visit/iisvisit') ?>" class="btn btn-default<?= ($id == 'iisvisit') ? ' btn-primary' : '' ?>">IIS访问IP统计</a>
-            <a href="<?= Url::toRoute('/visit/showtotal') ?>" class="btn btn-default<?= ($id == 'showtotal') ? ' btn-primary' : '' ?>">Nginx日志</a>
-            <a href="<?= Url::toRoute('/visit/servicestatus') ?>" class="btn btn-default<?= ($id == 'servicestatus') ? ' btn-primary' : '' ?>">服务器状态</a>
-            <a href="<?= Url::toRoute('/visit/iis') ?>" class="btn btn-default<?= ($id == 'iis') ? ' btn-primary' : '' ?>">IIS日志</a>
+            <a href="<?= Url::toRoute('/visit/iislist') ?>" class="btn btn-default<?= ($id == 'iislist') ? ' btn-primary' : '' ?>">IIS访问列表</a>
+            <a href="<?= Url::toRoute('/visit/iis') ?>" class="btn btn-default<?= ($id == 'iis') ? ' btn-primary' : '' ?>">IIS统计</a>
         </div>
         <div class="btn-group pull-right">
             <?=

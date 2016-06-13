@@ -14,12 +14,21 @@ use yii\filters\VerbFilter;
  * Site controller
  */
 class VisitController extends Controller {
+
+    /**
+     * IIs访问详情列表
+     */
+    public function actionIislist() {
+        return $this->render('iislist');
+    }
+
     /**
      * nginx访问详情列表
-     */            
-    public function actionNginxlist(){
+     */
+    public function actionNginxlist() {
         return $this->render('nginxlist');
     }
+
     /**
      * @inheritdoc
      */
@@ -33,7 +42,7 @@ class VisitController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => [ 'index', 'servicestatus', 'city', 'showtotal', 'showmap', 'api','iisvisit','nginxlist'],
+                        'actions' => [ 'index', 'servicestatus', 'city', 'showtotal', 'showmap', 'api', 'iisvisit', 'nginxlist','iislist'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -66,6 +75,7 @@ class VisitController extends Controller {
     public function actionIisvisit() {
         return $this->render('iisvisit');
     }
+
     /**
      * 显示nginx访问首页
      * @return type
@@ -73,6 +83,7 @@ class VisitController extends Controller {
     public function actionIndex() {
         return $this->render('index');
     }
+
     /**
      * 显示nginx访问首页
      * @return type

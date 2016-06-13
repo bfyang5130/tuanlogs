@@ -2,20 +2,20 @@
 /* @var $this yii\web\View */
 
 use yii\widgets\Breadcrumbs;
-use backend\models\AccessLogssSearch;
+use backend\models\IisAccessLogSearch;
 use yii\widgets\LinkPager;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
-$this->title = 'NGINX访问列表';
+$this->title = 'IIS访问列表';
 $params = \Yii::$app->request->get();
 //为了保证实时数据，先统计一下当前最近10分钟的top50数据因为只有10分钟，所以统计会少很多时间
 //处理时间
-$accLogErr = new AccessLogssSearch();
-if (!empty($params['AccessLogssSearch']['date_reg'])) {
-    $accLogErr->date_reg = $params['AccessLogssSearch']['date_reg'];
+$accLogErr = new IisAccessLogSearch();
+if (!empty($params['IisAccessLogSearch']['date_reg'])) {
+    $accLogErr->date_reg = $params['IisAccessLogSearch']['date_reg'];
 } else {
-    $params['AccessLogssSearch']['date_reg'] = date('Y-m-d 00:00:00');
+    $params['IisAccessLogSearch']['date_reg'] = date('Y-m-d 00:00:00');
     $accLogErr->date_reg = date('Y-m-d 00:00:00');
     //$params['AccessLogssSearch']['date_reg'] = '2016-06-06 00:00:00';
     //$accLogErr->date_reg = '2016-06-06 00:00:00';
@@ -56,7 +56,7 @@ if ($begin > $end) {
                                             <td colspan="3">
                                                 <?php
                                                 $form = ActiveForm::begin([
-                                                            'action' => ['/visit/nginxlist'],
+                                                            'action' => ['/visit/iislist'],
                                                             'method' => 'get',
                                                 ]);
                                                 ?>

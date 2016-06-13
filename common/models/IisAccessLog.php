@@ -7,22 +7,24 @@ use Yii;
 /**
  * This is the model class for table "IisAccessLog".
  *
- * @property integer $id
- * @property string $RequestTime
- * @property string $ServerIp
- * @property string $RequestType
- * @property string $CsUriStem
- * @property string $CsUriQuery
- * @property integer $ServerPort
- * @property string $CsUsername
- * @property string $ClientIp
- * @property string $UserAgent
- * @property string $System
- * @property string $Browser
- * @property integer $Status
- * @property integer $SubStatus
- * @property integer $ScWin32Status
- * @property integer $TimeTaken
+ * @property integer $Id
+ * @property string $Ip1
+ * @property string $country
+ * @property string $province
+ * @property string $city
+ * @property string $date_reg
+ * @property string $request_method
+ * @property string $request_url
+ * @property string $request_protocol
+ * @property integer $status_code
+ * @property integer $body_size
+ * @property string $from_url
+ * @property string $agent
+ * @property string $plat
+ * @property string $bower
+ * @property string $mobile_plat
+ * @property double $request_time
+ * @property string $visitwebsite
  */
 class IisAccessLog extends \yii\db\ActiveRecord
 {
@@ -40,13 +42,14 @@ class IisAccessLog extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['RequestTime'], 'safe'],
-            [['ServerPort', 'Status', 'SubStatus', 'ScWin32Status', 'TimeTaken'], 'integer'],
-            [['ServerIp', 'ClientIp'], 'string', 'max' => 50],
-            [['RequestType'], 'string', 'max' => 200],
-            [['CsUsername','CsUriStem'], 'string', 'max' => 255],
-            [['UserAgent','CsUriQuery'], 'string', 'max' => 1024],
-            [['System', 'Browser'], 'string', 'max' => 100]
+            [['date_reg'], 'safe'],
+            [['request_url', 'from_url', 'agent'], 'string'],
+            [['status_code', 'body_size'], 'integer'],
+            [['request_time'], 'number'],
+            [['Ip1', 'province', 'city', 'request_method'], 'string', 'max' => 20],
+            [['country', 'visitwebsite'], 'string', 'max' => 255],
+            [['request_protocol'], 'string', 'max' => 100],
+            [['plat', 'bower', 'mobile_plat'], 'string', 'max' => 500]
         ];
     }
 
@@ -56,22 +59,24 @@ class IisAccessLog extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'RequestTime' => '请求时间',
-            'ServerIp' => '服务器IP',
-            'RequestType' => '请求方式',
-            'CsUriStem' => '访问的资源',
-            'CsUriQuery' => '具体的访问参数',
-            'ServerPort' => '客户端连接到的端口号',
-            'CsUsername' => '访问服务器的已验证用户的名称这不包括连字符 -表示的匿名用户',
-            'ClientIp' => '客户端IP',
-            'UserAgent' => '客户端类型',
-            'System' => '客户端类型',
-            'Browser' => '浏览器',
-            'Status' => '状态',
-            'SubStatus' => '协议子状态',
-            'ScWin32Status' => 'Win32状态',
-            'TimeTaken' => '操作花费的时间长短',
+            'Id' => 'ID',
+            'Ip1' => '用户IP1',
+            'country' => '国家',
+            'province' => '省份',
+            'city' => '城市',
+            'date_reg' => '请求时间',
+            'request_method' => '请求方法',
+            'request_url' => '请求地址',
+            'request_protocol' => '请求协议',
+            'status_code' => '状态',
+            'body_size' => '内容大小',
+            'from_url' => '入口地址',
+            'agent' => '信息',
+            'plat' => '平台',
+            'bower' => '浏览器',
+            'mobile_plat' => '手机信息',
+            'request_time' => '耗时',
+            'visitwebsite' => '访问的网址',
         ];
     }
 }

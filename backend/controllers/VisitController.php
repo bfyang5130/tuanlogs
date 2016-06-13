@@ -14,7 +14,12 @@ use yii\filters\VerbFilter;
  * Site controller
  */
 class VisitController extends Controller {
-
+    /**
+     * nginx访问详情列表
+     */            
+    public function actionNginxlist(){
+        return $this->render('nginxlist');
+    }
     /**
      * @inheritdoc
      */
@@ -28,7 +33,7 @@ class VisitController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => [ 'index', 'servicestatus', 'city', 'showtotal', 'showmap', 'api','iisvisit'],
+                        'actions' => [ 'index', 'servicestatus', 'city', 'showtotal', 'showmap', 'api','iisvisit','nginxlist'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],

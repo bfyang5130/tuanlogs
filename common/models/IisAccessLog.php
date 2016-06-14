@@ -25,6 +25,8 @@ use Yii;
  * @property string $mobile_plat
  * @property double $request_time
  * @property string $visitwebsite
+ * @property integer $proxy
+ * @property string $collectimtime
  */
 class IisAccessLog extends \yii\db\ActiveRecord
 {
@@ -42,9 +44,9 @@ class IisAccessLog extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['date_reg'], 'safe'],
+            [['date_reg', 'collectimtime'], 'safe'],
             [['request_url', 'from_url', 'agent'], 'string'],
-            [['status_code', 'body_size'], 'integer'],
+            [['status_code', 'body_size', 'proxy'], 'integer'],
             [['request_time'], 'number'],
             [['Ip1', 'province', 'city', 'request_method'], 'string', 'max' => 20],
             [['country', 'visitwebsite'], 'string', 'max' => 255],
@@ -77,6 +79,8 @@ class IisAccessLog extends \yii\db\ActiveRecord
             'mobile_plat' => '手机信息',
             'request_time' => '耗时',
             'visitwebsite' => '访问的网址',
+            'proxy' => '代理服务器',
+            'collectimtime' => '集合时间',
         ];
     }
 }

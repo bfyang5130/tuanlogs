@@ -4,6 +4,8 @@ namespace backend\services;
 
 use common\models\AccessStatistic;
 use common\models\AccessStatisticOne;
+use common\models\AccessStatistic17;
+use common\models\AccessStatistic21;
 use yii\db\Query;
 
 /**
@@ -15,6 +17,8 @@ class NginxService {
 
     const AccessStatistic = 1;
     const AccessStatisticOne = 2;
+    const AccessStatistic17 = 3;
+    const AccessStatistic21 = 4;
 
     /**
      * 获得某一天的访问人数
@@ -28,14 +32,14 @@ class NginxService {
         $end_date = date('Y-m-d 00:00:00', strtotime('+1 day', strtotime($start_date)));
         $query = null;
         switch ($tableselect) {
-            case self::AccessStatistic:
-                $query = AccessStatistic::find();
+            case self::AccessStatistic17:
+                $query = AccessStatistic17::find();
                 break;
-            case self::AccessStatisticOne:
-                $query = AccessStatisticOne::find();
+            case self::AccessStatistic21:
+                $query = AccessStatistic21::find();
                 break;
             default :
-                $query = AccessStatistic::find();
+                $query = AccessStatistic17::find();
         }
         return $query->where("TopType=:topT AND CheckTime>=:sT AND CheckTime<=:eT", [':topT' => $topType, ':sT' => $start_date, ':eT' => $end_date])->sum('Amount');
     }
@@ -53,14 +57,14 @@ class NginxService {
         $query = new Query;
         $query->where("CheckTime>=:sT AND CheckTime<=:eT", [':sT' => $start_date, ':eT' => $end_date]);
         switch ($tableselect) {
-            case self::AccessStatistic:
-                $query = $query->from('AccessStatistic');
+            case self::AccessStatistic17:
+                $query = $query->from('AccessStatistic17');
                 break;
-            case self::AccessStatisticOne:
-                $query = $query->from('AccessStatisticOne');
+            case self::AccessStatistic21:
+                $query = $query->from('AccessStatistic21');
                 break;
             default :
-                $query = $query->from('AccessStatistic');
+                $query = $query->from('AccessStatistic17');
         }
         return $query->select("$groupstring,sum(Amount) totalNum")->andwhere($topType, $params)->groupBy($groupstring)->all();
     }

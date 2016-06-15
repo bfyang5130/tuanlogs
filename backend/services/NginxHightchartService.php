@@ -17,6 +17,8 @@ class NginxHightchartService {
 
     const AccessStatistic = 1;
     const AccessStatisticOne = 2;
+    const AccessStatistic17 = 3;
+    const AccessStatistic21 = 4;
 
     /**
      * 获得一个简单的饼状图
@@ -254,6 +256,7 @@ class NginxHightchartService {
         }
         return $outCharts;
     }
+
     /**
      * 获得最近五天的错误状态进行展示
      * @return type
@@ -307,12 +310,12 @@ class NginxHightchartService {
         }
         foreach ($fitdates as $key => $oneDate) {
             $outCharts['series'][] = [
-                'name' => ''.$key,
+                'name' => '' . $key,
                 'type' => 'line',
                 'smooth' => true,
                 'data' => array_values($oneDate),
             ];
-            $outCharts['toptip'][]=''.$key;
+            $outCharts['toptip'][] = '' . $key;
         }
         $outCharts['categories'] = array_reverse($outCharts['categories']);
         //标记是否为今天的数据，如果是今天的数据,那么对今天的数据进行实时统计处理
@@ -339,6 +342,230 @@ class NginxHightchartService {
         }
         return $outCharts;
     }
+
+    /**
+     * 获取中国地图对应信息
+     */
+    public static function fitChinaMap() {
+
+        //获得ID，获得时间
+        $proxy = \Yii::$app->request->get('proxy');
+        $date = \Yii::$app->request->get('date');
+        //如果这两个都为空那么就直接出错吧
+        if (empty($proxy) || empty($date)) {
+            return [];
+        }
+
+        $selectTable = NginxHightchartService::AccessStatistic17;
+        $text = $date . '代理服务器' . $proxy . ':的全国访问量';
+        $dataname = '访问量';
+        switch ($proxy) {
+            case 21:
+                $selectTable = NginxHightchartService::AccessStatistic21;
+
+                break;
+            case 17:
+                $selectTable = NginxHightchartService::AccessStatistic17;
+                break;
+            case 141:
+            case 40:
+            default :
+                $selectTable = NginxHightchartService::AccessStatistic17;
+        }
+        $dateString = NginxService::findGroupString($date, "TopType=:topT", [':topT' => 'user_ip_1'], 'DetailType1', $selectTable);
+
+        if (empty($dateString)) {
+            return [];
+        }
+        //得到数据后，处理一个数组然后返回。
+        $countryCity = \Yii::$app->params['pinyincity'];
+        $redate = [];
+        $maxshow = 0;
+        foreach ($dateString as $oneDate) {
+            //处理属于国内的数据
+            if (in_array($oneDate['DetailType1'], $countryCity)) {
+                $redate['series']['data'][] = ['name' => $oneDate['DetailType1'], 'value' => floatval($oneDate['totalNum'])];
+                if ($oneDate['totalNum'] > $maxshow) {
+                    $maxshow = $oneDate['totalNum'];
+                }
+            }
+        }
+        $redate['maxshow'] = $maxshow;
+        $redate['text'] = $text;
+        $redate['dataname'] = $dataname;
+        return $redate;
+    }
+
+    /**
+     * 获得世界访问量
+     */
+    public static function fitWorldMap() {
+
+        //获得ID，获得时间
+        $proxy = \Yii::$app->request->get('proxy');
+        $date = \Yii::$app->request->get('date');
+        //如果这两个都为空那么就直接出错吧
+        if (empty($proxy) || empty($date)) {
+            return [];
+        }
+        $selectTable = NginxHightchartService::AccessStatistic17;
+        $text = $date . '代理服务器' . $proxy . ':的世界访问量';
+        $dataname = '访问量';
+        switch ($proxy) {
+            case 21:
+                $selectTable = NginxHightchartService::AccessStatistic21;
+
+                break;
+            case 17:
+                $selectTable = NginxHightchartService::AccessStatistic17;
+                break;
+            case 141:
+            case 40:
+            default :
+                $selectTable = NginxHightchartService::AccessStatistic17;
+        }
+        $dateString = NginxService::findGroupString($date, "TopType=:topT", [':topT' => 'user_ip_1'], 'DetailType1', $selectTable);
+        if (empty($dateString)) {
+            return [];
+        }
+        //得到数据后，处理一个数组然后返回。
+        $countryCity = \Yii::$app->params['worldcountry'];
+        $redate = [];
+        $maxshow = 0;
+        $chinaCity = \Yii::$app->params['pinyincity'];
+        $chinanums = 0;
+        foreach ($dateString as $oneDate) {
+            //处理属于国内的数据
+            if (in_array($oneDate['DetailType1'], $chinaCity)) {
+                $chinanums += $oneDate['totalNum'];
+            }
+            //处理属于国内的数据
+            if (in_array($oneDate['DetailType1'], $countryCity)) {
+                $key = array_search($oneDate['DetailType1'], $countryCity); // $key = 2;
+                $redate['series']['data'][] = ['name' => $key, 'value' => floatval($oneDate['totalNum'])];
+            }
+        }
+        $maxshow = $chinanums;
+        $redate['series']['data'][] = ['name' => 'China', 'value' => floatval($maxshow)];
+        $redate['maxshow'] = $maxshow;
+        $redate['text'] = $text;
+        $redate['dataname'] = $dataname;
+        return $redate;
+    }
+
+    /**
+     * 获得平台与浏览器相关信息
+     * @return string
+     */
+    public static function fitPlatBrower() {
+        return self::CommonFunctionFitPie("TopType=:topT", [':topT' => 'plat_brower'], 'DetailType1', 'DetailType2');
+    }
+
+    /**
+     * 这个方法跟上面那个很类似，又重复搬砖了。。
+     */
+    public static function fitErrors() {
+        return self::CommonFunctionFitPie("TopType=:topT AND DetailType1<>200", [':topT' => 'status'], 'LogType', 'DetailType1');
+    }
+
+    /**
+     * 处理手机平台与浏览器的关系
+     */
+    public static function fitMobilebrower() {
+        return self::CommonFunctionFitPie("TopType=:topT AND DetailType2<>'other'", [':topT' => 'plat_mobile_brower'], 'DetailType2', 'DetailType3');
+    }
+
+    /**
+     * 不想重复造代码，写个通用的方法
+     */
+    public static function CommonFunctionFitPie($queryWhere, $queryOptions, $groupColumn1, $groupColumn2) {
+
+
+        //获得ID，获得时间
+        $proxy = \Yii::$app->request->get('proxy');
+        $date = \Yii::$app->request->get('date');
+        //如果这两个都为空那么就直接出错吧
+        if (empty($proxy) || empty($date)) {
+            return [];
+        }
+        $selectTable = NginxHightchartService::AccessStatistic17;
+        switch ($proxy) {
+            case 21:
+                $selectTable = NginxHightchartService::AccessStatistic21;
+
+                break;
+            case 17:
+                $selectTable = NginxHightchartService::AccessStatistic17;
+                break;
+            case 141:
+            case 40:
+            default :
+                $selectTable = NginxHightchartService::AccessStatistic17;
+        }
+        $dateString = NginxService::findGroupString($date, $queryWhere, $queryOptions, $groupColumn1 . ',' . $groupColumn2, $selectTable);
+
+        if (empty($dateString)) {
+            return [];
+        }
+        //开始处理数据，处理的方式是，一堆又一堆，不懂就看程序吧。
+        //定义一个装大数组的array
+        $plats = [];
+        //定义一个二级数据
+        $browers = [];
+        //定义一个单独的浏览器显示
+        $aloneBrower = [];
+        //定义一个DATATEXT用来记录LABEL
+        $datatext0 = [];
+        $datatext1 = [];
+        $datatext2 = [];
+        foreach ($dateString as $oneDate) {
+            //如果为空，那就为QYS空
+            if (empty($oneDate[$groupColumn1])) {
+                $oneDate[$groupColumn1] = 'qysone';
+            }
+            //如果为空，那就为QYS空
+            if (empty($oneDate[$groupColumn2])) {
+                $oneDate[$groupColumn2] = 'qystwo';
+            }
+            //判断第一个数组是否存在，存在就加数，不存在就初始化它为0
+            if (isset($plats[$oneDate[$groupColumn1]])) {
+                $plats[$oneDate[$groupColumn1]]+=$oneDate['totalNum'];
+            } else {
+                $datatext1[] = $oneDate[$groupColumn1];
+                $plats[$oneDate[$groupColumn1]] = $oneDate['totalNum'];
+            }
+            if (isset($aloneBrower[$oneDate[$groupColumn2]])) {
+                $aloneBrower[$oneDate[$groupColumn2]]+=$oneDate['totalNum'];
+            } else {
+                $datatext0[] = $oneDate[$groupColumn2];
+                $aloneBrower[$oneDate[$groupColumn2]] = $oneDate['totalNum'];
+            }
+            //处理第二组的数据了
+            $lines = $oneDate[$groupColumn1] . '-' . $oneDate[$groupColumn2];
+            $datatext2[] = $lines;
+
+            $browers[] = ['name' => $lines, 'value' => floatval($oneDate['totalNum'])];
+        }
+        //对$plats再做一次手术
+        $plat = [];
+        foreach ($plats as $key => $onePlat) {
+            $plat[] = ['name' => $key, 'value' => floatval($onePlat)];
+        }
+        //对$aloneBrower再做一次手术
+        $aBrower = [];
+        foreach ($aloneBrower as $key1 => $oneB) {
+            $aBrower[] = ['name' => $key1, 'value' => floatval($oneB)];
+        }
+        //对两个datatext1,datatext2合并
+        $datetext = array_merge_recursive($datatext0, $datatext1, $datatext2);
+        //配置生成数据
+        $redate['datatext'] = $datetext;
+        $redate['platdata'] = $plat;
+        $redate['brower'] = $browers;
+        $redate['alonebrower'] = $aBrower;
+        return $redate;
+    }
+
 }
 
 ?>

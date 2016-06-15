@@ -41,7 +41,7 @@ if (empty($search_date)) {
                                     var myChart = echarts.init(document.getElementById('main'));
                                     myChart.showLoading();
 
-                                    $.get('/visit/api.html?fc=mobilebrower&proxy=17&date=2016-06-06', function(data) {
+                                    $.get('/visit/api.html?fc=plat_brower&proxy=17&date=2016-06-06', function(data) {
                                         myChart.hideLoading();
                                         myChart.setOption(option = {
                                             tooltip: {

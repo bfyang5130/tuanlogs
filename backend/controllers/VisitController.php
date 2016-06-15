@@ -42,7 +42,7 @@ class VisitController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => [ 'index', 'servicestatus', 'city', 'showtotal', 'showmap', 'api', 'iisvisit', 'nginxlist','iislist'],
+                        'actions' => [ 'index', 'servicestatus', 'city', 'showtotal', 'showmap', 'api', 'iisvisit', 'nginxlist', 'iislist'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -122,11 +122,20 @@ class VisitController extends Controller {
         $fc = \Yii::$app->request->get('fc');
         if (!empty($fc)) {
             switch ($fc) {
-                case 'twodayfit':
-                    $dataLists = \backend\services\ZabbixHightchartService::fitTwoDay();
+                case 'chinamap':
+                    $dataLists = \backend\services\NginxHightchartService::fitChinaMap();
                     return $dataLists;
-                case 'detail':
-                    $dataLists = \backend\services\ZabbixHightchartService::fitDetailData();
+                case 'worldmap':
+                    $dataLists = \backend\services\NginxHightchartService::fitWorldMap();
+                    return $dataLists;
+                case 'plat_brower':
+                    $dataLists = \backend\services\NginxHightchartService::fitPlatBrower();
+                    return $dataLists;
+                case 'errorstatus':
+                    $dataLists = \backend\services\NginxHightchartService::fitErrors();
+                    return $dataLists;
+                case 'mobilebrower':
+                    $dataLists = \backend\services\NginxHightchartService::fitMobilebrower();
                     return $dataLists;
                 default :
             }

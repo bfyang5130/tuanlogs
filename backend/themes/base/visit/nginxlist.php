@@ -15,10 +15,10 @@ $accLogErr = new AccessLogssSearch();
 if (!empty($params['AccessLogssSearch']['date_reg'])) {
     $accLogErr->date_reg = $params['AccessLogssSearch']['date_reg'];
 } else {
-    $params['AccessLogssSearch']['date_reg'] = date('Y-m-d 00:00:00');
-    $accLogErr->date_reg = date('Y-m-d 00:00:00');
-    //$params['AccessLogssSearch']['date_reg'] = '2016-06-06 00:00:00';
-    //$accLogErr->date_reg = '2016-06-06 00:00:00';
+    //$params['AccessLogssSearch']['date_reg'] = date('Y-m-d 00:00:00');
+    //$accLogErr->date_reg = date('Y-m-d 00:00:00');
+    $params['AccessLogssSearch']['date_reg'] = '2016-06-06 00:00:00';
+    $accLogErr->date_reg = '2016-06-06 00:00:00';
 }
 
 $thisDayErrorsLists = $accLogErr->search($params);

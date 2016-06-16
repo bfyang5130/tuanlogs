@@ -5,7 +5,7 @@ use yii\helpers\Url;
 $id = \Yii::$app->controller->action->id;
 $search_date = Yii::$app->request->get("search_date");
 if (empty($url)) {
-    $url = '/visit/showtatal';
+    $toUrl = '/visit/showtatal';
 }
 ?>
 <div class="panel-heading">
@@ -31,7 +31,7 @@ if (empty($url)) {
                     'maxDate' => date("Y-m-d"),
                     'onSelect' => new \yii\web\JsExpression(
                             "function (dateText, inst) {
-                                            var url = '$toUrl?search_date='+ dateText;
+                                            var url = '/visit/showtatal?search_date='+ dateText;
                                             location.href = url;
                                         }"
                     ),

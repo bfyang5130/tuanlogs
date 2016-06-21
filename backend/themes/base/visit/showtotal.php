@@ -276,7 +276,7 @@ if (empty($search_date)) {
                                                             var mobile_brower_main17 = echarts.init(document.getElementById('mobile_brower_main17'));
                                                             mobile_brower_main17.showLoading();
 
-                                                            $.get('/visit/api.html?fc=plat_brower&proxy=17&date=<?= $search_date ?>', function(data) {
+                                                            $.get('/visit/api.html?fc=mobilebrower&proxy=17&date=<?= $search_date ?>', function(data) {
                                                                 mobile_brower_main17.hideLoading();
                                                                 mobile_brower_main17.setOption(option = {
                                                                     tooltip: {
@@ -680,7 +680,7 @@ if (empty($search_date)) {
                                                             var mobile_brower_main21 = echarts.init(document.getElementById('mobile_brower_main21'));
                                                             mobile_brower_main21.showLoading();
 
-                                                            $.get('/visit/api.html?fc=plat_brower&proxy=21&date=<?= $search_date ?>', function(data) {
+                                                            $.get('/visit/api.html?fc=mobilebrower&proxy=21&date=<?= $search_date ?>', function(data) {
                                                                 mobile_brower_main21.hideLoading();
                                                                 mobile_brower_main21.setOption(option = {
                                                                     tooltip: {

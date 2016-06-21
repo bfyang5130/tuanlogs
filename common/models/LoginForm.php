@@ -50,6 +50,7 @@ class LoginForm extends Model {
     public function validatePassword($attribute, $params) {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
+            //$user->setPassword($this->password);exit;
             if (!$user || !$user->validatePassword($this->password)) {
                 $this->addError($attribute, '用户名或者密码不正确.');
             }

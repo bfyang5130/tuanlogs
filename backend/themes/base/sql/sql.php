@@ -49,7 +49,7 @@ if ($begin > $end) {
                                         $form = ActiveForm::begin([
                                                     'action' => ['/sql/index'],
                                                     'method' => 'get',
-                                                    //'options' => ['onSubmit' => 'return checkDate();'],
+                                                    'options' => ['onSubmit' => 'return checkDate();'],
                                         ]);
                                         ?>
                                         <div class="content form-inline">
@@ -156,10 +156,10 @@ if ($begin > $end) {
         end_time = end_time.replace(/-/g, "/");
         var end_d = new Date(end_time);
         var cai_Y = Date.parse(end_d)-Date.parse(start_d);
-        if (end_d > start_d && cai_Y <= 3*60*60*1000) {
+        if (end_d > start_d && cai_Y <= 6*60*60*1000) {
             return true;
         } else {
-            alert("请查询三个钟头内的数据");
+            alert("请查询六个钟头内的数据");
             return false;
         }
     }

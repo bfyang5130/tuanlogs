@@ -49,6 +49,7 @@ if ($begin > $end) {
                                         $form = ActiveForm::begin([
                                                     'action' => ['/sql/index'],
                                                     'method' => 'get',
+                                                    'options' => ['onSubmit' => 'return checkDate();'],
                                         ]);
                                         ?>
                                         <div class="content form-inline">
@@ -144,5 +145,22 @@ if ($begin > $end) {
 
 <script type="text/javascript">
     $(document).ready(function() {
+
     });
+    function checkDate() {
+        var start_time = $("#sqllogsearch-start_date").val();
+        
+        start_time = start_time.replace(/-/g, "/");
+        var start_d = new Date(start_time);
+        var end_time = $("#sqllogsearch-end_date").val();
+        end_time = end_time.replace(/-/g, "/");
+        var end_d = new Date(end_time);
+        var cai_Y = Date.parse(end_d)-Date.parse(start_d);
+        if (end_d > start_d && cai_Y <= 3*60*60*1000) {
+            return true;
+        } else {
+            alert("请查询三个钟头内的数据");
+            return false;
+        }
+    }
 </script>

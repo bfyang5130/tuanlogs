@@ -171,7 +171,7 @@ class SqlController extends Controller {
             ],
             'defaultOrder' => ['executedate' => SORT_DESC]
         ]);
-        $locals = ToolService::getPagedRows($query, $tablename = 'SqlTrace', $params, ['orderBy' => $sort->orders, 'pageSize' => 10]);
+        $locals = ToolService::getPagedRows($query, $tablename = 'SqlTrace', $params, ['orderBy' => $sort->orders, 'pageSize' => 30]);
         $locals['searchModel'] = $searchModel;
         return $this->render('sql', $locals);
     }

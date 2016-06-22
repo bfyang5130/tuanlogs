@@ -165,10 +165,10 @@ class ToolService {
      */
     public static function getMonthFirstAndLastInfo($timestr = null) {
         if (empty($timestr)) {
-            $format_str_time = date('Y-m-01');
+            $format_str_time = date('Y-m-d');
             $str_time = strtotime($format_str_time); //获取从1号0点开始的时间戳。
         } else {
-            $format_str_time = date("Y-m-01", $timestr);
+            $format_str_time = date("Y-m-d", $timestr);
             $str_time = strtotime($format_str_time);
         }
         $end_time = strtotime('+1 day', $str_time); //获取这个月最后一天23点59分的时间戳

@@ -171,7 +171,7 @@ class ToolService {
             $format_str_time = date("Y-m-01", $timestr);
             $str_time = strtotime($format_str_time);
         }
-        $end_time = strtotime('+1 month -1 day', $str_time); //获取这个月最后一天23点59分的时间戳
+        $end_time = strtotime('+1 day', $str_time); //获取这个月最后一天23点59分的时间戳
         return ["str_time" => $str_time, "end_time" => $end_time];
     }
 

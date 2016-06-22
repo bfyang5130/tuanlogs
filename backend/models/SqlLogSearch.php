@@ -53,7 +53,7 @@ class SqlLogSearch extends SqlTrace {
             ]);
         } else {
             $dataProvider = new ActiveDataProvider([
-                'query' => $query->from("SqlTrace ignore index (executedate)"),
+                'query' => $query->from("SqlTrace"),
                 'sort' => [
                     'defaultOrder' => [
                         'executedate' => SORT_DESC,

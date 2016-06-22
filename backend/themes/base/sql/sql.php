@@ -110,7 +110,7 @@ if ($begin > $end) {
                                 </tr>
                             </tbody>
                         </table>
-                        <div class="summary">第<b><?= $begin . '-' . $end ?></b>条，共<b><?= $pager->totalCount ?></b>条数据.</div>
+                        <div class="summary">第<b><?= $begin . '-' . $end ?></b>条<?= ($pager->totalCount==10000000)?'':'，共<b>'.$pager->totalCount.'</b>条数据.'  ?></div>
                         <table class="table table-bordered table-striped table-condensed">
                             <tbody>
                                 <tr>

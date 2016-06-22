@@ -44,9 +44,9 @@ class ToolService {
     public static function getPagedRows($query, $tablename, $params, $config = []) {
         $countQuery = clone $query;
         if (isset($params['SqlLogSearch']) || isset($params['ErrorLogSearch'])) {
-            $rownums['nums'] = $countQuery->count();
+            //$rownums['nums'] = $countQuery->count();
             //在条件查询时不处理分页，给一个大概数
-            $rownums['nums']=10000;
+            $rownums['nums']=10000000;
         } else {
             $rownums = Yii::$app->db->createCommand("select TABLE_ROWS nums from information_schema.TABLES where TABLE_SCHEMA='Tuandai_Log' and TABLE_NAME='" . $tablename . "'")->queryOne();
         }

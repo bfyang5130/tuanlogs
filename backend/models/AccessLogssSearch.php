@@ -63,7 +63,7 @@ class AccessLogssSearch extends AccessLogss {
         $query->andFilterWhere(['Ip1' => $this->Ip1]);
         $query->andFilterWhere(['>=', 'date_reg', $this->start_date]);
         $query->andFilterWhere(['<', 'date_reg', $this->end_date]);
-        $query->orderBy('Id desc');
+        $query->orderBy('date_reg desc');
         return $dataProvider;
     }
 

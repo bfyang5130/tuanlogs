@@ -1,6 +1,8 @@
 <?php
 /* @var $this yii\web\View */
 
+use yii\grid\GridView;
+use yii\widgets\Pjax;
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
 use yii\widgets\LinkPager;
@@ -8,21 +10,9 @@ use yii\widgets\ActiveForm;
 use dosamigos\datetimepicker\DateTimePicker;
 use backend\services\SqlTraceService;
 use backend\services\ToolService;
+use yii\helpers\Url;
 
-$this->title = 'SQL日志列表';
-
-$params = \Yii::$app->request->get();
-        $searchModel = new SqlLogSearch();
-        $dataProvider = $searchModel->search($params);
-        $query = $dataProvider->query;
-        $sort = new Sort([
-            'attributes' => [
-                'executedate',
-            ],
-            'defaultOrder' => ['executedate' => SORT_DESC]
-        ]);
-        $locals = ToolService::getPagedRows($query, $tablename = 'SqlTrace', $params, ['orderBy' => $sort->orders, 'pageSize' => 10]);
-        $locals['searchModel'] = $searchModel;
+$this->title = '日志列表';
 $month_info = ToolService::getMonthFirstAndLastInfo();
 $searchModel->start_date = empty($searchModel->start_date) ? date("Y-m-d H:i:s", $month_info['str_time']) : $searchModel->start_date;
 $searchModel->end_date = empty($searchModel->end_date) ? date("Y-m-d H:i:s", $month_info['end_time']) : $searchModel->end_date;

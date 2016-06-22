@@ -49,7 +49,7 @@ if ($begin > $end) {
                                         $form = ActiveForm::begin([
                                                     'action' => ['/sql/index'],
                                                     'method' => 'get',
-                                                    'options' => ['onSubmit' => 'return checkDate();'],
+                                                    //'options' => ['onSubmit' => 'return checkDate();'],
                                         ]);
                                         ?>
                                         <div class="content form-inline">

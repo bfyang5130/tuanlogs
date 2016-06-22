@@ -16,9 +16,9 @@ $this->title = '日志列表';
 
 $params = \Yii::$app->request->queryParams;
 //月首
-$month_info['str_time'] = date('Y-m-01 00:00:00');
+$month_info['str_time'] = date('Y-m-d 00:00:00');
 //月尾
-$month_info['end_time'] = date('Y-m-d 23:59:59', strtotime($month_info['str_time'] . " +1 month -1 day"));
+$month_info['end_time'] = date('Y-m-d', strtotime($month_info['str_time'] . " +1 day"));
 
 $searchModel = new TraceLogSearch();
 $applicationName = new \common\models\ApplicateName();

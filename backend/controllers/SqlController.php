@@ -161,19 +161,7 @@ class SqlController extends Controller {
      * @return type
      */
     public function actionIndex() {
-        $params = Yii::$app->request->get();
-        $searchModel = new SqlLogSearch();
-        $dataProvider = $searchModel->search($params);
-        $query = $dataProvider->query;
-        $sort = new Sort([
-            'attributes' => [
-                'executedate',
-            ],
-            'defaultOrder' => ['executedate' => SORT_DESC]
-        ]);
-        $locals = ToolService::getPagedRows($query, $tablename = 'SqlTrace', $params, ['orderBy' => $sort->orders, 'pageSize' => 10]);
-        $locals['searchModel'] = $searchModel;
-        return $this->render('sql', $locals);
+        return $this->render('sql');
     }
 
     /**

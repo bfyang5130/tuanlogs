@@ -40,6 +40,11 @@ class AccessLogMostSearch extends AccessLogMost {
         return Model::scenarios();
     }
 
+//sqplit
+    public static function getDb() {
+        return \Yii::$app->db1;
+    }
+
     //put your code here
     public function search($params) {
         $query = new \yii\db\Query;

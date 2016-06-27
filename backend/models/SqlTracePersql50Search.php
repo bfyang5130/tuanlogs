@@ -37,8 +37,12 @@ class SqlTracePersql50Search extends SqlTracePersql {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
+//sqplit
+//    public static function getDb() {
+//        return \Yii::$app->db1;
+//    }
 
-    //put your code here
+//put your code here
     public function search($params) {
         $query = new \yii\db\Query;
 

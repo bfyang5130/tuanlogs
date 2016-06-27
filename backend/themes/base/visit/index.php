@@ -6,8 +6,6 @@ use backend\models\AccessLogMostSearch;
 use yii\widgets\LinkPager;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
-use backend\services\SqlTraceService;
-use dosamigos\datetimepicker\DateTimePicker;
 
 $this->title = 'IP重复访问最多数据';
 $params = \Yii::$app->request->get();

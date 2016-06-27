@@ -28,7 +28,7 @@ class AccessLogssSearch extends AccessLogss {
      */
     public function rules() {
         return [
-            [['start_date', 'end_date','Ip1'], 'safe'],
+            [['start_date', 'end_date', 'Ip1'], 'safe'],
         ];
     }
 
@@ -38,6 +38,11 @@ class AccessLogssSearch extends AccessLogss {
     public function scenarios() {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
+    }
+
+//sqplit
+    public static function getDb() {
+        return \Yii::$app->db1;
     }
 
     //put your code here

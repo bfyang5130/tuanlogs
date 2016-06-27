@@ -37,13 +37,17 @@ class LongtimesqlSearch extends SqlTraceLong {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
-
+//sqplit
+    public static function getDb() {
+        return \Yii::$app->db1;
+    }
     //put your code here
     public function search($params) {
         $query = SqlTraceLong::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'db'=>self::getDb(),
             'sort' => [
                 'defaultOrder' => [
                     'sqlusedtime' => SORT_DESC,

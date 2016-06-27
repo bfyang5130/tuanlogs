@@ -48,9 +48,9 @@ class AccessLogMostSearch extends AccessLogMost {
     //put your code here
     public function search($params) {
         $query = new \yii\db\Query;
-
         $dataProvider = new ActiveDataProvider([
             'query' => $query->from(AccessLogMost::tableName()),
+            'db'=>  self::getDb(),
             'pagination' => [
                 'pageSize' => 50,
             ],

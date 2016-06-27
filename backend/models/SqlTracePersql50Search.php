@@ -38,9 +38,9 @@ class SqlTracePersql50Search extends SqlTracePersql {
         return Model::scenarios();
     }
 //sqplit
-//    public static function getDb() {
-//        return \Yii::$app->db1;
-//    }
+    public static function getDb() {
+        return \Yii::$app->db1;
+    }
 
 //put your code here
     public function search($params) {
@@ -48,6 +48,7 @@ class SqlTracePersql50Search extends SqlTracePersql {
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query->from(SqlTracePersql50Search::tableName()),
+            'db'=>self::getDb(),
             'pagination' => [
                 'pageSize' => 50,
             ],

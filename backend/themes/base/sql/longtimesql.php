@@ -6,7 +6,6 @@ use backend\models\LongtimesqlSearch;
 use yii\widgets\LinkPager;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
-use dosamigos\datetimepicker\DateTimePicker;
 
 $this->title = '慢日志查询';
 $params = \Yii::$app->request->get();

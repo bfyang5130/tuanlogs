@@ -2,8 +2,6 @@
 
 namespace backend\services;
 
-use common\models\AccessStatistic;
-use common\models\AccessStatisticOne;
 use common\models\AccessStatistic17;
 use common\models\AccessStatistic21;
 use yii\db\Query;

@@ -37,13 +37,17 @@ class SqlTracePersqlNewSearch extends SqlTracePersql {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
-
+//sqplit
+    public static function getDb() {
+        return \Yii::$app->db1;
+    }
     //put your code here
     public function search($params) {
         $query = new \yii\db\Query;
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query->from(SqlTracePersqlSearch::tableName()),
+            'db'=>self::getDb(),
             'pagination' => [
                 'pageSize' => 50,
             ],

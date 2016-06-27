@@ -18,6 +18,9 @@ use Yii;
  */
 class AccessStatistic21 extends \yii\db\ActiveRecord
 {
+    public static function getDb() {
+        return \Yii::$app->db1;
+    }
     /**
      * @inheritdoc
      */

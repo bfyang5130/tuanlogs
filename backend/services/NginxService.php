@@ -41,7 +41,7 @@ class NginxService {
             default :
                 $query = AccessStatistic17::find();
         }
-        return $query->where("TopType=:topT AND CheckTime>=:sT AND CheckTime<=:eT", [':topT' => $topType, ':sT' => $start_date, ':eT' => $end_date])->sum('Amount');
+        return $query->where("TopType=:topT AND CheckTime>=:sT AND CheckTime<=:eT", [':topT' => $topType, ':sT' => $start_date, ':eT' => $end_date])->sum('Amount',\Yii::$app->db1);
     }
 
     /**
@@ -66,7 +66,7 @@ class NginxService {
             default :
                 $query = $query->from('AccessStatistic17');
         }
-        return $query->select("$groupstring,sum(Amount) totalNum")->andwhere($topType, $params)->groupBy($groupstring)->all();
+        return $query->select("$groupstring,sum(Amount) totalNum")->andwhere($topType, $params)->groupBy($groupstring)->all(\Yii::$app->db1);
     }
 
 }

@@ -51,6 +51,7 @@ class AccessLogssSearch extends AccessLogss {
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query->from(AccessLogss::tableName()),
+            'db'=>  self::getDb(),
             'pagination' => [
                 'pageSize' => 50,
             ],

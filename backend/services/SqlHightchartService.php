@@ -135,17 +135,17 @@ class SqlHightchartService {
         $fitDate = date('Y-m-d 00:00:00');
 
         $after5Date = date('Y-m-d 00:00:00', strtotime('-5 day', strtotime($fitDate)));
-        $fiveDateLists = SqlTraceLongSqlDay::find()->Where('StatisticDate>:sd AND StatisticDate<=:ed', [':sd' => $after5Date, ':ed' => $fitDate])->asArray()->orderBy("StatisticDate desc")->All();
+        $fiveDateLists = SqlTraceLongSqlDay::find()->Where('StatisticDate>:sd AND StatisticDate<=:ed', [':sd' => $after5Date, ':ed' => $fitDate])->asArray()->orderBy("StatisticDate desc")->All(\Yii::$app->db1);
         //如果为空，就取最后一个时间，以最后一个时间点为准
         //标记是否为最新的数据
         if (empty($fiveDateLists)) {
-            $lastDay = SqlTraceLongSqlDay::find()->orderBy("Id desc")->one();
+            $lastDay = SqlTraceLongSqlDay::find()->orderBy("Id desc")->one(\Yii::$app->db1);
             if (empty($lastDay)) {
                 return [];
             }
             $fitDate = date('Y-m-d 00:00:00', strtotime($lastDay->StatisticDate));
             $after5Date = date('Y-m-d 00:00:00', strtotime('-5 day', strtotime($fitDate)));
-            $fiveDateLists = SqlTraceLongSqlDay::find()->Where('StatisticDate>:sd AND StatisticDate<=:ed', [':sd' => $after5Date, ':ed' => $fitDate])->asArray()->orderBy("StatisticDate desc")->All();
+            $fiveDateLists = SqlTraceLongSqlDay::find()->Where('StatisticDate>:sd AND StatisticDate<=:ed', [':sd' => $after5Date, ':ed' => $fitDate])->asArray()->orderBy("StatisticDate desc")->All(\Yii::$app->db1);
 
             if (empty($fiveDateLists)) {
                 return [];

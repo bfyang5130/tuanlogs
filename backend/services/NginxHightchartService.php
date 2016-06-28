@@ -147,7 +147,7 @@ class NginxHightchartService {
         $sqlattack = AccessLogSqlInject::find()->count();
         //获得访问出错的数据
         $query = new Query;
-        $dateString = $query->select("count(*) nums,error_status")->from('AccessLogErrorStatus')->groupBy("error_status")->orderBy("nums desc")->all();
+        $dateString = $query->select("count(*) nums,error_status")->from('AccessLogErrorStatus')->groupBy("error_status")->orderBy("nums desc")->all(\Yii::$app->db1);
         if (empty($dateString)) {
             return [];
         }
@@ -266,18 +266,18 @@ class NginxHightchartService {
         $fitDate = date('Y-m-d 00:00:00');
 
         $after5Date = date('Y-m-d 00:00:00', strtotime('-5 day', strtotime($fitDate)));
-        $fiveDateLists = AccessLogErrorStatusDay::find()->Where('StatisticDate>:sd AND StatisticDate<=:ed', [':sd' => $after5Date, ':ed' => $fitDate])->asArray()->orderBy("StatisticDate desc")->All();
+        $fiveDateLists = AccessLogErrorStatusDay::find()->Where('StatisticDate>:sd AND StatisticDate<=:ed', [':sd' => $after5Date, ':ed' => $fitDate])->asArray()->orderBy("StatisticDate desc")->All(\Yii::$app->db1);
         //如果为空，就取最后一个时间，以最后一个时间点为准
         //标记是否为最新的数据
         $isToday = true;
         if (empty($fiveDateLists)) {
-            $lastDay = AccessLogErrorStatusDay::find()->orderBy("Id desc")->one();
+            $lastDay = AccessLogErrorStatusDay::find()->orderBy("Id desc")->one(\Yii::$app->db1);
             if (empty($lastDay)) {
                 return [];
             }
             $fitDate = date('Y-m-d 00:00:00', strtotime($lastDay->StatisticDate));
             $after5Date = date('Y-m-d 00:00:00', strtotime('-5 day', strtotime($fitDate)));
-            $fiveDateLists = AccessLogErrorStatusDay::find()->Where('StatisticDate>:sd AND StatisticDate<=:ed', [':sd' => $after5Date, ':ed' => $fitDate])->asArray()->orderBy("StatisticDate desc")->All();
+            $fiveDateLists = AccessLogErrorStatusDay::find()->Where('StatisticDate>:sd AND StatisticDate<=:ed', [':sd' => $after5Date, ':ed' => $fitDate])->asArray()->orderBy("StatisticDate desc")->All(\Yii::$app->db1);
 
             if (empty($fiveDateLists)) {
                 return [];
@@ -325,7 +325,7 @@ class NginxHightchartService {
             $after1Date = date('Y-m-d 00:00:00', strtotime('+1 day', strtotime($fitDate)));
             //因为上面已经做了判断，所以今天的数据肯定会存在
             //获得今天最新的数据
-            $errorstatusLists = \common\models\AccessLogErrorStatus::find()->select("count(*) nums,error_status")->where('request_time>:sd AND request_time<=:ed', [':sd' => $fitDate, ':ed' => $after1Date])->groupBy('error_status')->indexBy('error_status')->asArray()->all();
+            $errorstatusLists = \common\models\AccessLogErrorStatus::find()->select("count(*) nums,error_status")->where('request_time>:sd AND request_time<=:ed', [':sd' => $fitDate, ':ed' => $after1Date])->groupBy('error_status')->indexBy('error_status')->asArray()->all(\Yii::$app->db1);
 
             //对上面的数组进行处理
             foreach ($outCharts['series'] as $key => $oneVaue) {

@@ -48,7 +48,7 @@ class SqlHightchartService {
      */
     public static function find5ColumnEcharts($condition, $conPrams, $groupstring) {
         $query = new Query;
-        $dateString = $query->select("*,sum(Amount) nums")->from('SqlTrace_LongSqlDay')->where($condition, $conPrams)->groupBy($groupstring)->orderBy("nums desc")->all();
+        $dateString = $query->select("*,sum(Amount) nums")->from('SqlTrace_LongSqlDay')->where($condition, $conPrams)->groupBy($groupstring)->orderBy("nums desc")->all(\Yii::$app->db1);
         if (empty($dateString)) {
             return [];
         }

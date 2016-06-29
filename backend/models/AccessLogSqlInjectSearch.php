@@ -45,6 +45,7 @@ class AccessLogSqlInjectSearch extends AccessLogSqlInject {
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'db'=>\Yii::$app->db1,
             'sort' => [
                 'defaultOrder' => [
                     'request_time' => SORT_DESC,

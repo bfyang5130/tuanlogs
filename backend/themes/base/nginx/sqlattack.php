@@ -124,7 +124,7 @@ if ($begin > $end) {
                                             </tr>
                                         <?php endforeach; ?>
                                         <tr>
-                                            <td colspan="6" class="text-center">
+                                            <td colspan="7" class="text-center">
                                                 <?= LinkPager::widget(['pagination' => $pager]); ?>
                                             </td>
                                         </tr>

@@ -12,6 +12,7 @@ if (empty($url)) {
     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
         <div class="btn-group" role="group" aria-label="First group">
             <a href="<?= Url::toRoute('/visit/index') ?>" class="btn btn-default<?= ($id == 'index') ? ' btn-primary' : '' ?>">NGINX访问IP统计</a>
+            <a href="<?= Url::toRoute('/visit/nginxblock') ?>" class="btn btn-default<?= ($id == 'nginxblock') ? ' btn-primary' : '' ?>">Nginx面板</a>
             <a href="<?= Url::toRoute('/visit/nginxlist') ?>" class="btn btn-default<?= ($id == 'nginxlist') ? ' btn-primary' : '' ?>">Nginx访问列表</a>
             <a href="<?= Url::toRoute('/visit/showtotal') ?>" class="btn btn-default<?= ($id == 'showtotal') ? ' btn-primary' : '' ?>">Nginx统计</a>
             <a href="<?= Url::toRoute('/visit/iisvisit') ?>" class="btn btn-default<?= ($id == 'iisvisit') ? ' btn-primary' : '' ?>">IIS访问IP统计</a>

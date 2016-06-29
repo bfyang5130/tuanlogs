@@ -2,12 +2,8 @@
 
 namespace backend\controllers;
 
-use backend\services\ErrorLogService;
-use Yii;
 use yii\filters\AccessControl;
-use yii\helpers\ArrayHelper;
 use yii\web\Controller;
-use common\models\LoginForm;
 use yii\filters\VerbFilter;
 
 /**
@@ -42,7 +38,7 @@ class VisitController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => [ 'index', 'servicestatus', 'city', 'showtotal', 'showmap', 'api', 'iisvisit', 'nginxlist', 'iislist'],
+                        'actions' => [ 'index', 'servicestatus', 'city', 'showtotal', 'showmap', 'api', 'iisvisit', 'nginxlist', 'iislist', 'nginxblock', 'onedtail'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -66,6 +62,23 @@ class VisitController extends Controller {
                 'class' => 'yii\web\ErrorAction',
             ],
         ];
+    }
+
+    /**
+     * 对一组数据做统计，
+     * 目前未打算做整合，只展示一个，后期看情况
+     * @return type
+     */
+    public function actionOnedtail() {
+        return $this->render('onedtail');
+    }
+
+    /**
+     * NGINX其他数据统计入口的BLOCK
+     * @return type
+     */
+    public function actionNginxblock() {
+        return $this->render('nginxblock');
     }
 
     /**
@@ -136,6 +149,9 @@ class VisitController extends Controller {
                     return $dataLists;
                 case 'mobilebrower':
                     $dataLists = \backend\services\NginxHightchartService::fitMobilebrower();
+                    return $dataLists;
+                case 'totalvisit':
+                    $dataLists = \backend\services\NginxHightchartService::fitTotalVisit();
                     return $dataLists;
                 default :
             }

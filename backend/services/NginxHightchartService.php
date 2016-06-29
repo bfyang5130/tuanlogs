@@ -566,6 +566,62 @@ class NginxHightchartService {
         return $redate;
     }
 
+    /**
+     * 处理访问量
+     */
+    public static function fitTotalVisit() {
+        List($date, $selectTable) = self::CheckCommonSet();
+        if (empty($date)) {
+            return [];
+        }
+        $dateString = NginxService::findGroupString($date, "TopType=:status", [':status' => 'status'], 'CheckTime', $selectTable);
+
+        if (empty($dateString)) {
+            return [];
+        }
+        $legend = [$date];
+        $xdata = [];
+        $seriesdata = [];
+        foreach ($dateString as $oneDate) {
+            $fittime = explode(' ',$oneDate['CheckTime']);
+            $xdata[] = $fittime[1];
+            $seriesdata[] = floatval($oneDate['totalNum']);
+        }
+        return [
+            'legend' => $legend,
+            'xdata' => $xdata,
+            'seriesdata' => $seriesdata
+        ];
+    }
+
+    /**
+     * 一个公用部分的方法处理
+     */
+    public static function CheckCommonSet() {
+        //获得ID，获得时间
+        $proxy = \Yii::$app->request->get('proxy');
+        $date = \Yii::$app->request->get('date');
+        //如果这两个都为空那么就直接出错吧
+        if (empty($proxy) || empty($date)) {
+            return ['', ''];
+        }
+        $selectTable = NginxHightchartService::AccessStatistic17;
+        switch ($proxy) {
+            case 21:
+                $selectTable = NginxHightchartService::AccessStatistic21;
+
+                break;
+            case 17:
+                $selectTable = NginxHightchartService::AccessStatistic17;
+                break;
+            case 141:
+            case 40:
+            default :
+                $selectTable = NginxHightchartService::AccessStatistic17;
+        }
+        return [$date, $selectTable];
+    }
+
 }
 
 ?>

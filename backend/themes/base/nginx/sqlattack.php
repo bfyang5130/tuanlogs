@@ -98,13 +98,13 @@ if ($begin > $end) {
                                 <table class="table table-bordered table-striped table-condensed">
                                     <tbody>
                                         <tr>
-                                            <th>用户IP</th>
+                                            <th width="10%">用户IP</th>
                                             <th>攻击地址</th>
                                             <th>攻击来源</th>
                                             <th>客户端信息</th>
-                                            <th>请求时间</th>
-                                            <th>请求域名</th>
-                                            <th>来源</th>
+                                            <th width="7%">请求时间</th>
+                                            <th width="10%">请求域名</th>
+                                            <th width="3%">来源</th>
                                         </tr>
                                         <?php foreach ($datas as $oneErrorValue): ?>
                                             <tr>

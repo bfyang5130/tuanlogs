@@ -99,14 +99,23 @@ if ($begin > $end) {
                                     <tbody>
                                         <tr>
                                             <th>用户IP</th>
-                                            <th width="600px">详细内容</th>
+                                            <th>攻击地址</th>
+                                            <th>攻击来源</th>
+                                            <th>客户端信息</th>
                                             <th>请求时间</th>
                                             <th>请求域名</th>
                                             <th>来源</th>
                                         </tr>
                                         <?php foreach ($datas as $oneErrorValue): ?>
                                             <tr>
-                                                <td class="center"><?= Html::encode($oneErrorValue['user_ip']) ?></td><td>
+                                                <td class="center"><?= Html::encode($oneErrorValue['user_ip']) ?></td>
+                                                <td>
+                                                    <code><?= Html::encode($oneErrorValue['request_url']) ?></code>
+                                                </td>
+                                                <td>
+                                                    <code><?= Html::encode($oneErrorValue['from_url']) ?></code>
+                                                </td>
+                                                <td>
                                                     <code><?= Html::encode($oneErrorValue['access_str']) ?></code>
                                                 </td>
                                                 <td class="center"><?= Html::encode($oneErrorValue['request_time']) ?></td>

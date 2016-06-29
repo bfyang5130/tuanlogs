@@ -9,6 +9,8 @@ use Yii;
  *
  * @property integer $id
  * @property string $user_ip
+ * @property string $request_url
+ * @property string $from_url
  * @property string $access_str
  * @property string $request_time
  * @property string $source
@@ -30,7 +32,7 @@ class AccessLogSqlInject extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['access_str'], 'string'],
+            [['request_url', 'from_url', 'access_str'], 'string'],
             [['request_time'], 'safe'],
             [['user_ip'], 'string', 'max' => 100],
             [['source'], 'string', 'max' => 50],
@@ -45,8 +47,10 @@ class AccessLogSqlInject extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'user_ip' => '用户IP',
-            'access_str' => '错误状态',
+            'user_ip' => '用户ip',
+            'request_url' => '攻击地址',
+            'from_url' => '攻击来源',
+            'access_str' => '客户端信息',
             'request_time' => ' 添加时间',
             'source' => ' 来源 17,23',
             'log_type' => ' 日志类型',

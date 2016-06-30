@@ -17,7 +17,7 @@ $this->title = $search_date . '请求延时情况';
 //默认得到的是访问量的统计
 $fc = Yii::$app->request->get("fc");
 if (empty($fc)) {
-    $fc = 'totalvisit';
+    $fc = 'latevisit';
 }
 ?>
 <div class="site-index">
@@ -34,7 +34,7 @@ if (empty($fc)) {
 
     <div class="body-content">
         <div class="panel panel-default">
-            <?= $this->render('second_top.php', ['url' => '/visit/latevisit.html?fc=' . $fc]); ?>
+            <?= $this->render('second_top.php', ['url' => '/visit/onedtail.html?fc=' . $fc]); ?>
             <div class="panel-body">
                 <div class="tab-content">
                     <?php

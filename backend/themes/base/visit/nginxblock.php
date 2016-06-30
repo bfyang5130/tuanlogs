@@ -42,7 +42,7 @@ if (empty($search_date)) {
                                             <td>日访问详情</td><td><a target="_blank" href="<?= Url::toRoute('/visit/onedtail').'?fc=totalvisit&search_date='.$search_date ?>">查看</a></td>
                                         </tr>
                                         <tr>
-                                            <td>延时页面详情</td><td><a target="_blank" href="<?= Url::toRoute('/visit/latevisit').'?fc=totalvisit&search_date='.$search_date ?>">查看</a></td>
+                                            <td>延时页面详情</td><td><a target="_blank" href="<?= Url::toRoute('/visit/onedtail').'?fc=latevisit&search_date='.$search_date ?>">查看</a></td>
                                         </tr>
                                     </tbody>
                                 </table>

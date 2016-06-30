@@ -626,7 +626,7 @@ class NginxHightchartService {
         if (empty($date)) {
             return [];
         }
-        $dateString = NginxService::findGroupString($date, "TopType=:status AND DetailType1=:retime", [':status' => 'status',':retime'=>$latetypeselect], 'CheckTime', $selectTable);
+        $dateString = NginxService::findGroupString($date, "TopType=:request_time AND DetailType1=:retime", [':request_time' => 'request_time',':retime'=>$latetypeselect], 'CheckTime', $selectTable);
 
         if (empty($dateString)) {
             return [];

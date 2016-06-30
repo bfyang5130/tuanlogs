@@ -52,7 +52,7 @@ if (empty($fc)) {
     <?= "main17" . $i ?>.hideLoading();
     <?= "main17" . $i ?>.setOption(option = {
                                                 title: {
-                                                    text: '代理17全天访问情况',
+                                                    text: data.titletext,
                                                     left: 'left',
                                                     top: 'top'
                                                 },
@@ -120,7 +120,7 @@ if (empty($fc)) {
                                             <?= "main21" . $i ?>.hideLoading();
                                             <?= "main21" . $i ?>.setOption(option = {
                                                 title: {
-                                                    text: '代理21全天访问情况',
+                                                    text: data.titletext,
                                                     left: 'left',
                                                     top: 'top'
                                                 },

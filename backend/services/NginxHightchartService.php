@@ -601,6 +601,7 @@ class NginxHightchartService {
     public static function fitLateVisit() {
         //处理要请求具体的数据参数
         // 's_1'， 's_1_3'， 's_3_5'， 's_5_10'， 's_10'
+        $proxy=\Yii::$app->request->get('proxy');
         $data=\Yii::$app->request->get('data');
         $latetypeselect='s_1';
         switch ($data){
@@ -640,6 +641,7 @@ class NginxHightchartService {
             $seriesdata[] = floatval($oneDate['totalNum']);
         }
         return [
+            'titletext'=>$proxy.'代理'.$seriesdata.'延时访问情况',
             'legend' => $legend,
             'xdata' => $xdata,
             'seriesdata' => $seriesdata

@@ -583,7 +583,59 @@ class NginxHightchartService {
         $xdata = [];
         $seriesdata = [];
         foreach ($dateString as $oneDate) {
-            $fittime = explode(' ',$oneDate['CheckTime']);
+            $fittime = explode(' ', $oneDate['CheckTime']);
+            $xdata[] = $fittime[1];
+            $seriesdata[] = floatval($oneDate['totalNum']);
+        }
+        return [
+            'legend' => $legend,
+            'xdata' => $xdata,
+            'seriesdata' => $seriesdata
+        ];
+    }
+
+    /**
+     * 处理响应信息的统计
+     * @return type
+     */
+    public static function fitLateVisit() {
+        //处理要请求具体的数据参数
+        // 's_1'， 's_1_3'， 's_3_5'， 's_5_10'， 's_10'
+        $data=\Yii::$app->request->get('data');
+        $latetypeselect='s_1';
+        switch ($data){
+            case 0:
+                break;
+            $latetypeselect='s_1';
+            case 1:
+                $latetypeselect='s_1_3';
+                break;
+            case 2:
+                $latetypeselect='s_3_5';
+                break;
+            case 3:
+                $latetypeselect='s_5_10';
+                break;
+            case 4:
+                $latetypeselect='s_10';
+                break;
+            default :
+                $latetypeselect='s_1';
+        }
+        List($date, $selectTable) = self::CheckCommonSet();
+        if (empty($date)) {
+            return [];
+        }
+        $dateString = NginxService::findGroupString($date, "TopType=:status AND DetailType1=:retime", [':status' => 'status',':retime'=>$latetypeselect], 'CheckTime', $selectTable);
+
+        if (empty($dateString)) {
+            return [];
+        }
+        $legend = [$date];
+        $xdata = [];
+        $seriesdata = [];
+        foreach ($dateString as $oneDate) {
+            $fittime = explode(' ', $oneDate['CheckTime']);
             $xdata[] = $fittime[1];
             $seriesdata[] = floatval($oneDate['totalNum']);
         }

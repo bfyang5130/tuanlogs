@@ -70,7 +70,17 @@ class VisitController extends Controller {
      * @return type
      */
     public function actionOnedtail() {
-        return $this->render('onedtail');
+        $fc = \Yii::$app->request->get("fc");
+        switch ($fc) {
+            case 'totalvisit':
+                return $this->render('onedtail');
+                break;
+            case 'latevisit':
+                return $this->render('latevisit');
+                break;
+            default :
+                return $this->render('onedtail');
+        }
     }
 
     /**
@@ -152,6 +162,9 @@ class VisitController extends Controller {
                     return $dataLists;
                 case 'totalvisit':
                     $dataLists = \backend\services\NginxHightchartService::fitTotalVisit();
+                    return $dataLists;
+                case 'latevisit':
+                    $dataLists = \backend\services\NginxHightchartService::fitLateVisit();
                     return $dataLists;
                 default :
             }

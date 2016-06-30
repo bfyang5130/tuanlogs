@@ -7,12 +7,13 @@ use yii\web\View;
 $this->registerJsFile('/base/js/echarts-all-3.js', [
     'position' => View::POS_HEAD
 ]);
-$this->title = '服务器状态信息';
+
 //默认时间为当天
 $search_date = Yii::$app->request->get("search_date");
 if (empty($search_date)) {
     $search_date = date('Y-m-d');
 }
+$this->title = $search_date.'访问情况';
 //默认得到的是访问量的统计
 $fc = Yii::$app->request->get("fc");
 if (empty($fc)) {

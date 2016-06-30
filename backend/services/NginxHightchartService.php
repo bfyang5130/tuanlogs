@@ -641,7 +641,7 @@ class NginxHightchartService {
             $seriesdata[] = floatval($oneDate['totalNum']);
         }
         return [
-            'titletext'=>$proxy.'代理'.$seriesdata.'延时访问情况',
+            'titletext'=>$proxy.'代理'.$latetypeselect.'延时访问情况',
             'legend' => $legend,
             'xdata' => $xdata,
             'seriesdata' => $seriesdata

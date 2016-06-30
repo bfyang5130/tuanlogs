@@ -104,7 +104,7 @@ class ErrorsController extends Controller {
         $locals = ToolService::getPagedRows($query, $tablename = 'ErrorLog', $params, ['orderBy' => $sort->orders, 'pageSize' => 10]);
         $locals['searchModel'] = $searchModel;
 
-        $application_item = ErrorLogService::getApplicationNameItem(1);
+        $application_item = ErrorLogService::getApplicationNameItem(0);
         $locals['application_item'] = $application_item;
         return $this->render('index', $locals);
     }

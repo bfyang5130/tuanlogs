@@ -33,6 +33,7 @@ $searchModel->end_date = empty($searchModel->end_date)?date("Y-m-d 59:59:59",$mo
             <div class="panel-body">
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin:10px 0px;">
                     <div class="btn-group pull-right" role="group" aria-label="First group">
+                        <a href="<?= Url::toRoute('/errors/addtype') ?>" class="btn btn-default">添加类型</a>
                         <a href="<?= Url::toRoute('/errors/index') ?>" class="btn btn-default">列表</a>
                         <a href="<?= Url::toRoute('/errors/errorgraph') ?>" class="btn btn-default">图形</a>
                     </div>

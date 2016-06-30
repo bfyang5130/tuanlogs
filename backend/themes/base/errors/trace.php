@@ -46,6 +46,7 @@ $searchModel->end_date = empty($searchModel->end_date) ? $month_info['end_time']
             <div class="panel-body">
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin:10px 0px;">
                     <div class="btn-group pull-right" role="group" aria-label="First group">
+                        <a href="<?= Url::toRoute('/errors/addtype') ?>" class="btn btn-default">添加类型</a>
                         <a href="<?= Url::toRoute(['errors/trace']) ?>" class="btn btn-default">列表</a>
                         <a href="<?= Url::toRoute(['errors/tracereport']) ?>" class="btn btn-default">图形</a>
                     </div>

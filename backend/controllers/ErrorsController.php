@@ -6,13 +6,13 @@ use backend\models\ErrorLogSearch;
 use backend\services\ErrorLogService;
 use backend\services\TraceLogService;
 use backend\services\ToolService;
-use common\models\User;
 use Yii;
 use yii\data\Sort;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use common\models\LoginForm;
 use yii\filters\VerbFilter;
+use backend\models\forms\ApplicationForm;
 
 /**
  * Site controller
@@ -32,7 +32,7 @@ class ErrorsController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index', 'trace', 'sql', 'sqlgraph', 'errorgraph',
+                        'actions' => ['logout', 'index', 'trace', 'sql', 'sqlgraph', 'errorgraph', 'addtype',
                             'getdata', 'doing', 'countday', 'countmonth', 'tracereport', 'tracedayreport', 'tracemonreport',
                             'tip', 'api'
                         ],
@@ -59,6 +59,31 @@ class ErrorsController extends Controller {
                 'class' => 'yii\web\ErrorAction',
             ],
         ];
+    }
+
+    /**
+     * 手动添加类型
+     * @return type
+     */
+    public function actionAddtype() {
+
+        $monitorForm = new ApplicationForm();
+        $fitForm = Yii::$app->request->post();
+        $databaseFit = 0;
+        if (isset($fitForm['ApplicationForm'])) {
+            $monitorForm->load(Yii::$app->request->post());
+
+            if ($monitorForm->validate()&&$monitorForm->save()) {
+                $databaseFit = 1;
+            } else {
+                $databaseFit = 2;
+            }
+        }
+        return $this->render('addtype', [
+                    'monitorForm' => $monitorForm,
+                    'databaseFit' => $databaseFit,
+                        ]
+        );
     }
 
     /**

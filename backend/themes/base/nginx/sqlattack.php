@@ -67,7 +67,7 @@ if ($begin > $end) {
                                                             <label for="sqllogsearch-sqltext">来源：</label>
                                                             <?= Html::activeTextInput($accLogErr, 'source', ['class' => 'form-control', 'style' => 'width:100px']) ?>
 
-                                                            <label for="sqllogsearch-sqltext">类型：</label>
+                                                            <label for="sqllogsearch-sqltext">站点：</label>
                                                             <?= Html::activeTextInput($accLogErr, 'log_type', ['class' => 'form-control', 'style' => 'width:100px']) ?>
 
                                                             <label for="exampleInputEmail2">请求时间：</label>
@@ -103,7 +103,7 @@ if ($begin > $end) {
                                             <th>攻击来源</th>
                                             <th>客户端信息</th>
                                             <th width="7%">请求时间</th>
-                                            <th width="10%">请求域名</th>
+                                            <th width="10%">站点</th>
                                             <th width="3%">来源</th>
                                         </tr>
                                         <?php foreach ($datas as $oneErrorValue): ?>

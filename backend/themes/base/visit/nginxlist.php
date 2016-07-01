@@ -65,6 +65,11 @@ if ($begin > $end) {
                                                         <div class="col-md-12">
                                                             <label for="sqllogsearch-sqltext">IP：</label>
                                                             <?= Html::activeTextInput($accLogErr, 'Ip1', ['class' => 'form-control', 'style' => 'width:200px']) ?>
+                                                            <label for="sqllogsearch-sqltext">站点：</label>
+                                                            <?= Html::activeTextInput($accLogErr, 'visitwebsite', ['class' => 'form-control', 'style' => 'width:200px']) ?>
+                                                            <label for="sqllogsearch-sqltext">耗时：</label>
+                                                            <?= Html::activeTextInput($accLogErr, 'request_time', ['class' => 'form-control', 'style' => 'width:200px']) ?>
+                                                            
                                                             <label for="exampleInputEmail2">访问日期：</label>
                                                             <?=
                                                             \yii\jui\DatePicker::widget([

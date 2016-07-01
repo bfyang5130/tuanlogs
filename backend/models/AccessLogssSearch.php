@@ -22,13 +22,15 @@ class AccessLogssSearch extends AccessLogss {
 
     public $start_date;
     public $end_date;
-
+    public $Ip1;
+    public $visitwebsite;
+    public $request_time;
     /**
      * @inheritdoc
      */
     public function rules() {
         return [
-            [['start_date', 'end_date', 'Ip1'], 'safe'],
+            [['start_date', 'end_date', 'Ip1','visitwebsite','request_time'], 'safe'],
         ];
     }
 
@@ -67,6 +69,8 @@ class AccessLogssSearch extends AccessLogss {
             $this->end_date = date('Y-m-d 00:00:00', strtotime('+1 day', strtotime($this->start_date)));
         }
         $query->andFilterWhere(['Ip1' => $this->Ip1]);
+        $query->andFilterWhere(['visitwebsite' => $this->visitwebsite]);
+        $query->andFilterWhere(['>=','request_time' , $this->request_time]);
         $query->andFilterWhere(['>=', 'date_reg', $this->start_date]);
         $query->andFilterWhere(['<', 'date_reg', $this->end_date]);
         $query->orderBy('date_reg desc');

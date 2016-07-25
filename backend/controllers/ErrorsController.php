@@ -1,7 +1,6 @@
 <?php
 
 namespace backend\controllers;
-
 use backend\models\ErrorLogSearch;
 use backend\services\ErrorLogService;
 use backend\services\TraceLogService;

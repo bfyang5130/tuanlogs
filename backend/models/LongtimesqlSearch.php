@@ -50,7 +50,7 @@ class LongtimesqlSearch extends SqlTraceLong {
             'db'=>self::getDb(),
             'sort' => [
                 'defaultOrder' => [
-                    'sqlusedtime' => SORT_DESC,
+                    'executedate' => SORT_DESC,
                 ],
             ],
         ]);

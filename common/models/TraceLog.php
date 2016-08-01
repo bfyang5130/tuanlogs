@@ -8,22 +8,21 @@ use Yii;
  * This is the model class for table "TraceLog".
  *
  * @property string $Id
- * @property integer $ApplicationId
- * @property string $ApplicationName
+ * @property string $ApplicationId
  * @property string $Method
  * @property string $Parameter
  * @property string $Content
  * @property string $AddDate
+ * @property string $IP
  */
 class TraceLog extends \yii\db\ActiveRecord
 {
-    public static $tablename='TraceLog';
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return self::$tablename;
+        return 'TraceLog';
     }
 
     /**
@@ -33,10 +32,10 @@ class TraceLog extends \yii\db\ActiveRecord
     {
         return [
             [['Id'], 'required'],
-            [['ApplicationId'], 'integer'],
             [['Content'], 'string'],
             [['AddDate'], 'safe'],
-            [['Id', 'ApplicationName'], 'string', 'max' => 64],
+            [['Id'], 'string', 'max' => 36],
+            [['ApplicationId', 'IP'], 'string', 'max' => 64],
             [['Method'], 'string', 'max' => 128],
             [['Parameter'], 'string', 'max' => 1024]
         ];
@@ -48,13 +47,13 @@ class TraceLog extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'Id' => 'ID',
-            'ApplicationId' => 'Application ID',
-            'ApplicationName' => 'Application Name',
-            'Method' => 'Method',
-            'Parameter' => 'Parameter',
-            'Content' => 'Content',
-            'AddDate' => 'Add Date',
+            'Id' => '主键',
+            'ApplicationId' => '应用Id',
+            'Method' => '方法名称',
+            'Parameter' => '方法参数',
+            'Content' => '跟踪日志内容',
+            'AddDate' => '新增日期',
+            'IP' => '应用服务器IP',
         ];
     }
 }

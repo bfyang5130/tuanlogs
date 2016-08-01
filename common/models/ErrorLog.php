@@ -8,8 +8,7 @@ use Yii;
  * This is the model class for table "ErrorLog".
  *
  * @property string $Id
- * @property integer $ApplicationId
- * @property string $ApplicationName
+ * @property string $ApplicationId
  * @property string $Method
  * @property string $Parameter
  * @property string $Content
@@ -23,6 +22,7 @@ use Yii;
  * @property string $AuditResult
  * @property integer $ErrorStatus
  * @property string $AddDate
+ * @property string $IP
  */
 class ErrorLog extends \yii\db\ActiveRecord
 {
@@ -41,10 +41,11 @@ class ErrorLog extends \yii\db\ActiveRecord
     {
         return [
             [['Id'], 'required'],
-            [['ApplicationId', 'ErrorStatus'], 'integer'],
             [['Content', 'HandlerResult'], 'string'],
             [['AllocationDate', 'HandlerDate', 'AuditDate', 'AddDate'], 'safe'],
-            [['Id', 'ApplicationName'], 'string', 'max' => 64],
+            [['ErrorStatus'], 'integer'],
+            [['Id'], 'string', 'max' => 36],
+            [['ApplicationId', 'IP'], 'string', 'max' => 64],
             [['Method', 'Parameter'], 'string', 'max' => 1024],
             [['AllocationUserId', 'HandlerUserId', 'AuditUserId', 'AuditResult'], 'string', 'max' => 128]
         ];
@@ -56,22 +57,22 @@ class ErrorLog extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'Id' => 'ID',
-            'ApplicationId' => 'Application ID',
-            'ApplicationName' => 'Application Name',
-            'Method' => 'Method',
-            'Parameter' => 'Parameter',
-            'Content' => 'Content',
-            'AllocationDate' => 'Allocation Date',
-            'AllocationUserId' => 'Allocation User ID',
-            'HandlerDate' => 'Handler Date',
-            'HandlerUserId' => 'Handler User ID',
-            'HandlerResult' => 'Handler Result',
-            'AuditDate' => 'Audit Date',
-            'AuditUserId' => 'Audit User ID',
-            'AuditResult' => 'Audit Result',
-            'ErrorStatus' => 'Error Status',
-            'AddDate' => 'Add Date',
+            'Id' => '主键',
+            'ApplicationId' => '应用Id',
+            'Method' => '方法名称',
+            'Parameter' => '方法参数',
+            'Content' => '错误内容',
+            'AllocationDate' => '分配日期',
+            'AllocationUserId' => '分配人员',
+            'HandlerDate' => '处理时间',
+            'HandlerUserId' => '处理人员',
+            'HandlerResult' => '处理结果',
+            'AuditDate' => '审核日期',
+            'AuditUserId' => '审核人员',
+            'AuditResult' => '审核结果',
+            'ErrorStatus' => '错误状态',
+            'AddDate' => '新增时间',
+            'IP' => '应用服务器IP',
         ];
     }
 }

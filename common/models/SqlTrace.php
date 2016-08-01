@@ -13,8 +13,9 @@ use Yii;
  * @property string $adddate
  * @property string $sqltext
  * @property double $sqlusedtime
- * @property integer $Id
+ * @property string $Id
  * @property string $databasetype
+ * @property string $ip
  */
 class SqlTrace extends \yii\db\ActiveRecord
 {
@@ -36,7 +37,8 @@ class SqlTrace extends \yii\db\ActiveRecord
             [['sqlusedtime'], 'number'],
             [['begindate', 'enddate'], 'string', 'max' => 50],
             [['sqltext'], 'string', 'max' => 5000],
-            [['databasetype'], 'string', 'max' => 20]
+            [['databasetype'], 'string', 'max' => 20],
+            [['ip'], 'string', 'max' => 64]
         ];
     }
 
@@ -54,6 +56,7 @@ class SqlTrace extends \yii\db\ActiveRecord
             'sqlusedtime' => 'Sqlusedtime',
             'Id' => 'ID',
             'databasetype' => 'Databasetype',
+            'ip' => '应用服务器IP',
         ];
     }
 }

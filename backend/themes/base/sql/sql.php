@@ -116,6 +116,7 @@ if ($begin > $end) {
                                     <th>耗时(ms)</th>
                                     <th>执行时间</th>
                                     <th>类型</th>
+                                    <th>IP</th>
                                 </tr>
                                 <?php foreach ($datas as $sql): ?>
                                     <tr>
@@ -125,6 +126,7 @@ if ($begin > $end) {
                                         <td class="center"><?= Html::encode($sql['sqlusedtime']) ?></td>
                                         <td class="center"><?= Html::encode($sql['executedate']) ?></td>
                                         <td class="center"><?= Html::encode($sql['databasetype']) ?></td>
+                                        <td class="center"><?= Html::encode($sql['ip']) ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                                 <tr>

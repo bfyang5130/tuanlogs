@@ -106,19 +106,22 @@ $searchModel->end_date = empty($searchModel->end_date)?date("Y-m-d 59:59:59",$mo
                         ?>
                         <table class="table table-striped table-bordered">
                             <tr style="background-color: #ddd;">
-                                <td width="80px;">类型:</td><td><?= Html::encode($oneError->ApplicationId) ?></td><td>ID:</td><td><?= $oneError->Id ?></td>
+                                <td width="80px;">类型:</td>
+                                <td><?= Html::encode($oneError->ApplicationId) ?></td>
+                                <td>ID:</td><td><?= $oneError->Id ?></td>
+                                <td>IP:</td><td><?= $oneError->IP ?></td>
                             </tr>
                             <tr>
-                                <td>时间:</td><td colspan="3"><?= Html::encode($oneError->AddDate) ?></td>
+                                <td>时间:</td><td colspan="5"><?= Html::encode($oneError->AddDate) ?></td>
                             </tr>
                             <tr>
-                                <td>函数:</td><td colspan="3"><?= Html::encode($oneError->Method) ?></td>
+                                <td>函数:</td><td colspan="5"><?= Html::encode($oneError->Method) ?></td>
                             </tr>
                             <tr>
-                                <td>参数：</td><td colspan="3"><?= Html::encode($oneError->Parameter) ?></td>
+                                <td>参数：</td><td colspan="5"><?= Html::encode($oneError->Parameter) ?></td>
                             </tr>
                             <tr>
-                                <td colspan="4"><pre><code><?= Html::encode($oneError->Content) ?></code></pre></td>
+                                <td colspan="6"><pre><code><?= Html::encode($oneError->Content) ?></code></pre></td>
                             </tr>
                         </table>
                         <?php

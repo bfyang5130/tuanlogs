@@ -143,6 +143,14 @@ $searchModel->end_date = empty($searchModel->end_date) ? $month_info['end_time']
                                 return Html::encode($model->Parameter);
                             },
                         ],
+                                    [
+                            'label' => 'IP',
+//                            'filter' => Html::activeTextInput($searchModel, 'Parameter', ['class' => 'form-control']),
+                            'format' => 'raw',
+                            'value' => function ($model) {
+                                return Html::encode($model->IP);
+                            },
+                        ],
                         [
 //                            'attribute' => 'start_date',
                             'label' => '开始时间',

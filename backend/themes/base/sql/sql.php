@@ -121,7 +121,7 @@ if ($begin > $end) {
                                 <?php foreach ($datas as $sql): ?>
                                     <tr>
                                         <td>
-                                            <code><?= Html::encode($sql['sqltext']) ?></code>
+                                            <code><?= $sql['sqltext'] ?></code>
                                         </td>
                                         <td class="center"><?= Html::encode($sql['sqlusedtime']) ?></td>
                                         <td class="center"><?= Html::encode($sql['executedate']) ?></td>

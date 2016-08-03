@@ -99,7 +99,7 @@ if ($begin > $end) {
                                         </tr>
                                         <?php foreach ($datas as $oneErrorValue): ?>
                                             <tr>
-                                                <td class="center"><code><?= Html::encode($oneErrorValue['sqltext']) ?></code></td>
+                                                <td class="center"><code><?= $oneErrorValue['sqltext'] ?></code></td>
                                                 <td class="center"><?= Html::encode($oneErrorValue['amount']) ?></td>
                                                 <td class="center"><?= Html::encode($oneErrorValue['databasetype']) ?></td>
                                                 <td class="center"><?= Html::encode($oneErrorValue['sqlquerytime']) ?></td>

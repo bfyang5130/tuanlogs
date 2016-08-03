@@ -112,9 +112,9 @@ if ($begin > $end) {
                         <table class="table table-bordered table-striped table-condensed">
                             <tbody>
                                 <tr>
-                                    <th width="820px">语句</th>
+                                    <th width="750px">语句</th>
                                     <th>耗时(ms)</th>
-                                    <th>执行时间</th>
+                                    <th width="90px">执行时间</th>
                                     <th>类型</th>
                                     <th>IP</th>
                                 </tr>

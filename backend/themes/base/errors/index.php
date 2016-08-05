@@ -115,7 +115,7 @@ $searchModel->end_date = empty($searchModel->end_date)?date("Y-m-d 59:59:59",$mo
                                 <td>时间:</td><td colspan="5"><?= Html::encode($oneError->AddDate) ?></td>
                             </tr>
                             <tr>
-                                <td>函数:</td><td colspan="5"><?= Html::encode($oneError->Method) ?></td>
+                                <td>函数:</td><td colspan="5"><?= $oneError->Method ?></td>
                             </tr>
                             <tr>
                                 <td>参数：</td><td colspan="5"><?= Html::encode($oneError->Parameter) ?></td>

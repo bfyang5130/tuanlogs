@@ -121,7 +121,7 @@ $searchModel->end_date = empty($searchModel->end_date)?date("Y-m-d 59:59:59",$mo
                                 <td>参数：</td><td colspan="5"><?= Html::encode($oneError->Parameter) ?></td>
                             </tr>
                             <tr>
-                                <td colspan="6"><pre><code><?= Html::encode($oneError->Content) ?></code></pre></td>
+                                <td colspan="6"><pre><code><?= $oneError->Content ?></code></pre></td>
                             </tr>
                         </table>
                         <?php

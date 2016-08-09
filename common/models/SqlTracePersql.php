@@ -15,6 +15,7 @@ use Yii;
  * @property string $databasetype
  * @property string $sqlquerytime
  * @property integer $is_new
+ * @property string $ip
  */
 class SqlTracePersql extends \yii\db\ActiveRecord
 {
@@ -37,7 +38,8 @@ class SqlTracePersql extends \yii\db\ActiveRecord
             [['queryusemaxtime'], 'number'],
             [['sqlquerytime'], 'safe'],
             [['querymd5'], 'string', 'max' => 500],
-            [['databasetype'], 'string', 'max' => 255]
+            [['databasetype'], 'string', 'max' => 255],
+            [['ip'], 'string', 'max' => 64]
         ];
     }
 
@@ -55,6 +57,7 @@ class SqlTracePersql extends \yii\db\ActiveRecord
             'databasetype' => '数据库类型',
             'sqlquerytime' => '查询时间',
             'is_new' => '是否为新增数据',
+            'ip' => '应用服务器IP',
         ];
     }
 }

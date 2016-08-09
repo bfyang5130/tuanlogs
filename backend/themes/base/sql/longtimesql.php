@@ -100,6 +100,7 @@ if ($begin > $end) {
                                             <th>耗时</th>
                                             <th>数据库</th>
                                             <th>执行时间</th>
+                                            <th>IP</th>
                                         </tr>
                                         <?php foreach ($datas as $oneErrorValue): ?>
                                             <tr>
@@ -107,6 +108,7 @@ if ($begin > $end) {
                                                 <td class="center"><?= Html::encode($oneErrorValue['sqlusedtime']) ?></td>
                                                 <td class="center"><?= Html::encode($oneErrorValue['databasetype']) ?></td>
                                                 <td class="center"><?= Html::encode($oneErrorValue['executedate']) ?></td>
+                                                <td class="center"><?= Html::encode($oneErrorValue['ip']) ?></td>
                                             </tr>
                                         <?php endforeach; ?>
                                         <tr>

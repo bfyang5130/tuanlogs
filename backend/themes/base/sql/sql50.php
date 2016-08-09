@@ -92,10 +92,10 @@ if ($begin > $end) {
                                 <table class="table table-bordered table-striped table-condensed">
                                     <tbody>
                                         <tr>
-                                            <th width="70%">查询语句</th>
+                                            <th width="830px">查询语句</th>
                                             <th>耗时</th>
                                             <th>数据库</th>
-                                            <th>时间</th>
+                                            <th width="90px">时间</th>
                                             <th>IP</th>
                                         </tr>
                                         <?php foreach ($datas as $oneErrorValue): ?>

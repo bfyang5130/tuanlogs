@@ -97,7 +97,7 @@ if ($begin > $end) {
                                     <tbody>
                                         <tr>
                                             <th width="760px">查询语句</th>
-                                            <th width="90px">耗时</th>
+                                            <th width="70px">耗时</th>
                                             <th>数据库</th>
                                             <th width="90px">执行时间</th>
                                             <th>IP</th>

@@ -62,7 +62,7 @@ class SqlLogSearch extends SqlTrace {
                 $querydayint = strtotime($querydaytimestring);
                 //今天的标记daytime
                 $todayint = strtotime(date('Y-m-d', time()));
-                if ($querydayint < $todayint && ($querydayint + 8 * 24 * 60 * 60) >= $todayint&&$todayint>  strtotime('2016-8-9')) {
+                if ($querydayint < $todayint && ($querydayint + 8 * 24 * 60 * 60) >= $todayint&&$querydayint>=  strtotime('2016-8-9')) {
                     //判断是否在对应的天内
                     //得到要查询的表的数据
                     $queryTable = "SqlTrace_" . date("Ymd", $querydayint);

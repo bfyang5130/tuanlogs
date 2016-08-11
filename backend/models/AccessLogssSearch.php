@@ -25,12 +25,13 @@ class AccessLogssSearch extends AccessLogss {
     public $Ip1;
     public $visitwebsite;
     public $request_time;
+
     /**
      * @inheritdoc
      */
     public function rules() {
         return [
-            [['start_date', 'end_date', 'Ip1','visitwebsite','request_time'], 'safe'],
+            [['start_date', 'end_date', 'Ip1', 'visitwebsite', 'request_time'], 'safe'],
         ];
     }
 
@@ -50,10 +51,25 @@ class AccessLogssSearch extends AccessLogss {
     //put your code here
     public function search($params) {
         $query = new \yii\db\Query;
-
+        //判断参数中的时间，从而选择正确的数据库
+        $queryTable = AccessLogss::tableName();
+        if (isset($params['AccessLogssSearch']['date_reg'])) {
+            $baseDay = $params['AccessLogssSearch']['date_reg'];
+            //判断当前表是不是在这七天内
+            $queryDaystring = strtotime($baseDay);
+            $querydaytimestring = date("Y-m-d", $queryDaystring);
+            $querydayint = strtotime($querydaytimestring);
+            //今天的标记daytime
+            $todayint = strtotime(date('Y-m-d', time()));
+            if ($querydayint < $todayint && ($querydayint + 8 * 24 * 60 * 60) >= $todayint && $querydayint >= strtotime('2016-8-11')) {
+                //判断是否在对应的天内
+                //得到要查询的表的数据
+                $queryTable = $queryTable . "_" . date("Ymd", $querydayint);
+            }
+        }
         $dataProvider = new ActiveDataProvider([
-            'query' => $query->from(AccessLogss::tableName()),
-            'db'=>  self::getDb(),
+            'query' => $query->from($queryTable),
+            'db' => self::getDb(),
             'pagination' => [
                 'pageSize' => 50,
             ],
@@ -70,7 +86,7 @@ class AccessLogssSearch extends AccessLogss {
         }
         $query->andFilterWhere(['Ip1' => $this->Ip1]);
         $query->andFilterWhere(['visitwebsite' => $this->visitwebsite]);
-        $query->andFilterWhere(['>=','request_time' , $this->request_time]);
+        $query->andFilterWhere(['>=', 'request_time', $this->request_time]);
         $query->andFilterWhere(['>=', 'date_reg', $this->start_date]);
         $query->andFilterWhere(['<', 'date_reg', $this->end_date]);
         $query->orderBy('date_reg desc');

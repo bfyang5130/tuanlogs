@@ -56,13 +56,13 @@ class SqlLogSearch extends SqlTrace {
             $queryTable = 'SqlTrace';
             if (isset($params['SqlLogSearch']['start_date'])) {
                 $baseDay = $params['SqlLogSearch']['start_date'];
-                //判断当前表是不是在这七天内
+                //判断当前表是不是在这3天内
                 $queryDaystring = strtotime($baseDay);
                 $querydaytimestring = date("Y-m-d", $queryDaystring);
                 $querydayint = strtotime($querydaytimestring);
                 //今天的标记daytime
                 $todayint = strtotime(date('Y-m-d', time()));
-                if ($querydayint < $todayint && ($querydayint + 8 * 24 * 60 * 60) >= $todayint&&$querydayint>=  strtotime('2016-8-9')) {
+                if ($querydayint < $todayint && ($querydayint + 4 * 24 * 60 * 60) >= $todayint&&$querydayint>=  strtotime('2016-8-9')) {
                     //判断是否在对应的天内
                     //得到要查询的表的数据
                     $queryTable = "SqlTrace_" . date("Ymd", $querydayint);

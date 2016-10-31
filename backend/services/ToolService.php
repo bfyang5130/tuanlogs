@@ -43,7 +43,7 @@ class ToolService {
 
     public static function getPagedRows($query, $tablename, $params, $config = []) {
         $countQuery = clone $query;
-        if (isset($params['SqlLogSearch']) || isset($params['ErrorLogSearch'])) {
+        if (isset($params['SqlAttackSearch']) || isset($params['SqlLogSearch']) || isset($params['ErrorLogSearch'])) {
             //$rownums['nums'] = $countQuery->count();
             //在条件查询时不处理分页，给一个大概数
             $rownums['nums']=10000000;

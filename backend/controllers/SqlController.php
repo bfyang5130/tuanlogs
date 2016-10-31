@@ -9,10 +9,10 @@ use yii\filters\VerbFilter;
 use backend\services\ToolService;
 use backend\services\SqlTraceService;
 use backend\models\SqlLogSearch;
+use backend\models\SqlAttackSearch;
 use yii\data\Sort;
 use backend\models\forms\DataBaseTypeForm;
 use backend\models\forms\TableFitForm;
-use common\models\DatabaseType;
 
 /**
  * Site controller
@@ -37,7 +37,26 @@ class SqlController extends Controller {
     public function actionSqlnums() {
         return $this->render("sqlnums");
     }
-
+    /**
+     * 攻击页面
+     * @return type
+     */
+public function actionSqlattack() {
+    
+        $params = Yii::$app->request->get();
+        $searchModel = new SqlAttackSearch();
+        $dataProvider = $searchModel->search($params);
+        $query = $dataProvider->query;
+        $sort = new Sort([
+            'attributes' => [
+                'executedate',
+            ],
+            'defaultOrder' => ['executedate' => SORT_DESC]
+        ]);
+        $locals = ToolService::getPagedRows($query, $tablename = 'SqlAttack', $params, ['orderBy' => $sort->orders, 'pageSize' => 30]);
+        $locals['searchModel'] = $searchModel;
+        return $this->render('sqlattack', $locals);
+    }
     /**
      * 查询某个数据库的统计
      * @return type
@@ -213,7 +232,7 @@ class SqlController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['index', 'sqlgraph', 'addstatistics', 'database', 'longtimesql', 'sql50', 'sqlnums', 'api', 'persqlquery', 'sqlnewadd'],
+                        'actions' => ['index', 'sqlgraph', 'addstatistics', 'database', 'longtimesql', 'sql50', 'sqlnums', 'api', 'persqlquery', 'sqlnewadd','sqlattack'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],

@@ -54,7 +54,7 @@ class TraceLogSearch extends TraceLog {
         if (isset($params['TraceLogSearch']['start_date']) && !empty($params['TraceLogSearch']['start_date'])) {
             $data = date("Ym", strtotime($params['TraceLogSearch']['start_date']));
             $nowdata = date("Ym");
-            if ($data < $nowdata && $data > '201601') {
+            if ($data < $nowdata && $data > '201608') {
                 TraceLog::$tablename = 'TraceLog_' . $data;
             }
             $dataProvider = new ActiveDataProvider([

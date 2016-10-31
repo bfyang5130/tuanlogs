@@ -66,7 +66,7 @@ class SqlAttackSearch extends SqlAttack {
                 //    //判断是否在对应的天内
                 //    //得到要查询的表的数据
                 //    $queryTable = "SqlAttack" . date("Ymd", $querydayint);
-               // }
+                // }
             }
             $dataProvider = new ActiveDataProvider([
                 'query' => $query->from($queryTable),
@@ -77,7 +77,7 @@ class SqlAttackSearch extends SqlAttack {
                 ],
             ]);
         }
-
+        $query->groupBy('querymd5');
 
         $this->load($params);
 

@@ -77,7 +77,7 @@ class SqlAttackSearch extends SqlAttack {
                 ],
             ]);
         }
-        $query->groupBy('querymd5');
+        //$query->groupBy('querymd5');
 
         $this->load($params);
 
@@ -85,7 +85,9 @@ class SqlAttackSearch extends SqlAttack {
             return $dataProvider;
         }
 
-        $query->andFilterWhere(['databasetype' => $this->databasetype]);
+        if ($this->databasetype && $this->databasetype != 'all') {
+            $query->andFilterWhere(['databasetype' => $this->databasetype]);
+        }
 
         $query->andFilterWhere(['like', 'sqltext', $this->sqltext]);
 

@@ -26,7 +26,7 @@ class LongtimesqlSearch extends SqlTraceLong {
      */
     public function rules() {
         return [
-            [['executedate',  'start_date', 'end_date', 'sqlusedtime', 'databasetype'], 'safe'],
+            [['executedate', 'start_date', 'end_date', 'sqlusedtime', 'databasetype'], 'safe'],
         ];
     }
 
@@ -37,17 +37,19 @@ class LongtimesqlSearch extends SqlTraceLong {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
+
 //sqplit
     public static function getDb() {
         return \Yii::$app->db1;
     }
+
     //put your code here
     public function search($params) {
         $query = SqlTraceLong::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'db'=>self::getDb(),
+            'db' => self::getDb(),
             'sort' => [
                 'defaultOrder' => [
                     'executedate' => SORT_DESC,
@@ -60,12 +62,14 @@ class LongtimesqlSearch extends SqlTraceLong {
         if (!$this->validate()) {
             return $dataProvider;
         }
-        if ($this->executedate) {
-            $this->start_date = $this->executedate;
-            $this->end_date = date('Y-m-d 00:00:00', strtotime('+1 day', strtotime($this->start_date)));
-        }
+        // if ($this->executedate) {
+        //    $this->start_date = $this->executedate;
+        //     $this->end_date = date('Y-m-d 00:00:00', strtotime('+1 day', strtotime($this->start_date)));
+        //}
         $query->andFilterWhere(['>=', 'sqlusedtime', $this->sqlusedtime]);
-        $query->andFilterWhere(['databasetype' => $this->databasetype]);
+        if ($this->databasetype && $this->databasetype != 'all') {
+            $query->andFilterWhere(['databasetype' => $this->databasetype]);
+        }
 
         $query->andFilterWhere(['>=', 'executedate', $this->start_date]);
         $query->andFilterWhere(['<', 'executedate', $this->end_date]);

@@ -85,7 +85,9 @@ class SqlLogSearch extends SqlTrace {
             return $dataProvider;
         }
 
-        $query->andFilterWhere(['databasetype' => $this->databasetype]);
+        if ($this->databasetype && $this->databasetype != 'all') {
+            $query->andFilterWhere(['databasetype' => $this->databasetype]);
+        }
 
         $query->andFilterWhere(['like', 'sqltext', $this->sqltext]);
 

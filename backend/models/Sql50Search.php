@@ -57,9 +57,10 @@ class Sql50Search extends SqlTraceTop50 {
             $this->end_date = date('Y-m-d 00:00:00', strtotime('+1 day', strtotime($this->start_date)));
         }
         $query->andFilterWhere(['>=', 'sqlusedtime', $this->sqlusedtime]);
-        $query->andFilterWhere(['databasetype' => $this->databasetype]);
-
-        if (!empty($this->databasetype)) {
+        if ($this->databasetype && $this->databasetype != 'all') {
+            $query->andFilterWhere(['databasetype' => $this->databasetype]);
+        }
+        if (!empty($this->databasetype) && $this->databasetype != 'all') {
             $query = new \yii\db\Query;
             $dataProvider = new ActiveDataProvider([
                 'query' => $query->from('(SELECT *

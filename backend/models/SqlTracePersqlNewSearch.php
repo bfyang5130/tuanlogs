@@ -64,7 +64,9 @@ class SqlTracePersqlNewSearch extends SqlTracePersql {
             $this->start_date = $this->sqlquerytime;
             $this->end_date = date('Y-m-d 00:00:00', strtotime('+1 day', strtotime($this->sqlquerytime)));
         }
-        $query->andFilterWhere(['databasetype' => $this->databasetype]);
+        if ($this->databasetype && $this->databasetype != 'all') {
+            $query->andFilterWhere(['databasetype' => $this->databasetype]);
+        }
         $query->andFilterWhere(['sqlquerytime' => $this->start_date]);
         $query->orderBy('amount desc');
         return $dataProvider;

@@ -24,6 +24,8 @@ class SqlTraceService {
                 ->distinct();
         $dbtypes = $query->all();
         $dbtype_item = ArrayHelper::map($dbtypes, "appname", "appname");
+        
+        $dbtype_item['all']='all';
         return $dbtype_item;
     }
 

@@ -26,7 +26,7 @@ class Sql50Search extends SqlTraceTop50 {
      */
     public function rules() {
         return [
-            [['executedate', 'start_date', 'end_date', 'sqlusedtime', 'databasetype'], 'safe'],
+            [['sqlquerytime', 'start_date', 'end_date', 'queryusemaxtime', 'databasetype'], 'safe'],
         ];
     }
 
@@ -41,38 +41,32 @@ class Sql50Search extends SqlTraceTop50 {
     //put your code here
     public function search($params) {
         $query = new \yii\db\Query;
-
+        if(!$this->sqlquerytime){
+            $this->sqlusedtime=date("Y-m-d 00:00:00");
+        }
         $dataProvider = new ActiveDataProvider([
             'query' => $query->from(SqlTraceTop50::tableName()),
         ]);
-        $query->orderBy('sqlusedtime desc');
+        $query->groupBy('querymd5');
+        $query->orderBy('queryusemaxtime desc');
         $this->load($params);
 
         if (!$this->validate()) {
             return $dataProvider;
         }
-
-        if ($this->executedate) {
-            $this->start_date = $this->executedate;
+        if ($this->sqlquerytime) {
+            $this->start_date = $this->sqlquerytime;
             $this->end_date = date('Y-m-d 00:00:00', strtotime('+1 day', strtotime($this->start_date)));
         }
-        $query->andFilterWhere(['>=', 'sqlusedtime', $this->sqlusedtime]);
+        $query->andFilterWhere(['>=', 'queryusemaxtime', $this->queryusemaxtime]);
         if ($this->databasetype && $this->databasetype != 'all') {
             $query->andFilterWhere(['databasetype' => $this->databasetype]);
         }
-        if (!empty($this->databasetype) && $this->databasetype != 'all') {
-            $query = new \yii\db\Query;
-            $dataProvider = new ActiveDataProvider([
-                'query' => $query->from('(SELECT *
-			FROM SqlTrace_top50    where databasetype="' . $this->databasetype . '"
-			order by sqlusedtime desc) sql_tmp ')
-            ]);
-        }
-        $query->andFilterWhere(['>=', 'sqlusedtime', $this->sqlusedtime]);
-        $query->andFilterWhere(['>=', 'executedate', $this->start_date]);
-        $query->andFilterWhere(['<', 'executedate', $this->end_date]);
-        $query->groupBy('sqltext_md5');
-        $query->orderBy('sqlusedtime desc');
+        $query->andFilterWhere(['>=', 'queryusemaxtime', $this->queryusemaxtime]);
+        $query->andFilterWhere(['>=', 'sqlquerytime', $this->start_date]);
+        $query->andFilterWhere(['<', 'sqlquerytime', $this->end_date]);
+        $query->groupBy('querymd5');
+        $query->orderBy('queryusemaxtime desc');
         return $dataProvider;
     }
 

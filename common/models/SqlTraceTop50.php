@@ -7,13 +7,13 @@ use Yii;
 /**
  * This is the model class for table "SqlTrace_top50".
  *
- * @property string $executedate
- * @property string $sqltext_md5
- * @property double $sqlusedtime
  * @property string $sqltext
- * @property string $Id
+ * @property string $querymd5
+ * @property string $amount
+ * @property double $queryusemaxtime
  * @property string $databasetype
- * @property string $update_time
+ * @property string $sqlquerytime
+ * @property string $ip
  */
 class SqlTraceTop50 extends \yii\db\ActiveRecord
 {
@@ -31,11 +31,13 @@ class SqlTraceTop50 extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['executedate', 'update_time'], 'safe'],
-            [['sqlusedtime'], 'number'],
-            [['sqltext_md5'], 'string', 'max' => 64],
-            [['sqltext'], 'string', 'max' => 5000],
-            [['databasetype'], 'string', 'max' => 20]
+            [['querymd5', 'sqlquerytime'], 'required'],
+            [['amount'], 'integer'],
+            [['queryusemaxtime'], 'number'],
+            [['sqlquerytime'], 'safe'],
+            [['sqltext'], 'string', 'max' => 20000],
+            [['querymd5', 'ip'], 'string', 'max' => 64],
+            [['databasetype'], 'string', 'max' => 50]
         ];
     }
 
@@ -45,13 +47,13 @@ class SqlTraceTop50 extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'executedate' => 'Executedate',
-            'sqltext_md5' => 'Sqltext Md5',
-            'sqlusedtime' => 'Sqlusedtime',
-            'sqltext' => 'Sqltext',
-            'Id' => 'ID',
-            'databasetype' => 'Databasetype',
-            'update_time' => 'Update Time',
+            'sqltext' => '查询语句',
+            'querymd5' => '唯一标识md5',
+            'amount' => '查询次数',
+            'queryusemaxtime' => '语句查询最多扫行时间',
+            'databasetype' => '数据库类型',
+            'sqlquerytime' => '查询时间',
+            'ip' => '应用服务器IP',
         ];
     }
 }

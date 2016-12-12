@@ -38,13 +38,19 @@ class Sql50Search extends SqlTraceTop50 {
         return Model::scenarios();
     }
 
+//sqplit
+    public static function getDb() {
+        return \Yii::$app->db1;
+    }
+
     //put your code here
     public function search($params) {
         $query = new \yii\db\Query;
-        if(!$this->sqlquerytime){
-            $this->sqlusedtime=date("Y-m-d 00:00:00");
+        if (!$this->sqlquerytime) {
+            $this->sqlusedtime = date("Y-m-d 00:00:00");
         }
         $dataProvider = new ActiveDataProvider([
+            'db' => self::getDb(),
             'query' => $query->from(SqlTraceTop50::tableName()),
         ]);
         $query->groupBy('querymd5');

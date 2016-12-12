@@ -22,7 +22,7 @@ class SqlTraceService {
                 ->from("ApplicateName")
                 ->where('logtype=2')
                 ->distinct();
-        $dbtypes = $query->all();
+        $dbtypes = $query->all(\Yii::$app->db1);
         $dbtype_item = ArrayHelper::map($dbtypes, "appname", "appname");
         
         $dbtype_item['all']='all';

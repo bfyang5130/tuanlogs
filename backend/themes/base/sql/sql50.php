@@ -12,10 +12,10 @@ $this->title = '每天前50条查询最久统计';
 $params = \Yii::$app->request->get();
 //处理时间
 $accLogErr = new Sql50Search();
-if (!empty($params['Sql50Search']['sqlquerytime'])) {
-    $accLogErr->sqlquerytime = $params['Sql50Search']['sqlquerytime'];
+if (!empty($params['Sql50Search']['start_date'])) {
+    $accLogErr->sqlquerytime = $params['Sql50Search']['start_date'];
 } else {
-    $params['Sql50Search']['sqlquerytime'] = date('Y-m-d 00:00:00');
+    $params['Sql50Search']['start_date'] = date('Y-m-d 00:00:00');
     $accLogErr->sqlquerytime = date("Y-m-d 00:00:00");
 }
 

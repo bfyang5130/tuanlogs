@@ -47,8 +47,9 @@ class Sql50Search extends SqlTraceTop50 {
     public function search($params) {
         $query = new \yii\db\Query;
         
-        if (!$this->sqlquerytime) {
-            $this->sqlusedtime = date("Y-m-d 00:00:00");
+        if (!$this->start_date) {
+            $this->start_date = date("Y-m-d 00:00:00");
+             $this->end_date = date('Y-m-d 00:00:00', strtotime('+1 day', strtotime($this->start_date)));
         }
         $dataProvider = new ActiveDataProvider([
             'db' => self::getDb(),
@@ -61,10 +62,6 @@ class Sql50Search extends SqlTraceTop50 {
 
         if (!$this->validate()) {
             return $dataProvider;
-        }
-        if ($this->sqlquerytime) {
-            $this->start_date = $this->sqlquerytime;
-            $this->end_date = date('Y-m-d 00:00:00', strtotime('+1 day', strtotime($this->start_date)));
         }
         $query->andFilterWhere(['>=', 'queryusemaxtime', $this->queryusemaxtime]);
         if ($this->databasetype && $this->databasetype != 'all') {

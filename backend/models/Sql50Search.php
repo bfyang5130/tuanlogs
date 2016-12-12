@@ -46,6 +46,7 @@ class Sql50Search extends SqlTraceTop50 {
     //put your code here
     public function search($params) {
         $query = new \yii\db\Query;
+        
         if (!$this->sqlquerytime) {
             $this->sqlusedtime = date("Y-m-d 00:00:00");
         }
@@ -53,6 +54,7 @@ class Sql50Search extends SqlTraceTop50 {
             'db' => self::getDb(),
             'query' => $query->from(SqlTraceTop50::tableName()),
         ]);
+        $query->select(['sqltext','sum(amount) as amount','queryusemaxtime','databasetype','sqlquerytime','ip']);
         $query->groupBy('querymd5');
         $query->orderBy('queryusemaxtime desc');
         $this->load($params);

@@ -109,6 +109,7 @@ if ($begin > $end) {
                                     <tbody>
                                         <tr>
                                             <th width="760px">查询语句</th>
+                                            <th>查询量</th>
                                             <th width="70px">耗时</th>
                                             <th>数据库</th>
                                             <th width="90px">时间</th>
@@ -117,6 +118,7 @@ if ($begin > $end) {
                                         <?php foreach ($datas as $oneErrorValue): ?>
                                             <tr>
                                                 <td class="center"><code><?= $oneErrorValue['sqltext'] ?></code></td>
+                                                <td class="center"><?= $oneErrorValue['amount'] ?></td>
                                                 <td class="center"><?= Html::encode($oneErrorValue['queryusemaxtime']) ?></td>
                                                 <td class="center"><?= Html::encode($oneErrorValue['databasetype']) ?></td>
                                                 <td class="center"><?= Html::encode($oneErrorValue['sqlquerytime']) ?></td>
@@ -124,7 +126,7 @@ if ($begin > $end) {
                                             </tr>
                                         <?php endforeach; ?>
                                         <tr>
-                                            <td colspan="6" class="text-center">
+                                            <td colspan="7" class="text-center">
                                                 <?= LinkPager::widget(['pagination' => $pager]); ?>
                                             </td>
                                         </tr>
